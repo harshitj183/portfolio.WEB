@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  /* We can add configurations here if needed */
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+  basePath: process.env.GITHUB_ACTIONS ? '/portfolio.WEB' : '',
 };
 
 export default nextConfig;
