@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import CommandPalette from '../components/CommandPalette';
-import Sidebar from '../components/Sidebar';
-import MiniAvatar from '../components/MiniAvatar';
+import dynamic from 'next/dynamic';
+
+const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false });
+const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
+const MiniAvatar = dynamic(() => import('../components/MiniAvatar'), { ssr: false });
 
 /**
  * Ambient Typing Sound Engine
