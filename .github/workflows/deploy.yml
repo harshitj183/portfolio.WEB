@@ -1,0 +1,30 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build Project
+        run: bun run build
+
+      - name: Deploy to Netlify
+        # This is a sample deploy step. User will need to configure NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID
+        # For now, we provide the build verification step.
+        run: echo "Build verified. Ready for deployment to production node."

@@ -6,34 +6,34 @@ import { FiHome, FiAlertTriangle } from 'react-icons/fi';
 
 const NotFound = () => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      style={{ 
-        height: '70vh', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
+      style={{
+        height: '70vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
-        textAlign: 'center' 
+        textAlign: 'center'
       }}
     >
       <motion.div
-        animate={{ 
+        animate={{
           y: [0, -20, 0],
           rotate: [0, 5, -5, 0]
         }}
-        transition={{ 
-          duration: 6, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut"
         }}
         style={{ marginBottom: '3rem' }}
       >
-        <h1 style={{ 
-          fontSize: '12rem', 
-          fontWeight: 800, 
+        <h1 style={{
+          fontSize: '12rem',
+          fontWeight: 800,
           lineHeight: 1,
           color: '#fff'
         }}>
@@ -50,15 +50,15 @@ const NotFound = () => {
           <FiAlertTriangle className="text-accent" /> Lost in the Architecture
         </h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginBottom: '3.5rem', maxWidth: '500px' }}>
-          The requested coordinate does not exist within this system. 
+          The requested coordinate does not exist within this system.
           Standard protocol suggests returning to the command center.
         </p>
-        
-        <Link href="/" className="pill accent" style={{ 
-          padding: '1.2rem 2.5rem', 
-          fontSize: '1.1rem', 
-          display: 'inline-flex', 
-          alignItems: 'center', 
+
+        <Link href="/" className="pill accent" style={{
+          padding: '1.2rem 2.5rem',
+          fontSize: '1.1rem',
+          display: 'inline-flex',
+          alignItems: 'center',
           gap: '1rem',
           textDecoration: 'none'
         }}>
@@ -68,5 +68,6 @@ const NotFound = () => {
     </motion.div>
   );
 };
+
 
 export default NotFound;
