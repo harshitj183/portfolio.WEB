@@ -1,0 +1,83 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { FiGithub, FiLinkedin, FiMail, FiCode, FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiMenu, FiX } from 'react-icons/fi';
+
+const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
+
+interface NavItem {
+  to: string;
+  name: string;
+  icon: React.ReactNode;
+}
+
+const Sidebar = () => {
+  const [open, setOpen] = useState<boolean>(false);
+  const pathname = usePathname();
+
+  const close = () => setOpen(false);
+
+  const navItems: NavItem[] = [
+    { to: '/', name: 'Home', icon: <FiCommand size={20} /> },
+    { to: '/dashboard', name: 'Dashboard', icon: <FiActivity size={20} /> },
+    { to: '/projects', name: 'Projects', icon: <FiLayout size={20} /> },
+    { to: '/about', name: 'About', icon: <FiUser size={20} /> },
+    { to: '/contact', name: 'Contact', icon: <FiMessageSquare size={20} /> },
+  ];
+
+  return (
+    <aside className="sidebar">
+      <div className="profile-card">
+        <img
+          src={GITHUB_AVATAR}
+          alt="Harshit Jaiswal"
+          className="avatar"
+          style={{ width: '80px', height: '80px', borderRadius: '8px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
+        />
+        <div className="profile-info" style={{ marginTop: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.2rem', color: '#fff' }}>Harshit J.</h2>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>SDE | AI Agent Engineer | Freelancer | Author</p>
+          <div className="status-indicator">
+            <span className="status-dot"></span>
+            Active
+          </div>
+        </div>
+      </div>
+
+      <button className="hamburger" onClick={() => setOpen(o => !o)} aria-label="Toggle menu">
+        {open ? <FiX size={26} color="#fff" /> : <FiMenu size={26} color="#fff" />}
+      </button>
+
+      <nav className={`nav-links${open ? ' open' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '3rem' }}>
+        {navItems.map((item) => {
+          const currentPath = pathname || '';
+          const isActive = item.to === '/' ? currentPath === '/' : currentPath.startsWith(item.to);
+          return (
+            <Link 
+              key={item.to}
+              href={item.to} 
+              className={isActive ? 'nav-item active' : 'nav-item'} 
+              onClick={close}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-text" style={{ marginLeft: '1rem' }}>{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div style={{ marginTop: 'auto' }}>
+        <div className="social-links" style={{ display: 'flex', gap: '1.2rem' }}>
+          <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" style={{ color: 'var(--text-secondary)' }}><FiGithub size={20} /></a>
+          <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={20} /></a>
+          <a href="https://leetcode.com/u/harshitj183/" target="_blank" rel="noreferrer" title="LeetCode" style={{ color: 'var(--text-secondary)' }}><FiCode size={20} /></a>
+          <a href="mailto:harshitj183@gmail.com" title="Email" style={{ color: 'var(--text-secondary)' }}><FiMail size={20} /></a>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;
