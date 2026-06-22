@@ -8,6 +8,7 @@ import { FiMessageSquare, FiX, FiSend, FiPlay, FiCompass } from 'react-icons/fi'
 interface Message {
   sender: 'user' | 'agent';
   text: string;
+  isLive?: boolean;
 }
 
 // Allowed actions enum / type
@@ -152,7 +153,7 @@ function getLocalAgentResponse(userInput: string): string {
 export default function PortfolioAgent() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { sender: 'agent', text: "Hello recruiter! 👋 I am Harshit's AI co-pilot. Ask me for a 'tour', 'resume', or to see 'projects'!" }
+    { sender: 'agent', text: "Hello recruiter! 👋 I am Harshit's AI co-pilot. Ask me for a 'tour', 'resume', or to see 'projects'!", isLive: false }
   ]);
   const [inputVal, setInputVal] = useState('');
   const [tourStep, setTourStep] = useState(-1);
@@ -287,18 +288,18 @@ export default function PortfolioAgent() {
     setMessages(prev => [...prev, { sender: 'user', text: userText }]);
     setInputVal('');
 
-    const processResponse = (rawResponse: string) => {
+    const processResponse = (rawResponse: string, isLive: boolean) => {
       try {
         const json = JSON.parse(rawResponse);
         if (json.reply) {
-          setMessages(prev => [...prev, { sender: 'agent', text: json.reply }]);
+          setMessages(prev => [...prev, { sender: 'agent', text: json.reply, isLive }]);
         }
         if (json.action) {
           handleActionExecution(json.action);
         }
       } catch {
         // Plain text fallback
-        setMessages(prev => [...prev, { sender: 'agent', text: rawResponse }]);
+        setMessages(prev => [...prev, { sender: 'agent', text: rawResponse, isLive }]);
       }
     };
 
@@ -313,11 +314,11 @@ export default function PortfolioAgent() {
       if (!res.ok) throw new Error('API Key missing or Server Error');
 
       const data = await res.json();
-      processResponse(data.response.trim());
+      processResponse(data.response.trim(), true);
     } catch {
       // Rule-based client-side fallback
       const fallbackResponse = getLocalAgentResponse(userText);
-      processResponse(fallbackResponse);
+      processResponse(fallbackResponse, false);
     }
   };
 
@@ -397,16 +398,38 @@ export default function PortfolioAgent() {
                   style={{
                     alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
-                    padding: '0.65rem 0.9rem',
-                    borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                    background: m.sender === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
-                    color: m.sender === 'user' ? '#fff' : '#e2e8f0',
-                    fontSize: '0.82rem',
-                    lineHeight: '1.4',
-                    fontFamily: m.text.startsWith('✨') ? 'monospace' : 'var(--font-primary)'
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: m.sender === 'user' ? 'flex-end' : 'flex-start',
+                    gap: '0.3rem'
                   }}
                 >
-                  {m.text}
+                  <div
+                    style={{
+                      padding: '0.65rem 0.9rem',
+                      borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                      background: m.sender === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
+                      color: m.sender === 'user' ? '#fff' : '#e2e8f0',
+                      fontSize: '0.82rem',
+                      lineHeight: '1.4',
+                      fontFamily: m.text.startsWith('✨') ? 'monospace' : 'var(--font-primary)'
+                    }}
+                  >
+                    {m.text}
+                  </div>
+                  {m.sender === 'agent' && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.65rem', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>
+                      <span style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: m.isLive ? '#10b981' : '#ef4444',
+                        boxShadow: m.isLive ? '0 0 6px #10b981' : '0 0 6px #ef4444',
+                        display: 'inline-block'
+                      }} />
+                      {m.isLive ? 'Gemini AI' : 'Local Engine'}
+                    </div>
+                  )}
                 </div>
               ))}
               <div ref={messagesEndRef} />
