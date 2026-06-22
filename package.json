@@ -14,6 +14,7 @@
     "@harshitj183/ai-skills": "^2.2.9",
     "@microsoft/clarity": "^1.0.2",
     "canvas-confetti": "^1.9.4",
+    "eslint-plugin-react-refresh": "^0.5.3",
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
