@@ -132,15 +132,55 @@ const Home = () => {
 
         {/* Avatar card */}
         <div className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center', maxWidth: '300px', width: '100%', borderRadius: '12px' }}>
-          <img
-            src={GITHUB_AVATAR}
-            alt="Harshit Jaiswal"
-            style={{
-              width: '120px', height: '120px', borderRadius: '12px',
-              objectFit: 'cover', border: '1px solid var(--border-color)',
-              marginBottom: '1.5rem'
-            }}
-          />
+          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
+            {/* Thought/Dream Bubble */}
+            <div style={{
+              position: 'absolute',
+              top: '-32px',
+              right: '-32px',
+              background: 'var(--accent)',
+              color: '#fff',
+              padding: '0.4rem 0.8rem',
+              borderRadius: '20px',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              boxShadow: '0 0 15px var(--accent-glow)',
+              whiteSpace: 'nowrap',
+              zIndex: 3
+            }}>
+              harshitj183
+              {/* Little floating bubble trail */}
+              <span style={{
+                position: 'absolute',
+                bottom: '-6px',
+                right: '28px',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: 'var(--accent)',
+                boxShadow: '0 0 10px var(--accent-glow)'
+              }} />
+              <span style={{
+                position: 'absolute',
+                bottom: '-14px',
+                right: '22px',
+                width: '5px',
+                height: '5px',
+                borderRadius: '50%',
+                background: 'var(--accent)',
+                boxShadow: '0 0 10px var(--accent-glow)'
+              }} />
+            </div>
+            <img
+              src={GITHUB_AVATAR}
+              alt="Harshit Jaiswal"
+              style={{
+                width: '120px', height: '120px', borderRadius: '12px',
+                objectFit: 'cover', border: '1px solid var(--border-color)',
+                display: 'block'
+              }}
+            />
+          </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
             {[
               { val: '24+', label: 'Projects' },
