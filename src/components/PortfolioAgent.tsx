@@ -9,6 +9,7 @@ interface Message {
   sender: 'user' | 'agent';
   text: string;
   isLive?: boolean;
+  isAction?: boolean;
 }
 
 // Allowed actions enum / type
@@ -29,7 +30,8 @@ type AllowedAction =
   | 'toggle_theme'
   | 'show_timeline'
   | 'show_featured_project'
-  | 'book_meeting';
+  | 'book_meeting'
+  | 'execute_js';
 
 // Local Fallback Rule-Based Engine (Outputs JSON with reply & action)
 function getLocalAgentResponse(userInput: string): string {
@@ -131,6 +133,9 @@ function getLocalAgentResponse(userInput: string): string {
   if (input === 'home' || input === 'start') {
     return makeJson("Heading back to the main command center...", { action: 'goto_home' });
   }
+  if (input.includes('theme') || input.includes('dark') || input.includes('light')) {
+    return makeJson("Toggling the ambient theme...", { action: 'toggle_theme' });
+  }
 
   // 3. Normal informational responses
   if (input.includes('hello') || input.includes('hi ') || input.includes('hey')) {
@@ -147,7 +152,7 @@ function getLocalAgentResponse(userInput: string): string {
   }
 
   // Default fallback conversational reply
-  return makeJson("I'm here to help! I can understand commands like 'Show Next.js work', 'Open Resume', 'Start tour', or 'Book a meeting'. Let me know what you need!");
+  return makeJson("I am running in local fallback mode (AI unreachable). Try commands like: 'Show Next.js work', 'Toggle theme', 'Open Resume', 'Start tour', or 'Book a meeting'.");
 }
 
 export default function PortfolioAgent() {
@@ -168,9 +173,13 @@ export default function PortfolioAgent() {
   const handleActionExecution = (actionObj: any) => {
     const { action, technology, project_name, trigger, steps } = actionObj;
 
-    // Toast indicator helper
+    // Collapsible Action indicator helper
     const showToast = (txt: string) => {
-      setMessages(prev => [...prev, { sender: 'agent', text: `✨ [System Action]: ${txt}` }]);
+      setMessages(prev => [...prev, {
+        sender: 'agent',
+        text: JSON.stringify({ action, description: txt }, null, 2),
+        isAction: true
+      }]);
     };
 
     switch (action as AllowedAction | 'create_custom_command' | 'run_custom_command') {
@@ -243,6 +252,15 @@ export default function PortfolioAgent() {
         break;
       case 'toggle_theme':
         showToast("Toggling ambient visual alignment");
+        break;
+      case 'execute_js':
+        showToast("Executing Unlimited Power (JS Injection)");
+        try {
+          // eslint-disable-next-line no-eval
+          if (actionObj.code) eval(actionObj.code);
+        } catch (e) {
+          console.error('Failed to execute AI JS code:', e);
+        }
         break;
       case 'start_portfolio_tour':
         showToast("Initializing Guided Interactive Tour...");
@@ -350,21 +368,7 @@ export default function PortfolioAgent() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="glass-panel"
-            style={{
-              position: 'fixed',
-              bottom: '95px',
-              right: '25px',
-              width: '350px',
-              height: '480px',
-              zIndex: 99998,
-              borderRadius: '20px',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
-              border: '1px solid rgba(99,102,241,0.3)'
-            }}
+            className="glass-panel portfolio-agent-panel"
           >
             {/* Header */}
             <div style={{
@@ -404,19 +408,49 @@ export default function PortfolioAgent() {
                     gap: '0.3rem'
                   }}
                 >
-                  <div
-                    style={{
-                      padding: '0.65rem 0.9rem',
-                      borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                      background: m.sender === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
-                      color: m.sender === 'user' ? '#fff' : '#e2e8f0',
-                      fontSize: '0.82rem',
-                      lineHeight: '1.4',
-                      fontFamily: m.text.startsWith('✨') ? 'monospace' : 'var(--font-primary)'
-                    }}
-                  >
-                    {m.text}
-                  </div>
+                  {m.isAction ? (
+                    <details style={{
+                      alignSelf: 'stretch',
+                      margin: '0.4rem 0',
+                      border: '1px solid rgba(99,102,241,0.2)',
+                      background: 'rgba(99,102,241,0.03)',
+                      borderRadius: '8px',
+                      padding: '0.5rem 0.8rem',
+                      fontSize: '0.75rem',
+                      color: 'var(--accent)',
+                      cursor: 'pointer'
+                    }}>
+                      <summary style={{ outline: 'none', fontWeight: 600 }}>▶ Executed Action Log</summary>
+                      <pre style={{
+                        marginTop: '0.5rem',
+                        padding: '0.5rem',
+                        background: '#09090b',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '6px',
+                        fontSize: '0.68rem',
+                        color: 'var(--text-secondary)',
+                        overflowX: 'auto',
+                        fontFamily: 'monospace',
+                        cursor: 'default'
+                      }} onClick={e => e.stopPropagation()}>
+                        {m.text}
+                      </pre>
+                    </details>
+                  ) : (
+                    <div
+                      style={{
+                        padding: '0.65rem 0.9rem',
+                        borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                        background: m.sender === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
+                        color: m.sender === 'user' ? '#fff' : '#e2e8f0',
+                        fontSize: '0.82rem',
+                        lineHeight: '1.4',
+                        fontFamily: m.text.startsWith('✨') ? 'monospace' : 'var(--font-primary)'
+                      }}
+                    >
+                      {m.text}
+                    </div>
+                  )}
                   {m.sender === 'agent' && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.65rem', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>
                       <span style={{

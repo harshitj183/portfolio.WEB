@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@harshitj183/ai-skills": "^2.2.9",
     "@microsoft/clarity": "^1.0.2",
     "canvas-confetti": "^1.9.4",

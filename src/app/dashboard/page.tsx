@@ -75,44 +75,49 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
         </div>
       </div>
 
-      {/* Month labels */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '4px', paddingLeft: '2px' }}>
-        {Array.from({ length: 52 }).map((_, wi) => {
-          const ml = monthLabels.find(m => m.weekIndex === wi);
-          return (
-            <div key={wi} style={{ width: '12px', fontSize: '0.6rem', color: 'var(--text-secondary)', opacity: ml ? 1 : 0, whiteSpace: 'nowrap', flexShrink: 0 }}>
-              {ml?.label || ''}
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ display: 'flex', gap: '4px', overflowX: 'auto' }}>
-        {Array.from({ length: 52 }).map((_, weekIdx) => (
-          <div key={weekIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px', flexShrink: 0 }}>
-            {Array.from({ length: 7 }).map((_, dayIdx) => {
-              const dataIdx = weekIdx * 7 + dayIdx;
-              const val = loading ? 0 : (flatData[dataIdx] || 0);
-              const level = Math.min(val, 4);
+      {/* Scrollable Heatmap wrapper to keep labels and columns synced */}
+      <div style={{ overflowX: 'auto', width: '100%', paddingBottom: '0.5rem' }}>
+        <div style={{ minWidth: '800px' }}>
+          {/* Month labels */}
+          <div style={{ display: 'flex', gap: '4px', marginBottom: '4px', paddingLeft: '2px' }}>
+            {Array.from({ length: 52 }).map((_, wi) => {
+              const ml = monthLabels.find(m => m.weekIndex === wi);
               return (
-                <div
-                  key={dayIdx}
-                  onMouseEnter={() => setTooltip({ val, weekIdx, dayIdx })}
-                  onMouseLeave={() => setTooltip(null)}
-                  title={`${val} contribution${val !== 1 ? 's' : ''}`}
-                  style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '2px',
-                    background: loading ? '#161b22' : colors[level],
-                    border: '1px solid rgba(255,255,255,0.02)',
-                    cursor: 'default'
-                  }}
-                />
+                <div key={wi} style={{ width: '12px', fontSize: '0.6rem', color: 'var(--text-secondary)', opacity: ml ? 1 : 0, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  {ml?.label || ''}
+                </div>
               );
             })}
           </div>
-        ))}
+
+          <div style={{ display: 'flex', gap: '4px' }}>
+            {Array.from({ length: 52 }).map((_, weekIdx) => (
+              <div key={weekIdx} style={{ display: 'flex', flexDirection: 'column', gap: '4px', flexShrink: 0 }}>
+                {Array.from({ length: 7 }).map((_, dayIdx) => {
+                  const dataIdx = weekIdx * 7 + dayIdx;
+                  const val = loading ? 0 : (flatData[dataIdx] || 0);
+                  const level = Math.min(val, 4);
+                  return (
+                    <div
+                      key={dayIdx}
+                      onMouseEnter={() => setTooltip({ val, weekIdx, dayIdx })}
+                      onMouseLeave={() => setTooltip(null)}
+                      title={`${val} contribution${val !== 1 ? 's' : ''}`}
+                      style={{
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '2px',
+                        background: loading ? '#161b22' : colors[level],
+                        border: '1px solid rgba(255,255,255,0.02)',
+                        cursor: 'default'
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Legend */}
@@ -236,25 +241,42 @@ const Dashboard = () => {
 
     const fetchLeetcode = async () => {
       try {
-        // Public LeetCode stats API (no auth required)
-        const res = await fetch('https://leetcode-stats-api.herokuapp.com/harshitj183');
+        const res = await fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183');
         const data = await res.json();
-        if (data.status === 'success') {
+        const stats = data.matchedUserStats?.acSubmissionNum;
+        if (stats) {
+          const solved = stats.find((x: any) => x.difficulty === 'All')?.count || 372;
+          const easy = stats.find((x: any) => x.difficulty === 'Easy')?.count || 242;
+          const medium = stats.find((x: any) => x.difficulty === 'Medium')?.count || 116;
+          const hard = stats.find((x: any) => x.difficulty === 'Hard')?.count || 14;
           setLeetcode({
-            stats: {
-              solved: data.totalSolved,
-              easy: data.easySolved,
-              medium: data.mediumSolved,
-              hard: data.hardSolved,
-              totalQ: data.totalQuestions,
-            },
+            stats: { solved, easy, medium, hard, totalQ: 3300 },
             loading: false
           });
         } else throw new Error();
       } catch {
-        // fallback
+        // Try Heroku fallback
+        try {
+          const res = await fetch('https://leetcode-stats-api.herokuapp.com/harshitj183');
+          const data = await res.json();
+          if (data.status === 'success') {
+            setLeetcode({
+              stats: {
+                solved: data.totalSolved,
+                easy: data.easySolved,
+                medium: data.mediumSolved,
+                hard: data.hardSolved,
+                totalQ: data.totalQuestions,
+              },
+              loading: false
+            });
+            return;
+          }
+        } catch {}
+        
+        // Final fallback matching current exact stats
         setLeetcode({
-          stats: { solved: 257, easy: 184, medium: 65, hard: 8, totalQ: 3500 },
+          stats: { solved: 372, easy: 242, medium: 116, hard: 14, totalQ: 3300 },
           loading: false
         });
       }
@@ -280,7 +302,7 @@ const Dashboard = () => {
       </div>
 
       {/* Middle: Tech + LeetCode distribution */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '2.5rem', marginBottom: '3rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', marginBottom: '3rem' }}>
         <TechRadar />
 
         <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>

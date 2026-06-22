@@ -29,3 +29,5 @@ history/
 build.log
 build.txt
 tsconfig.tsbuildinfo
+.vercel
+out/

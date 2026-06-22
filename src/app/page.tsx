@@ -43,15 +43,25 @@ const FEATURED = [
 ];
 
 const Home = () => {
-  const [lcSolved, setLcSolved] = useState<string>('250+');
+  const [lcSolved, setLcSolved] = useState<string>('350+');
   const [slide, setSlide] = useState(0);
   const [dir, setDir] = useState(1);
 
   useEffect(() => {
-    fetch('https://leetcode-stats-api.herokuapp.com/harshitj183')
+    fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183')
       .then(r => r.json())
-      .then(d => { if (d.status === 'success') setLcSolved(String(d.totalSolved)); })
-      .catch(() => {});
+      .then(d => {
+        const allStats = d.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'All');
+        if (allStats) {
+          setLcSolved(String(allStats.count));
+        }
+      })
+      .catch(() => {
+        fetch('https://leetcode-stats-api.herokuapp.com/harshitj183')
+          .then(r => r.json())
+          .then(d => { if (d.status === 'success') setLcSolved(String(d.totalSolved)); })
+          .catch(() => {});
+      });
   }, []);
 
   useEffect(() => {
@@ -90,7 +100,7 @@ const Home = () => {
       </div>
 
       {/* Hero content row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'flex-start', marginBottom: '5rem' }}>
+      <div className="hero-content-grid">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1rem' }}>
             <FiMapPin size={16} />
@@ -219,7 +229,7 @@ const Home = () => {
         <FiStar className="text-accent" /> Featured Work
       </h2>
 
-      <div className="glass-panel" style={{ padding: '3rem', marginBottom: '5rem', borderRadius: '12px', overflow: 'hidden', position: 'relative', minHeight: '280px' }}>
+      <div className="glass-panel featured-showcase-panel" style={{ marginBottom: '5rem', borderRadius: '12px', overflow: 'hidden', position: 'relative', minHeight: '280px' }}>
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={slide}
@@ -228,7 +238,7 @@ const Home = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: dir * -80, opacity: 0 }}
             transition={{ duration: 0.35, ease: 'easeInOut' }}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', alignItems: 'center' }}
+            className="featured-project-grid"
           >
             <div>
               <span className="pill accent" style={{ marginBottom: '1.5rem', display: 'inline-block', fontSize: '0.75rem', background: proj.color, border: 'none' }}>

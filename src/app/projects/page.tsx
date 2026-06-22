@@ -284,12 +284,12 @@ const Projects = () => {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
               onClick={e => e.stopPropagation()}
-              className="glass-panel"
-              style={{ maxWidth: '860px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '3.5rem', position: 'relative' }}
+              className="glass-panel case-study-modal"
+              style={{ maxWidth: '860px', width: '100%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}
             >
               <button
                 onClick={() => setSelected(null)}
-                style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                className="modal-close-btn"
               >
                 <FiX size={28} />
               </button>
@@ -318,27 +318,13 @@ const Projects = () => {
                   scrollSnapType: 'x mandatory'
                 }}>
                   {selected.gallery.map((img, i) => (
-                    <div key={i} style={{
-                      flex: '0 0 100%',
-                      height: '380px',
-                      borderRadius: '16px',
-                      overflow: 'hidden',
-                      border: '1px solid var(--glass-border)',
-                      scrollSnapAlign: 'start'
-                    }}>
+                    <div key={i} className="gallery-image-container">
                       <img src={img} alt={`${selected.title} screenshot ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   ))}
                 </div>
               ) : selected.image && (
-                <div style={{ 
-                  width: '100%', 
-                  height: '380px', 
-                  borderRadius: '16px', 
-                  overflow: 'hidden', 
-                  marginBottom: '2.5rem', 
-                  border: '1px solid var(--glass-border)' 
-                }}>
+                <div className="single-image-container">
                   <img src={selected.image} alt={selected.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               )}

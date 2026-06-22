@@ -2,15 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// ── Character colors (matching Harshit's cartoon) ──────────────────────────
-const SKIN       = '#c8845a';
-const SKIN_SH    = '#a8673f';
-const HAIR       = '#1a1008';
-const SHIRT      = '#c0392b';
-const SHIRT_SH   = '#922b21';
-const EYE_IRIS   = '#3d1f00';
-const NECK_C     = '#b87448';
+import { usePathname } from 'next/navigation';
 
 type WalkDir = 'left' | 'right';
 type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing';
@@ -25,241 +17,285 @@ const QUIPS: Record<Mood, string[]> = {
   dancing:  ['Build passed! 🎉', 'No bugs today! 🕺', 'Ship it! 🚢'],
 };
 
-// ── SVG Character ──────────────────────────────────────────────────────────
-const HarshitSVG = ({ mood, dir, step }: { mood: Mood; dir: WalkDir; step: number }) => {
-  const walking  = mood === 'walk';
-  const isWave   = mood === 'waving';
-  const isType   = mood === 'typing';
-  const isDance  = mood === 'dancing';
-  const isSleep  = mood === 'sleeping';
-  const isThink  = mood === 'thinking';
+// Helper to get relative climb heights based on viewport height
+const getTargetLevels = () => {
+  if (typeof window === 'undefined') return [20, 150, 300, 450];
+  const maxClimb = window.innerHeight * 0.65;
+  return [20, Math.floor(maxClimb * 0.33), Math.floor(maxClimb * 0.66), Math.floor(maxClimb)];
+};
 
-  // leg swing
-  const legA = walking ? Math.sin(step * 0.18) * 22 : 0;
-  const legB = -legA;
+// ── Pixel Art Character ───────────────────────────────────────────────────
+const HarshitPixelImage = ({ mood, dir, step }: { mood: Mood; dir: WalkDir; step: number }) => {
+  let src = '/avatar/idle.png';
+  const isWalking = mood === 'walk';
+  const isDancing = mood === 'dancing';
+  
+  if (mood === 'waving') {
+    src = '/avatar/waving.png';
+  } else if (mood === 'idle') {
+    src = '/avatar/idle.png';
+  } else if (mood === 'typing') {
+    src = '/avatar/typing.png';
+  } else if (mood === 'thinking') {
+    src = '/avatar/thinking.png';
+  } else if (mood === 'sleeping') {
+    src = '/avatar/sleeping.png';
+  } else if (mood === 'dancing') {
+    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/dancing.png' : '/avatar/idle.png';
+  } else if (mood === 'walk') {
+    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/walk.png' : '/avatar/idle.png';
+  }
 
-  // arm swing opposite to legs
-  const lArm = isWave  ? -110 + Math.sin(step * 0.2) * 25
-             : isType  ? -40 + Math.sin(step * 0.5) * 15
-             : isDance ? -80 + Math.sin(step * 0.3) * 30
-             : walking ? 20 + Math.sin(step * 0.18) * 28
-             : -20;
-  const rArm = isType  ? 40 - Math.sin(step * 0.5) * 15
-             : isDance ? 80 - Math.sin(step * 0.3) * 30
-             : walking ? 20 - Math.sin(step * 0.18) * 28
-             : 20;
-
-  // body bob while walking
-  const bodyBob = walking ? Math.abs(Math.sin(step * 0.18)) * -3 : 0;
-
-  const flip = dir === 'left' ? 'scale(-1,1)' : 'scale(1,1)';
+  const bobY = isWalking ? (step % 2 === 0 ? '-5px' : '0px') : '0px';
+  const rotateVal = isDancing ? (step % 2 === 0 ? '7deg' : '-7deg') : '0deg';
+  const scaleVal = isDancing ? (step % 2 === 0 ? 1.1 : 0.94) : 1;
+  const flipScaleX = dir === 'left' ? -1 : 1;
 
   return (
-    <svg
-      width="64" height="96"
-      viewBox="0 0 72 108"
-      fill="none"
-      style={{ transform: flip, transformOrigin: '36px 54px', overflow: 'visible' }}
+    <div
+      style={{
+        width: '84px',
+        height: '84px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transform: `translateY(${bobY}) scaleX(${flipScaleX}) rotate(${rotateVal}) scale(${scaleVal})`,
+        transition: 'transform 0.1s ease',
+        position: 'relative'
+      }}
     >
-      {/* ── LEGS ── */}
-      <g transform={`translate(0,${bodyBob})`}>
-        {/* Left leg */}
-        <g style={{ transformOrigin: '28px 82px', transform: `rotate(${legA}deg)` }}>
-          <rect x="24" y="82" width="9" height="20" rx="4" fill="#1e1e24" />
-          <rect x="22" y="98" width="13" height="6" rx="3" fill="#111" />
-        </g>
-        {/* Right leg */}
-        <g style={{ transformOrigin: '44px 82px', transform: `rotate(${legB}deg)` }}>
-          <rect x="39" y="82" width="9" height="20" rx="4" fill="#1e1e24" />
-          <rect x="37" y="98" width="13" height="6" rx="3" fill="#111" />
-        </g>
-
-        {/* ── BODY ── */}
-        <path d="M18 66 Q14 78 13 108 H59 Q58 78 54 66 Q45 72 36 72 Q27 72 18 66Z" fill={SHIRT} />
-        <path d="M18 66 Q14 78 13 108 H36 V72 Q27 72 18 66Z" fill={SHIRT_SH} opacity="0.35" />
-        {/* Collar */}
-        <path d="M26 66 L30 76 L36 72 L36 66Z" fill={SHIRT_SH} />
-        <path d="M46 66 L42 76 L36 72 L36 66Z" fill={SHIRT} />
-
-        {/* LEFT ARM */}
-        <g style={{ transformOrigin: '20px 68px', transform: `rotate(${lArm}deg)` }}>
-          <rect x="13" y="66" width="9" height="22" rx="4.5" fill={SHIRT} />
-          <ellipse cx="17.5" cy="90" rx="4.5" ry="4" fill={SKIN} />
-        </g>
-
-        {/* RIGHT ARM */}
-        <g style={{ transformOrigin: '52px 68px', transform: `rotate(${rArm}deg)` }}>
-          <rect x="50" y="66" width="9" height="22" rx="4.5" fill={SHIRT} />
-          <ellipse cx="54.5" cy="90" rx="4.5" ry="4" fill={SKIN} />
-        </g>
-
-        {/* Coffee cup */}
-        {mood === 'idle' && (
-          <g transform="translate(62,76)">
-            <rect x="-5" y="-8" width="11" height="13" rx="2" fill="white" />
-            <rect x="-5" y="-8" width="11" height="5" rx="2" fill="#7b4f2e" />
-            <path d="M6 -5 Q11 -5 11 0 Q11 5 6 5" stroke="#aaa" strokeWidth="1.5" fill="none"/>
-          </g>
-        )}
-      </g>
-
-      {/* ── NECK ── */}
-      <rect x="30" y="56" width="12" height="12" rx="3" fill={NECK_C} transform={`translate(0,${bodyBob})`} />
-
-      {/* ── HEAD ── */}
-      <g transform={`translate(0,${bodyBob + (isDance ? Math.sin(step * 0.3) * 4 : 0)})`}
-         style={{ transformOrigin: '36px 56px',
-                  transform: `translate(0,${bodyBob + (isDance ? Math.sin(step * 0.3) * 4 : 0)}px) rotate(${isThink ? 8 : isSleep ? 10 : 0}deg)` }}>
-        {/* Head */}
-        <ellipse cx="36" cy="36" rx="20" ry="22" fill={SKIN} />
-        <ellipse cx="44" cy="36" rx="12" ry="20" fill={SKIN_SH} opacity="0.28" />
-
-        {/* Hair */}
-        <ellipse cx="36" cy="18" rx="20" ry="10" fill={HAIR} />
-        <path d="M16 24 Q14 12 20 8 Q28 2 38 4 Q50 4 54 14 Q58 22 52 26 Q48 14 36 14 Q24 14 18 26Z" fill={HAIR} />
-        <path d="M46 6 Q56 8 54 18 Q52 12 44 12Z" fill={HAIR} opacity="0.7" />
-        <path d="M22 12 Q28 6 36 8 Q30 10 26 16Z" fill="#2a1a08" opacity="0.5" />
-
-        {/* Eyebrows */}
-        <path d="M22 26 Q26 23 30 25" stroke={HAIR} strokeWidth="2.2" strokeLinecap="round" fill="none" />
-        <path d="M42 25 Q46 23 50 26" stroke={HAIR} strokeWidth="2.2" strokeLinecap="round" fill="none" />
-
-        {/* Eyes */}
-        <ellipse cx="27" cy="31" rx="4"   ry={isSleep ? 1.2 : 4}   fill="white" />
-        <ellipse cx="45" cy="31" rx="4"   ry={isSleep ? 1.2 : 4}   fill="white" />
-        {!isSleep && <>
-          <ellipse cx="27" cy="32" rx="2.5" ry="2.8" fill={EYE_IRIS} />
-          <ellipse cx="27" cy="32" rx="1.4" ry="1.6" fill="#080300" />
-          <ellipse cx="28" cy="30.5" rx="0.7" ry="0.7" fill="white" opacity="0.9" />
-          <ellipse cx="45" cy="32" rx="2.5" ry="2.8" fill={EYE_IRIS} />
-          <ellipse cx="45" cy="32" rx="1.4" ry="1.6" fill="#080300" />
-          <ellipse cx="46" cy="30.5" rx="0.7" ry="0.7" fill="white" opacity="0.9" />
-          {/* Blink overlay — animates via CSS so no framer-motion needed here */}
-          <ellipse cx="27" cy="31" rx="4" ry="4" fill={SKIN} style={{ animation: 'blink 4s infinite' }} />
-          <ellipse cx="45" cy="31" rx="4" ry="4" fill={SKIN} style={{ animation: 'blink 4s infinite' }} />
-        </>}
-        {isSleep && <>
-          <path d="M23 31 Q27 34 31 31" stroke={HAIR} strokeWidth="1.5" fill="none" />
-          <path d="M41 31 Q45 34 49 31" stroke={HAIR} strokeWidth="1.5" fill="none" />
-        </>}
-
-        {/* Nose */}
-        <path d="M34 36 Q32 42 34 44 Q36 45 38 44 Q40 42 38 36" stroke={SKIN_SH} strokeWidth="1.2" fill="none" strokeLinecap="round" />
-        <ellipse cx="34.5" cy="44" rx="2" ry="1" fill={SKIN_SH} opacity="0.4" />
-        <ellipse cx="37.5" cy="44" rx="2" ry="1" fill={SKIN_SH} opacity="0.4" />
-
-        {/* Mouth */}
-        {(isDance || isWave)
-          ? <path d="M29 50 Q36 56 43 50" stroke={SKIN_SH} strokeWidth="1.5" fill="none" strokeLinecap="round" />
-          : isSleep
-          ? <path d="M32 51 Q36 53 40 51" stroke={SKIN_SH} strokeWidth="1.5" fill="none" />
-          : <path d="M31 50 Q36 53 41 50" stroke={SKIN_SH} strokeWidth="1.5" fill="none" strokeLinecap="round" />
-        }
-
-        {/* Ears */}
-        <ellipse cx="16" cy="35" rx="3" ry="4.5" fill={SKIN} />
-        <ellipse cx="56" cy="35" rx="3" ry="4.5" fill={SKIN} />
-
-        {/* Zzz */}
-        {isSleep && (
-          <motion.text x="52" y="18" fontSize="10" fontWeight="800" fill="#94a3b8"
-            animate={{ y: [18, 5], opacity: [1, 0] }}
-            transition={{ repeat: Infinity, duration: 1.8 }}>Zzz</motion.text>
-        )}
-      </g>
-    </svg>
+      <img
+        src={src}
+        alt="Harshit Jaiswal Avatar"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain'
+        }}
+      />
+    </div>
   );
 };
 
 // ── Roaming Logic ──────────────────────────────────────────────────────────
-const CHAR_W = 64;
-const CHAR_H = 96;
-const MARGIN = 8;
-
 function randomBetween(a: number, b: number) { return a + Math.random() * (b - a); }
 
 export default function RoamingHarshit() {
-  const [pos, setPos]     = useState({ x: 40, y: 0 });
-  const [dir, setDir]     = useState<WalkDir>('right');
-  const [mood, setMood]   = useState<Mood>('waving');
-  const [step, setStep]   = useState(0);
+  const pathname = usePathname();
+  
+  // State for rendering repaint
+  const [pos, setPos]           = useState({ x: 40, y: 20 });
+  const [targetY, setTargetY]   = useState(20);
+  const [dir, setDir]           = useState<WalkDir>('left');
+  const [mood, setMood]         = useState<Mood>('waving');
+  const [step, setStep]         = useState(0);
   const [bubble, setBubble] = useState('');
-  const [showBubble, setShowBubble] = useState(true);
+  const [showBubble, setShowBubble] = useState(false);
 
-  const vel   = useRef({ x: 1.8, y: 0 });
-  const frame = useRef(0);
+  // Refs for stable coordinate updates inside animation frames
+  const posRef = useRef({ x: 40, y: 20 });
+  const vel = useRef({ x: 2.6, y: 0 }); // Positive velocity = moves left (away from right edge)
+  
+  const isHovered = useRef(false);
+  const lastTime = useRef(0);
+  const frameId = useRef(0);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const bubbleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  // Show a random quip bubble
-  const showQuip = useCallback((m: Mood) => {
-    const arr = QUIPS[m];
-    setBubble(arr[Math.floor(Math.random() * arr.length)]);
+  // Helper to trigger quips
+  const triggerBubble = useCallback((text: string, duration = 2500) => {
+    setBubble(text);
     setShowBubble(true);
-    setTimeout(() => setShowBubble(false), 2800);
+    if (bubbleTimer.current) clearTimeout(bubbleTimer.current);
+    bubbleTimer.current = setTimeout(() => setShowBubble(false), duration);
   }, []);
 
-  // Trigger random idle mood
+  const showQuip = useCallback((m: Mood) => {
+    const arr = QUIPS[m];
+    triggerBubble(arr[Math.floor(Math.random() * arr.length)]);
+  }, [triggerBubble]);
+
+  // Go to random idle mood
   const goIdle = useCallback(() => {
     const idles: Mood[] = ['idle', 'typing', 'thinking', 'sleeping', 'dancing', 'waving'];
     const m = idles[Math.floor(Math.random() * idles.length)];
     setMood(m);
     showQuip(m);
+    
+    if (idleTimer.current) clearTimeout(idleTimer.current);
     idleTimer.current = setTimeout(() => {
       setMood('walk');
-      vel.current = { x: (Math.random() > 0.5 ? 1 : -1) * randomBetween(1.2, 2.2), y: 0 };
-    }, randomBetween(3000, 7000));
+      const speed = randomBetween(2.4, 3.8);
+      vel.current.x = (Math.random() > 0.5 ? 1 : -1) * speed;
+      setDir(vel.current.x > 0 ? 'left' : 'right');
+    }, randomBetween(3000, 6000));
   }, [showQuip]);
 
+  // Initial welcome greeting
   useEffect(() => {
-    // CSS blink keyframe
-    const style = document.createElement('style');
-    style.innerHTML = `@keyframes blink { 0%,90%,100%{transform:scaleY(1)} 93%,97%{transform:scaleY(0)} }`;
-    document.head.appendChild(style);
+    setPos({ x: 40, y: 20 });
+    posRef.current = { x: 40, y: 20 };
+    setMood('waving');
+    setDir('left');
+    triggerBubble('Hey! Welcome to my site! 👋 Click me to talk.', 2500);
+    
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => {
+      setMood('walk');
+      vel.current.x = 2.6;
+      setDir('left');
+    }, 3000);
+    return () => {
+      clearTimeout(idleTimer.current);
+      clearTimeout(bubbleTimer.current);
+    };
+  }, [triggerBubble]);
 
-    // Initial greeting
+  // Smooth Roaming loop using requestAnimationFrame for X and Y easing
+  useEffect(() => {
+    lastTime.current = performance.now();
+    
+    const update = (time: number) => {
+      const delta = Math.min((time - lastTime.current) / 16.666, 3);
+      lastTime.current = time;
+
+      const current = posRef.current;
+
+      // 1. Ease Y position smoothly to targetY
+      let nextY = current.y + (targetY - current.y) * 0.08 * delta;
+      if (Math.abs(targetY - nextY) < 1) {
+        nextY = targetY;
+      }
+
+      // 2. Stroll X position (distance from right edge)
+      let nextX = current.x;
+      if (mood === 'walk' && !isHovered.current) {
+        nextX = current.x + vel.current.x * delta;
+        const charWidth = 84;
+        const padding = 20;
+        const maxW = typeof window !== 'undefined' ? window.innerWidth : 1200;
+
+        // Roaming bounds (distance from right edge)
+        const minX = padding;
+        const maxX = maxW > 768 ? 400 : maxW - charWidth - padding;
+
+        // Border collision checks
+        if (nextX > maxX) {
+          nextX = maxX;
+          vel.current.x = -Math.abs(vel.current.x); // Walk towards the right edge
+          setDir('right');
+          setMood('waving');
+          triggerBubble('Going right! 👉');
+          setTimeout(() => setMood('walk'), 600);
+        } else if (nextX < minX) {
+          nextX = minX;
+          vel.current.x = Math.abs(vel.current.x); // Walk towards the left
+          setDir('left');
+          setMood('waving');
+          triggerBubble('Heading left! 🚶‍♂️');
+          setTimeout(() => setMood('walk'), 600);
+        }
+      }
+
+      // Apply coordinates safely outside state-updaters
+      const nextPos = { x: nextX, y: nextY };
+      posRef.current = nextPos;
+      setPos(nextPos);
+
+      frameId.current = requestAnimationFrame(update);
+    };
+
+    frameId.current = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(frameId.current);
+  }, [mood, targetY, triggerBubble]);
+
+  // Periodic level jumping (climbing up/down components frequently)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isHovered.current) return;
+      
+      const levels = getTargetLevels();
+      const currentLevelIndex = levels.findIndex(l => Math.abs(l - targetY) < 10);
+      
+      let nextLevelIndex = Math.floor(Math.random() * levels.length);
+      if (nextLevelIndex === currentLevelIndex) {
+        nextLevelIndex = (nextLevelIndex + 1) % levels.length;
+      }
+      const nextYVal = levels[nextLevelIndex];
+      setTargetY(nextYVal);
+
+      if (nextYVal > targetY) {
+        setMood('walk');
+        const jumpQuips = [
+          'Let\'s climb to the upper sections! 🧗‍♂️',
+          'Jumping up to check out this card! 🦘',
+          'Let\'s inspect the layout from above! 🎈',
+        ];
+        triggerBubble(jumpQuips[Math.floor(Math.random() * jumpQuips.length)], 2500);
+      } else {
+        setMood('walk');
+        const fallQuips = [
+          'Wheee! Sliding down to lower content cards! 🎢',
+          'Back down to ground control! 🌍',
+          'Landing on a different surface! 🛬',
+        ];
+        triggerBubble(fallQuips[Math.floor(Math.random() * fallQuips.length)], 2500);
+      }
+    }, randomBetween(8000, 14000));
+
+    return () => clearInterval(interval);
+  }, [targetY, triggerBubble]);
+
+  // React to Route Navigation
+  useEffect(() => {
+    if (!pathname) return;
+    
+    const pathQuips: Record<string, string> = {
+      '/': 'Welcome to my main hub! 🏠 Let\'s explore!',
+      '/about': 'Here is all about me, my experience & skills! 📖',
+      '/projects': 'These are the projects I\'ve crafted! Click any to see details. 🚀',
+      '/dashboard': 'Tracking my GitHub stats and code quality live! 📊',
+      '/contact': 'Drop me a message! Let\'s collaborate on something awesome. ✉️',
+    };
+    
+    const matchedPath = Object.keys(pathQuips).find(p => pathname === p || (p !== '/' && pathname.startsWith(p)));
+    const quip = matchedPath ? pathQuips[matchedPath] : 'Exploring the site... 🚶‍♂️';
+    
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    
+    setPos({ x: 40, y: 20 });
+    posRef.current = { x: 40, y: 20 };
+    setMood('waving');
+    triggerBubble(quip, 2000);
+    
+    idleTimer.current = setTimeout(() => {
+      setMood('walk');
+    }, 1500);
+  }, [pathname, triggerBubble]);
+
+  // Frame animations ticker - 120ms tick
+  useEffect(() => {
+    const ticker = setInterval(() => {
+      setStep((s) => (s + 1) % 100);
+    }, 120);
+    return () => clearInterval(ticker);
+  }, []);
+
+  // Hover handlers
+  const handleMouseEnter = () => {
+    isHovered.current = true;
+    setMood('waving');
     showQuip('waving');
-    idleTimer.current = setTimeout(() => {
-      setMood('walk');
-    }, 3500);
+  };
 
-    return () => { clearTimeout(idleTimer.current); style.remove(); };
-  }, [showQuip]);
-
-  useEffect(() => {
-    if (mood !== 'walk') return;
-
-    let stepCount = 0;
-    frame.current = window.setInterval(() => {
-      setPos(prev => {
-        const maxX = window.innerWidth  - CHAR_W - MARGIN;
-        let nx = prev.x + vel.current.x;
-
-        // Bounce X
-        if (nx < MARGIN)  { nx = MARGIN;  vel.current.x =  Math.abs(vel.current.x); }
-        if (nx > maxX)    { nx = maxX;    vel.current.x = -Math.abs(vel.current.x); }
-
-        setDir(vel.current.x > 0 ? 'right' : 'left');
-        return { x: nx, y: 0 };
-      });
-
-      stepCount++;
-      setStep(s => s + 1);
-
-      // Random speed variation
-      if (stepCount % 200 === 0) {
-        const speed = randomBetween(1.2, 2.5);
-        vel.current.x = (vel.current.x > 0 ? 1 : -1) * speed;
+  const handleMouseLeave = () => {
+    isHovered.current = false;
+    setTimeout(() => {
+      if (!isHovered.current) {
+        setMood('walk');
       }
-
-      // Occasionally stop and do something
-      if (stepCount % 300 === 0 && Math.random() > 0.4) {
-        clearInterval(frame.current);
-        goIdle();
-      }
-    }, 16) as unknown as number;
-
-    return () => clearInterval(frame.current);
-  }, [mood, goIdle]);
+    }, 1000);
+  };
 
   return (
     <>
@@ -267,22 +303,28 @@ export default function RoamingHarshit() {
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.2, type: 'spring', stiffness: 260, damping: 20 }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onClick={() => {
-          clearTimeout(idleTimer.current);
-          clearInterval(frame.current);
-          goIdle();
+          if (idleTimer.current) clearTimeout(idleTimer.current);
+          setMood('dancing');
+          triggerBubble('Yay! Let\'s chat! 💬 Ask me anything about Harshit.');
           window.dispatchEvent(new CustomEvent('toggle-portfolio-agent'));
+          
+          idleTimer.current = setTimeout(() => {
+            setMood('walk');
+          }, 4000);
         }}
         style={{
           position: 'fixed',
-          left: pos.x,
-          bottom: '10px',
-          width:  CHAR_W,
-          height: CHAR_H,
+          right: 0, // Anchored to the right side of the screen
+          bottom: 0,
           zIndex: 9999,
           cursor: 'pointer',
           userSelect: 'none',
           pointerEvents: 'auto',
+          transform: `translate3d(-${pos.x}px, -${pos.y}px, 0)`, // Shift left by pos.x pixels
+          transition: 'transform 0.1s linear',
         }}
       >
         {/* Speech bubble */}
@@ -329,15 +371,7 @@ export default function RoamingHarshit() {
           )}
         </AnimatePresence>
 
-        <HarshitSVG mood={mood} dir={dir} step={step} />
-
-        {/* Shadow on ground */}
-        <div style={{
-          position: 'absolute', bottom: '-6px',
-          left: '50%', transform: 'translateX(-50%)',
-          width: '40px', height: '8px', borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%)',
-        }} />
+        <HarshitPixelImage mood={mood} dir={dir} step={step} />
       </motion.div>
     </>
   );

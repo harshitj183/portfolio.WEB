@@ -166,7 +166,7 @@ const About = () => {
         <h2 style={{ fontSize: '1.8rem', marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <FiBriefcase className="text-accent" /> Field Records
         </h2>
-        <div className="glass-panel" style={{ padding: '2.5rem 3rem' }}>
+        <div className="glass-panel responsive-timeline-panel">
           <div style={{ borderLeft: '2px solid var(--glass-border)', paddingLeft: '0.5rem' }}>
             {experiences.map((exp, idx) => (
               <TimelineItem key={idx} {...exp} isLast={idx === experiences.length - 1} />
@@ -183,7 +183,7 @@ const About = () => {
         className="grid"
         style={{ marginBottom: '5rem' }}
       >
-        <div className="glass-panel" style={{ padding: '2.5rem' }}>
+        <div className="glass-panel about-info-panel">
           <h2 style={{ fontSize: '1.3rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <FiAward className="text-accent" /> Credentials
           </h2>
@@ -203,7 +203,7 @@ const About = () => {
           ))}
         </div>
 
-        <div className="glass-panel" style={{ padding: '2.5rem' }}>
+        <div className="glass-panel about-info-panel">
           <h2 style={{ fontSize: '1.3rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <FiBook className="text-accent" /> Academic
           </h2>

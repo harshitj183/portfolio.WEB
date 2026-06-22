@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiGithub, FiLinkedin, FiMail, FiCode, FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiMenu, FiX } from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiMail, FiCode, FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiMenu, FiX, FiSearch } from 'react-icons/fi';
 
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
 
@@ -36,7 +36,7 @@ const Sidebar = () => {
           className="avatar"
           style={{ width: '80px', height: '80px', borderRadius: '8px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
         />
-        <div className="profile-info" style={{ marginTop: '1.5rem' }}>
+        <div className="profile-info">
           <h2 style={{ fontSize: '1.5rem', marginBottom: '0.2rem', color: '#fff' }}>Harshit Jaiswal</h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>SDE | AI Agent Engineer | Freelancer | Author</p>
           <div className="status-indicator">
@@ -46,11 +46,16 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <button className="hamburger" onClick={() => setOpen(o => !o)} aria-label="Toggle menu">
-        {open ? <FiX size={26} color="#fff" /> : <FiMenu size={26} color="#fff" />}
-      </button>
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <button className="search-toggle-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggle-command-palette'))} aria-label="Search">
+          <FiSearch size={24} color="#fff" />
+        </button>
+        <button className="hamburger" onClick={() => setOpen(o => !o)} aria-label="Toggle menu">
+          {open ? <FiX size={26} color="#fff" /> : <FiMenu size={26} color="#fff" />}
+        </button>
+      </div>
 
-      <nav className={`nav-links${open ? ' open' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '3rem' }}>
+      <nav className={`nav-links${open ? ' open' : ''}`}>
         {navItems.map((item) => {
           const currentPath = pathname || '';
           const isActive = item.to === '/' ? currentPath === '/' : currentPath.startsWith(item.to);
@@ -66,9 +71,16 @@ const Sidebar = () => {
             </Link>
           );
         })}
+        {/* Mobile social links inside drawer */}
+        <div className="mobile-social-links">
+          <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" style={{ color: 'var(--text-secondary)' }}><FiGithub size={24} /></a>
+          <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={24} /></a>
+          <a href="https://leetcode.com/u/harshitj183/" target="_blank" rel="noreferrer" title="LeetCode" style={{ color: 'var(--text-secondary)' }}><FiCode size={24} /></a>
+          <a href="mailto:harshitj183@gmail.com" title="Email" style={{ color: 'var(--text-secondary)' }}><FiMail size={24} /></a>
+        </div>
       </nav>
 
-      <div style={{ marginTop: 'auto' }}>
+      <div className="desktop-social-container" style={{ marginTop: 'auto' }}>
         <div className="social-links" style={{ display: 'flex', gap: '1.2rem' }}>
           <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" style={{ color: 'var(--text-secondary)' }}><FiGithub size={20} /></a>
           <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={20} /></a>
@@ -77,6 +89,7 @@ const Sidebar = () => {
         </div>
       </div>
     </aside>
+
   );
 };
 
