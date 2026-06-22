@@ -179,7 +179,7 @@ const MARGIN = 8;
 function randomBetween(a: number, b: number) { return a + Math.random() * (b - a); }
 
 export default function RoamingHarshit() {
-  const [pos, setPos]     = useState({ x: 40, y: 200 });
+  const [pos, setPos]     = useState({ x: 40, y: 0 });
   const [dir, setDir]     = useState<WalkDir>('right');
   const [mood, setMood]   = useState<Mood>('waving');
   const [step, setStep]   = useState(0);
@@ -232,29 +232,18 @@ export default function RoamingHarshit() {
     frame.current = window.setInterval(() => {
       setPos(prev => {
         const maxX = window.innerWidth  - CHAR_W - MARGIN;
-        const maxY = window.innerHeight - CHAR_H - MARGIN;
-
         let nx = prev.x + vel.current.x;
-        let ny = prev.y + vel.current.y;
 
         // Bounce X
         if (nx < MARGIN)  { nx = MARGIN;  vel.current.x =  Math.abs(vel.current.x); }
         if (nx > maxX)    { nx = maxX;    vel.current.x = -Math.abs(vel.current.x); }
-        // Bounce Y (gentle vertical drift)
-        if (ny < MARGIN)  { ny = MARGIN;  vel.current.y =  Math.abs(vel.current.y); }
-        if (ny > maxY)    { ny = maxY;    vel.current.y = -Math.abs(vel.current.y); }
 
         setDir(vel.current.x > 0 ? 'right' : 'left');
-        return { x: nx, y: ny };
+        return { x: nx, y: 0 };
       });
 
       stepCount++;
       setStep(s => s + 1);
-
-      // Random vertical nudge occasionally
-      if (stepCount % 120 === 0) {
-        vel.current.y = randomBetween(-0.6, 0.6);
-      }
 
       // Random speed variation
       if (stepCount % 200 === 0) {
@@ -286,13 +275,12 @@ export default function RoamingHarshit() {
         style={{
           position: 'fixed',
           left: pos.x,
-          top:  pos.y,
+          bottom: '10px',
           width:  CHAR_W,
           height: CHAR_H,
           zIndex: 9999,
           cursor: 'pointer',
           userSelect: 'none',
-          filter: 'drop-shadow(0 6px 18px rgba(99,102,241,0.55))',
           pointerEvents: 'auto',
         }}
       >
