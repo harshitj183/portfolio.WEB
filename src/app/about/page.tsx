@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FiTerminal, FiBriefcase, FiAward, FiBook, FiActivity, FiCode, FiHeart, FiMapPin, FiCalendar, FiLayout, FiDatabase, FiCpu, FiCompass, FiBookOpen } from 'react-icons/fi';
+import { FiTerminal, FiBriefcase, FiAward, FiBook, FiActivity, FiCode, FiHeart, FiMapPin, FiCalendar, FiLayout, FiDatabase, FiCpu, FiCompass, FiBookOpen, FiFileText, FiShield, FiTrendingUp, FiZap, FiMoon, FiTarget } from 'react-icons/fi';
 
 const SKILL_CATEGORIES = [
   {
@@ -188,13 +188,13 @@ const About = () => {
             <FiAward className="text-accent" /> Credentials
           </h2>
           {[
-            { icon: '🏆', title: 'Project-Based Learning Recognition (PBL)', sub: 'Certified for "Unified College Interaction System" by Projexa AI (May 2026)' },
-            { icon: '📄', title: 'Research Paper Publication', sub: '"Innovative Systems and Ethical Data Practices" issued in IJSREM (Oct 2024)' },
-            { icon: '🛡️', title: 'Cybersecurity Analyst Job Simulation', sub: 'Tata Group (Forage, Apr 2025)' },
-            { icon: '📈', title: 'AMCAT Assessment', sub: 'Ranked among the top-performing students in the AMCAT Assessment' },
+            { icon: <FiAward size={20} />, title: 'Project-Based Learning Recognition (PBL)', sub: 'Certified for "Unified College Interaction System" by Projexa AI (May 2026)' },
+            { icon: <FiFileText size={20} />, title: 'Research Paper Publication', sub: '"Innovative Systems and Ethical Data Practices" issued in IJSREM (Oct 2024)' },
+            { icon: <FiShield size={20} />, title: 'Cybersecurity Analyst Job Simulation', sub: 'Tata Group (Forage, Apr 2025)' },
+            { icon: <FiTrendingUp size={20} />, title: 'AMCAT Assessment', sub: 'Ranked among the top-performing students in the AMCAT Assessment' },
           ].map(({ icon, title, sub }) => (
             <motion.div key={title} whileHover={{ x: 6 }} style={{ display: 'flex', gap: '1.2rem', alignItems: 'flex-start', marginBottom: '2rem', padding: '1.2rem', borderRadius: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)' }}>
-              <span style={{ fontSize: '1.8rem', flexShrink: 0 }}>{icon}</span>
+              <span className="text-accent" style={{ flexShrink: 0, display: 'inline-flex', marginTop: '0.2rem' }}>{icon}</span>
               <div>
                 <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '0.3rem' }}>{title}</h4>
                 <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{sub}</p>
@@ -208,11 +208,11 @@ const About = () => {
             <FiBook className="text-accent" /> Academic
           </h2>
           {[
-            { icon: '🎓', title: 'B.Tech in Computer Science and Engineering', sub: 'KR Mangalam University, Gurugram, Delhi NCR', period: 'Aug 2023 – Jun 2027' },
-            { icon: '📚', title: 'Higher Secondary Certificate (12th Grade Science)', sub: 'S Tulsi Inter College, Rajapur, Near Prayagraj, UP', period: 'Apr 2021 – Mar 2022' },
+            { icon: <FiAward size={20} />, title: 'B.Tech in Computer Science and Engineering', sub: 'KR Mangalam University, Gurugram, Delhi NCR', period: 'Aug 2023 – Jun 2027' },
+            { icon: <FiBook size={20} />, title: 'Higher Secondary Certificate (12th Grade Science)', sub: 'S Tulsi Inter College, Rajapur, Near Prayagraj, UP', period: 'Apr 2021 – Mar 2022' },
           ].map(({ icon, title, sub, period }) => (
             <motion.div key={title} whileHover={{ x: 6 }} style={{ display: 'flex', gap: '1.2rem', alignItems: 'flex-start', marginBottom: '2rem', padding: '1.2rem', borderRadius: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)' }}>
-              <span style={{ fontSize: '1.8rem', flexShrink: 0 }}>{icon}</span>
+              <span className="text-accent" style={{ flexShrink: 0, display: 'inline-flex', marginTop: '0.2rem' }}>{icon}</span>
               <div>
                 <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '0.2rem' }}>{title}</h4>
                 <p style={{ fontSize: '0.85rem', color: 'var(--accent)', fontWeight: 600, marginBottom: '0.2rem' }}>{sub}</p>
@@ -228,12 +228,14 @@ const About = () => {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
               {[
-                '⚡ Runs on Bun, not Node',
-                '🌙 Peak productivity: midnight',
-                '♟ Chess player (blitz)',
-                '🔭 Fascinated by distributed systems',
-              ].map((fact) => (
-                <p key={fact} style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>{fact}</p>
+                { icon: <FiZap size={14} />, text: 'Runs on Bun, not Node' },
+                { icon: <FiMoon size={14} />, text: 'Peak productivity: midnight' },
+                { icon: <FiTarget size={14} />, text: 'Chess player (blitz)' },
+                { icon: <FiCompass size={14} />, text: 'Fascinated by distributed systems' },
+              ].map(({ icon, text }) => (
+                <p key={text} style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span className="text-accent" style={{ display: 'inline-flex' }}>{icon}</span> {text}
+                </p>
               ))}
             </div>
           </div>
