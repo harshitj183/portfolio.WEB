@@ -30,9 +30,14 @@ type AllowedAction =
   | 'show_featured_project'
   | 'book_meeting';
 
-// Local Fallback Rule-Based Engine
+// Local Fallback Rule-Based Engine (Outputs JSON with reply & action)
 function getLocalAgentResponse(userInput: string): string {
   const input = userInput.toLowerCase().trim();
+
+  // Helper to format response
+  const makeJson = (reply: string, actionObj: any = null) => {
+    return JSON.stringify({ reply, action: actionObj });
+  };
 
   // 1. Custom Command Creation Pattern: "When I say X, do Y"
   const createCmdMatch = input.match(/when\s+i\s+say\s+["']?([^"']+)["']?,\s*(?:do|show|run|go\s+to)\s+["']?([^"']+)["']?/i);
@@ -55,11 +60,11 @@ function getLocalAgentResponse(userInput: string): string {
       actionStep = { action: 'open_linkedin' };
     }
 
-    return JSON.stringify({
+    return makeJson(`Got it! I've created the custom command '${trigger}'.`, {
       action: 'create_custom_command',
       trigger: trigger,
       steps: [actionStep]
-    }, null, 2);
+    });
   }
 
   // Check saved custom commands
@@ -68,80 +73,80 @@ function getLocalAgentResponse(userInput: string): string {
     if (saved) {
       const commands = JSON.parse(saved);
       if (commands[input]) {
-        return JSON.stringify({
+        return makeJson("Running your custom command...", {
           action: 'run_custom_command',
           trigger: input
-        }, null, 2);
+        });
       }
     }
   } catch {}
 
   // 2. Exact triggers/keywords for actions
   if (input.includes('resume') || input.includes(' cv')) {
-    return JSON.stringify({ action: 'open_resume' });
+    return makeJson("Opening Harshit's resume for you...", { action: 'open_resume' });
   }
   if (input.includes('github')) {
-    return JSON.stringify({ action: 'open_github' });
+    return makeJson("Sure thing, opening Harshit's GitHub profile...", { action: 'open_github' });
   }
   if (input.includes('linkedin')) {
-    return JSON.stringify({ action: 'open_linkedin' });
+    return makeJson("Navigating to Harshit's LinkedIn profile...", { action: 'open_linkedin' });
   }
   if (input.includes('tour') || input.includes('guide')) {
-    return JSON.stringify({ action: 'start_portfolio_tour' });
+    return makeJson("Let's take a quick interactive tour of the site! 🚀", { action: 'start_portfolio_tour' });
   }
   if (input.includes('meeting') || input.includes('calendly') || input.includes('schedule')) {
-    return JSON.stringify({ action: 'book_meeting' });
+    return makeJson("Opening Calendly booker. Let's arrange a sync! 📅", { action: 'book_meeting' });
   }
   if (input.includes('featured') || input.includes('flagship')) {
-    return JSON.stringify({ action: 'show_featured_project' });
+    return makeJson("Taking you to the flagship Unified College Interaction System project!", { action: 'show_featured_project' });
   }
   if (input.includes('timeline') || input.includes('experience')) {
-    return JSON.stringify({ action: 'goto_experience' });
+    return makeJson("Navigating to Harshit's professional experience logs...", { action: 'goto_experience' });
   }
   if (input.includes('skill')) {
-    return JSON.stringify({ action: 'goto_skills' });
+    return makeJson("Here are Harshit's core skills and technologies...", { action: 'goto_skills' });
   }
   if (input.includes('contact') || input.includes('email') || input.includes('hire')) {
-    return JSON.stringify({ action: 'goto_contact' });
+    return makeJson("Direct connection channel initialized. Let's get in touch!", { action: 'goto_contact' });
   }
   if (input.includes('about') || input.includes('who are you') || input.includes('developer')) {
     if (input.includes('project') || input.includes('work')) {
-      return JSON.stringify({ action: 'goto_projects' });
+      return makeJson("Heading over to the Projects section...", { action: 'goto_projects' });
     }
-    return JSON.stringify({ action: 'goto_about' });
+    return makeJson("Let's head over to the About section to find out more!", { action: 'goto_about' });
   }
   if (input.includes('project') || input.includes('work') || input.includes('portfolio')) {
     if (input.includes('react')) {
-      return JSON.stringify({ action: 'filter_projects', technology: 'React' });
+      return makeJson("Filtering Harshit's projects for React work...", { action: 'filter_projects', technology: 'React' });
     }
     if (input.includes('next')) {
-      return JSON.stringify({ action: 'filter_projects', technology: 'Next.js' });
+      return makeJson("Filtering projects for Next.js work...", { action: 'filter_projects', technology: 'Next.js' });
     }
     if (input.includes('ai') || input.includes('agent')) {
-      return JSON.stringify({ action: 'filter_projects', technology: 'AI' });
+      return makeJson("Filtering projects to show AI Agent & Tooling work...", { action: 'filter_projects', technology: 'AI' });
     }
-    return JSON.stringify({ action: 'goto_projects' });
+    return makeJson("Navigating to the projects dossier...", { action: 'goto_projects' });
   }
   if (input === 'home' || input === 'start') {
-    return JSON.stringify({ action: 'goto_home' });
+    return makeJson("Heading back to the main command center...", { action: 'goto_home' });
   }
 
   // 3. Normal informational responses
   if (input.includes('hello') || input.includes('hi ') || input.includes('hey')) {
-    return "Hey there! 👋 I'm your technical co-pilot. I can take you on a tour, open GitHub/Resume, or filter projects. Try saying: 'Show Next.js work' or 'Start tour'!";
+    return makeJson("Hey there! 👋 I'm your technical co-pilot. I can take you on a tour, open GitHub/Resume, or filter projects. Try saying: 'Show Next.js work' or 'Start tour'!");
   }
   if (input.includes('who') && (input.includes('you') || input.includes('mascot'))) {
-    return "I'm the Portfolio Agent — Harshit's AI mascot. I represent Harshit and help recruiters explore his engineering portfolio. Ask me to open his resume or show his projects!";
+    return makeJson("I'm the Portfolio Agent — Harshit's AI mascot. I represent Harshit and help recruiters explore his engineering portfolio. Ask me to open his resume or show his projects!");
   }
   if (input.includes('stack') || input.includes('technology') || input.includes('languages')) {
-    return "Harshit builds with Next.js, React, Node.js, Bun.js, TypeScript, PostgreSQL, and MongoDB. He also builds custom AI tooling!";
+    return makeJson("Harshit builds with Next.js, React, Node.js, Bun.js, TypeScript, PostgreSQL, and MongoDB. He also builds custom AI tooling!");
   }
   if (input.includes('education') || input.includes('college') || input.includes('university')) {
-    return "Harshit is pursuing a B.Tech in CSE at KR Mangalam University (2023-2027) with a stellar record in Project-Based Learning.";
+    return makeJson("Harshit is pursuing a B.Tech in CSE at KR Mangalam University (2023-2027) with a stellar record in Project-Based Learning.");
   }
 
   // Default fallback conversational reply
-  return "I'm here to help! I can understand commands like 'Show Next.js work', 'Open Resume', 'Start tour', or 'Book a meeting'. Let me know what you need!";
+  return makeJson("I'm here to help! I can understand commands like 'Show Next.js work', 'Open Resume', 'Start tour', or 'Book a meeting'. Let me know what you need!");
 }
 
 export default function PortfolioAgent() {
@@ -282,6 +287,21 @@ export default function PortfolioAgent() {
     setMessages(prev => [...prev, { sender: 'user', text: userText }]);
     setInputVal('');
 
+    const processResponse = (rawResponse: string) => {
+      try {
+        const json = JSON.parse(rawResponse);
+        if (json.reply) {
+          setMessages(prev => [...prev, { sender: 'agent', text: json.reply }]);
+        }
+        if (json.action) {
+          handleActionExecution(json.action);
+        }
+      } catch {
+        // Plain text fallback
+        setMessages(prev => [...prev, { sender: 'agent', text: rawResponse }]);
+      }
+    };
+
     // Call API route with rule-based fallback
     try {
       const res = await fetch('/api/chat', {
@@ -293,35 +313,11 @@ export default function PortfolioAgent() {
       if (!res.ok) throw new Error('API Key missing or Server Error');
 
       const data = await res.json();
-      const rawResponse = data.response.trim();
-
-      // Check if response is valid JSON action
-      if (rawResponse.startsWith('{') && rawResponse.endsWith('}')) {
-        try {
-          const actionObj = JSON.parse(rawResponse);
-          if (actionObj.action) {
-            handleActionExecution(actionObj);
-            return;
-          }
-        } catch {}
-      }
-
-      setMessages(prev => [...prev, { sender: 'agent', text: rawResponse }]);
+      processResponse(data.response.trim());
     } catch {
       // Rule-based client-side fallback
       const fallbackResponse = getLocalAgentResponse(userText);
-
-      if (fallbackResponse.startsWith('{') && fallbackResponse.endsWith('}')) {
-        try {
-          const actionObj = JSON.parse(fallbackResponse);
-          if (actionObj.action) {
-            handleActionExecution(actionObj);
-            return;
-          }
-        } catch {}
-      }
-
-      setMessages(prev => [...prev, { sender: 'agent', text: fallbackResponse }]);
+      processResponse(fallbackResponse);
     }
   };
 
