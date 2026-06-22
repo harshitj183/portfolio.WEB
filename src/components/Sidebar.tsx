@@ -37,7 +37,7 @@ const Sidebar = () => {
           style={{ width: '80px', height: '80px', borderRadius: '8px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
         />
         <div className="profile-info" style={{ marginTop: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.2rem', color: '#fff' }}>Harshit J.</h2>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.2rem', color: '#fff' }}>Harshit Jaiswal</h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>SDE | AI Agent Engineer | Freelancer | Author</p>
           <div className="status-indicator">
             <span className="status-dot"></span>
