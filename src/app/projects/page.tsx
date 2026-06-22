@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiExternalLink, FiCpu, FiLayout, FiSearch,
@@ -190,6 +190,22 @@ const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
 const Projects = () => {
   const [selected, setSelected] = useState<Project | null>(null);
   const [activeTag, setActiveTag] = useState<string>('all');
+
+  useEffect(() => {
+    const handleAction = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { action, technology, project_name } = customEvent.detail || {};
+      if (action === 'filter_projects' && technology) {
+        setActiveTag(technology.toLowerCase());
+      }
+      if (action === 'highlight_project' && project_name) {
+        const found = PROJECTS.find(p => p.title.toLowerCase().includes(project_name.toLowerCase()));
+        if (found) setSelected(found);
+      }
+    };
+    window.addEventListener('portfolio-action', handleAction);
+    return () => window.removeEventListener('portfolio-action', handleAction);
+  }, []);
 
   const filtered = activeTag === 'all' ? PROJECTS : PROJECTS.filter(p => p.tags.includes(activeTag));
 
