@@ -122,7 +122,7 @@ const About = () => {
       style={{ padding: '2rem 0' }}
     >
       {/* Hero */}
-      <motion.div variants={itemVars} style={{ marginBottom: '5rem' }}>
+      <motion.div id="about-hero" variants={itemVars} style={{ marginBottom: '5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
           <FiMapPin className="text-accent" size={16} />
           <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Delhi NCR, India · KR Mangalam University, 2023–2027</span>
@@ -139,7 +139,7 @@ const About = () => {
       </motion.div>
 
       {/* Skills */}
-      <motion.div variants={itemVars} style={{ marginBottom: '5rem' }}>
+      <motion.div id="skills-section" variants={itemVars} style={{ marginBottom: '5rem' }}>
         <h2 style={{ fontSize: '1.8rem', marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <FiTerminal className="text-accent" /> Arsenal Intensity
         </h2>
@@ -162,7 +162,7 @@ const About = () => {
       </motion.div>
 
       {/* Experience Timeline */}
-      <motion.div variants={itemVars} style={{ marginBottom: '5rem' }}>
+      <motion.div id="experience-section" variants={itemVars} style={{ marginBottom: '5rem' }}>
         <h2 style={{ fontSize: '1.8rem', marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <FiBriefcase className="text-accent" /> Field Records
         </h2>

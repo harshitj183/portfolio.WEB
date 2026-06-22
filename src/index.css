@@ -410,6 +410,33 @@ input::placeholder, textarea::placeholder {
   }
 }
 
+/* ── Synthwave Rose Alternative Theme ── */
+:root.theme-alt {
+  --bg-color: #0b071e;
+  --bg-secondary: #140d34;
+  --border-color: #2e1a47;
+  --text-primary: #fdfafb;
+  --text-secondary: #b8a2c4;
+  --accent: #f43f5e;
+}
+
+/* ── Interactive Mascot Tour Highlights ── */
+.mascot-highlight-pulse {
+  outline: 2px solid var(--accent) !important;
+  box-shadow: 0 0 20px var(--accent) !important;
+  animation: mascot-pulse-anim 1.5s infinite alternate ease-in-out;
+  transition: all 0.3s ease;
+}
+
+@keyframes mascot-pulse-anim {
+  from {
+    box-shadow: 0 0 8px var(--accent);
+  }
+  to {
+    box-shadow: 0 0 25px var(--accent);
+  }
+}
+
 
 
 

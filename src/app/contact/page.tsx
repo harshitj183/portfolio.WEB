@@ -66,6 +66,7 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus('sending');
+    window.dispatchEvent(new CustomEvent('mascot-form-submitting'));
 
     if (!formRef.current) return;
     const formData = new FormData(formRef.current);
@@ -79,6 +80,7 @@ const Contact = () => {
 
       if (res.ok) {
         setStatus('success');
+        window.dispatchEvent(new CustomEvent('mascot-form-success'));
         formRef.current?.reset();
       } else {
         setStatus('error');
@@ -148,7 +150,7 @@ const Contact = () => {
 
       <div className="grid" style={{ gap: '5rem', alignItems: 'flex-start' }}>
         {/* Contact Links */}
-        <div>
+        <div id="direct-channels">
           <p style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', fontWeight: 700, marginBottom: '2rem' }}>
             Direct Channels
           </p>
@@ -219,6 +221,7 @@ const Contact = () => {
             ) : (
               <motion.form
                 key="form"
+                id="contact-form"
                 ref={formRef}
                 exit={{ opacity: 0, y: -20 }}
                 onSubmit={handleSubmit}

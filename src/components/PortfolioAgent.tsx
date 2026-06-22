@@ -161,7 +161,6 @@ export default function PortfolioAgent() {
     { sender: 'agent', text: "Hello recruiter! 👋 I am Harshit's AI co-pilot. Ask me for a 'tour', 'resume', or to see 'projects'!", isLive: false }
   ]);
   const [inputVal, setInputVal] = useState('');
-  const [tourStep, setTourStep] = useState(-1);
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -252,6 +251,7 @@ export default function PortfolioAgent() {
         break;
       case 'toggle_theme':
         showToast("Toggling ambient visual alignment");
+        window.dispatchEvent(new CustomEvent('mascot-toggle-theme'));
         break;
       case 'execute_js':
         showToast("Executing Unlimited Power (JS Injection)");
@@ -265,7 +265,7 @@ export default function PortfolioAgent() {
       case 'start_portfolio_tour':
         showToast("Initializing Guided Interactive Tour...");
         setIsOpen(false);
-        setTourStep(0);
+        window.dispatchEvent(new CustomEvent('start-mascot-tour'));
         break;
       case 'create_custom_command':
         try {
@@ -349,13 +349,7 @@ export default function PortfolioAgent() {
     return () => window.removeEventListener('toggle-portfolio-agent', handleToggle);
   }, []);
 
-  // Guided Tour steps
-  const tourSteps = [
-    { title: 'The Sidebar Navigation', desc: 'Find quick links to the home page, project directories, resume, and direct socials here.', selector: '.sidebar' },
-    { title: 'Resume Download & CV', desc: 'Recruiters can download Harshit\'s updated Professional PDF CV with one-click here.', selector: 'a[download]' },
-    { title: 'Interactive Command Palette', desc: 'Press Ctrl+K (or Cmd+K) anywhere on the website to open the command search window.', selector: '.app-container' },
-    { title: 'Available Status Badge', desc: 'Harshit is currently active and looking for SDE, AI Agent, or Full-stack roles.', selector: '.pill' }
-  ];
+
 
   return (
     <>
@@ -508,77 +502,6 @@ export default function PortfolioAgent() {
         )}
       </AnimatePresence>
 
-      {/* ── Guided Tour Banner/Overlay ── */}
-      <AnimatePresence>
-        {tourStep >= 0 && tourStep < tourSteps.length && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.7)',
-              zIndex: 999999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '2rem',
-              backdropFilter: 'blur(4px)'
-            }}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="glass-panel"
-              style={{
-                maxWidth: '420px',
-                width: '100%',
-                padding: '2.5rem',
-                border: '1px solid var(--accent)',
-                borderRadius: '16px',
-                textAlign: 'center',
-                boxShadow: '0 10px 30px rgba(99,102,241,0.3)'
-              }}
-            >
-              <div style={{ display: 'inline-flex', padding: '0.8rem', borderRadius: '50%', background: 'rgba(99,102,241,0.1)', color: 'var(--accent)', marginBottom: '1.5rem' }}>
-                <FiCompass size={28} />
-              </div>
-              <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#fff' }}>
-                {tourSteps[tourStep].title}
-              </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: '1.6', marginBottom: '2rem' }}>
-                {tourSteps[tourStep].desc}
-              </p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                  Step {tourStep + 1} of {tourSteps.length}
-                </span>
-                <div style={{ display: 'flex', gap: '0.8rem' }}>
-                  <button
-                    onClick={() => setTourStep(-1)}
-                    className="pill"
-                    style={{ border: 'none', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer' }}
-                  >
-                    Skip
-                  </button>
-                  <button
-                    onClick={() => {
-                      const next = tourStep + 1;
-                      setTourStep(next === tourSteps.length ? -1 : next);
-                    }}
-                    className="pill accent"
-                    style={{ border: 'none', padding: '0.4rem 1rem', fontSize: '0.75rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                  >
-                    {tourStep === tourSteps.length - 1 ? 'Finish' : 'Next'} <FiPlay size={12} />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

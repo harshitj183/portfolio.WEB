@@ -258,7 +258,7 @@ const Projects = () => {
       </motion.div>
 
       {/* Grid */}
-      <div className="grid">
+      <div id="projects-grid" className="grid">
         {filtered.map((project) => (
           <ProjectCard key={project.id} project={project} onOpen={setSelected} index={0} />
         ))}

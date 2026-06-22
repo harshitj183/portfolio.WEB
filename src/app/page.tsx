@@ -89,7 +89,7 @@ const Home = () => {
       </div>
 
       {/* Hero Section */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div id="hero-section" style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: 'clamp(3rem, 7vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: '1.1', marginBottom: '1.5rem', maxWidth: '900px' }}>
           Harshit Jaiswal
           <br />
@@ -141,7 +141,7 @@ const Home = () => {
         </div>
 
         {/* Avatar card */}
-        <div className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center', maxWidth: '300px', width: '100%', borderRadius: '12px' }}>
+        <div id="profile-card" className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center', maxWidth: '300px', width: '100%', borderRadius: '12px' }}>
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
             {/* Thought/Dream Bubble */}
             <div style={{
@@ -211,7 +211,7 @@ const Home = () => {
       </div>
 
       {/* Tech Stack Ticker (Now a clean static list) */}
-      <div style={{ marginBottom: '5rem' }}>
+      <div id="tech-stack" style={{ marginBottom: '5rem' }}>
         <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontWeight: 600 }}>
           Tech Stack
         </p>
@@ -225,7 +225,7 @@ const Home = () => {
       </div>
 
       {/* Featured Project Showcase */}
-      <h2 style={{ fontSize: '1.8rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <h2 id="featured-work" style={{ fontSize: '1.8rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <FiStar className="text-accent" /> Featured Work
       </h2>
 

@@ -294,7 +294,7 @@ const Dashboard = () => {
       </p>
 
       {/* Stats Grid */}
-      <div className="grid" style={{ marginBottom: '3rem' }}>
+      <div id="stats-overview" className="grid" style={{ marginBottom: '3rem' }}>
         <StatCard label="GitHub Repos" value={github.stats?.repos || 0} icon={<FiGithub />} loading={github.loading} />
         <StatCard label="LeetCode Solved" value={leetcode.stats?.solved || 0} icon={<FiCode />} loading={leetcode.loading} />
         <StatCard label="Projects Shipped" value={24} suffix="+" icon={<FiZap />} />
@@ -305,7 +305,7 @@ const Dashboard = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', marginBottom: '3rem' }}>
         <TechRadar />
 
-        <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
+        <div id="leetcode-distribution" className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <FiActivity className="text-accent" /> LeetCode Distribution
           </h3>
@@ -336,7 +336,7 @@ const Dashboard = () => {
       </div>
 
       {/* GitHub Heatmap */}
-      <div style={{ marginBottom: '3rem' }}>
+      <div id="github-heatmap" style={{ marginBottom: '3rem' }}>
         <GithubHeatmap data={github.heatmap} loading={github.loading} />
       </div>
     </div>
