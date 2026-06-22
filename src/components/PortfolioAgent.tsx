@@ -325,6 +325,15 @@ export default function PortfolioAgent() {
     }
   };
 
+  // Listen to toggle events from the walking avatar
+  useEffect(() => {
+    const handleToggle = () => {
+      setIsOpen(prev => !prev);
+    };
+    window.addEventListener('toggle-portfolio-agent', handleToggle);
+    return () => window.removeEventListener('toggle-portfolio-agent', handleToggle);
+  }, []);
+
   // Guided Tour steps
   const tourSteps = [
     { title: 'The Sidebar Navigation', desc: 'Find quick links to the home page, project directories, resume, and direct socials here.', selector: '.sidebar' },
@@ -335,46 +344,6 @@ export default function PortfolioAgent() {
 
   return (
     <>
-      {/* ── AI Mascot Floating Orb/Bubble ── */}
-      <div style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 99999 }}>
-        <button
-          onClick={() => setIsOpen(o => !o)}
-          style={{
-            width: '56px',
-            height: '56px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, var(--accent) 0%, #4338ca 100%)',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            cursor: 'pointer',
-            boxShadow: '0 8px 32px rgba(99, 102, 241, 0.45), 0 0 15px var(--accent-glow)',
-            outline: 'none',
-            position: 'relative'
-          }}
-          title="Talk to Portfolio AI Agent"
-        >
-          {isOpen ? <FiX size={24} /> : <FiMessageSquare size={24} />}
-          {/* Animated pulsing light */}
-          <span style={{
-            position: 'absolute',
-            inset: '-4px',
-            borderRadius: '50%',
-            border: '2px solid var(--accent)',
-            animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
-            opacity: 0.7
-          }} />
-        </button>
-      </div>
-
-      {/* CSS Animation keyframe injected dynamically */}
-      <style>{`
-        @keyframes ping {
-          75%, 100% { transform: scale(1.3); opacity: 0; }
-        }
-      `}</style>
 
       {/* ── Chat Panel Modal ── */}
       <AnimatePresence>

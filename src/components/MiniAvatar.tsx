@@ -16,10 +16,10 @@ type WalkDir = 'left' | 'right';
 type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing';
 
 const QUIPS: Record<Mood, string[]> = {
-  walk:     ['Just walking around 🚶', 'Exploring your site...', 'Where to next? 👀', 'npm install life'],
-  idle:     ['...', 'Hmm 🤔', 'Nice portfolio!', 'Should I use Bun?'],
+  walk:     ['Just walking around 🚶', 'Exploring your site...', 'Click me to chat! 💬', 'npm install life'],
+  idle:     ['...', 'Hmm 🤔 Click me!', 'Nice portfolio!', 'Should I use Bun?'],
   typing:   ['git commit -m "fix"', 'console.log("??")', 'const x = 42;', 'TypeScript ftw!'],
-  waving:   ['Hey! 👋', 'Namaste! 🙏', 'Hi from Gurugram!', 'Welcome!'],
+  waving:   ['Hey! 👋 Click to chat!', 'Namaste! 🙏', 'Hi from Gurugram!', 'Welcome!'],
   thinking: ['O(n log n)?', 'useEffect or useMemo?', 'Tabs vs spaces 🤔', 'Design patterns...'],
   sleeping: ['zzZ 😴', '5 more mins...', '*snore*'],
   dancing:  ['Build passed! 🎉', 'No bugs today! 🕺', 'Ship it! 🚢'],
@@ -271,6 +271,7 @@ export default function RoamingHarshit() {
           clearTimeout(idleTimer.current);
           clearInterval(frame.current);
           goIdle();
+          window.dispatchEvent(new CustomEvent('toggle-portfolio-agent'));
         }}
         style={{
           position: 'fixed',
