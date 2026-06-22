@@ -136,23 +136,44 @@ const HarshitPixelImage = ({ mood, dir, step }: { mood: Mood; dir: WalkDir; step
   return (
     <div
       style={{
-        width: '84px',
-        height: '84px',
+        width: '104px',
+        height: '104px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         transform: `translateY(${bobY}) scaleX(${flipScaleX}) rotate(${rotateVal}) scale(${scaleVal})`,
         transition: 'transform 0.1s ease',
-        position: 'relative'
+        position: 'relative',
+        borderRadius: '50%',
+        background: 'rgba(15, 23, 42, 0.6)',
+        boxShadow: '0 0 15px rgba(99, 102, 241, 0.4), inset 0 0 10px rgba(99, 102, 241, 0.4)',
+        border: '2px solid rgba(99, 102, 241, 0.6)',
+        backdropFilter: 'blur(4px)',
+        overflow: 'hidden'
       }}
     >
+      {/* Decorative high-tech ring */}
+      <div style={{
+        position: 'absolute',
+        top: '-4px', left: '-4px', right: '-4px', bottom: '-4px',
+        borderRadius: '50%',
+        border: '1px dashed rgba(16, 185, 129, 0.5)',
+        animation: 'spin 10s linear infinite',
+        pointerEvents: 'none'
+      }} />
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+      `}} />
+
       <img
         src={src}
         alt="Harshit Jaiswal Avatar"
         style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain'
+          width: '80%',
+          height: '80%',
+          objectFit: 'contain',
+          position: 'relative',
+          zIndex: 1
         }}
       />
     </div>
@@ -168,6 +189,8 @@ export default function RoamingHarshit() {
   
   // State for rendering repaint
   const [pos, setPos]           = useState({ x: 40, y: 20 });
+  // Add cursor tracking state
+  const [cursorPos, setCursorPos] = useState<{ x: number, y: number } | null>(null);
   const [targetY, setTargetY]   = useState(20);
   const [dir, setDir]           = useState<WalkDir>('left');
   const [mood, setMood]         = useState<Mood>('waving');
@@ -436,6 +459,55 @@ export default function RoamingHarshit() {
     }
   }, [isIdle, tourStep, deliveryMode, triggerBubble]);
 
+  // Contextual Hover State
+  const [hoveredContext, setHoveredContext] = useState<string | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Cursor Tracking & Context Detection ──────────────────────────────────
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Offset position slightly behind cursor
+      const offset = 60;
+      setCursorPos({
+        x: window.innerWidth - e.clientX - offset,
+        y: window.innerHeight - e.clientY - offset
+      });
+
+      // Contextual Widget Detection
+      const target = e.target as HTMLElement;
+      // Find closest interactive element or prominent section/card
+      const closestInteractive = target.closest('a, button, [role="button"], article, .card, section');
+
+      let contextName = null;
+      if (closestInteractive) {
+        // Try to get a meaningful name
+        contextName = closestInteractive.getAttribute('aria-label')
+                   || closestInteractive.getAttribute('title')
+                   || (closestInteractive.tagName === 'SECTION' ? closestInteractive.id : null)
+                   || (closestInteractive.textContent ? closestInteractive.textContent.slice(0, 20).trim() + '...' : null);
+      }
+
+      if (contextName && contextName !== hoveredContext) {
+        if (hoverTimer.current) clearTimeout(hoverTimer.current);
+        hoverTimer.current = setTimeout(() => {
+           setHoveredContext(contextName);
+           setMood('thinking');
+           triggerBubble(`You're looking at ${contextName}. Do you want me to do something with this? Tell me!`, 5000);
+        }, 1000); // Wait for 1 second of hovering
+      } else if (!contextName) {
+         if (hoverTimer.current) clearTimeout(hoverTimer.current);
+         setHoveredContext(null);
+      }
+
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    };
+  }, [hoveredContext, triggerBubble]);
+
   // ── Smooth Roaming/Easing loop ─────────────────────────────────────────────
   useEffect(() => {
     lastTime.current = performance.now();
@@ -451,7 +523,23 @@ export default function RoamingHarshit() {
       let nextX = current.x;
 
       // ── Priority Easing coordinates based on Mode ──
-      if (deliveryMode === 'submitting' && deliveryTarget) {
+      if (cursorPos && !overrideTarget && tourStep < 0 && deliveryMode === 'none') {
+        // Follow cursor
+        nextX = current.x + (cursorPos.x - current.x) * 0.08 * delta;
+        nextY = current.y + (cursorPos.y - current.y) * 0.08 * delta;
+
+        // Set direction based on movement
+        if (cursorPos.x > current.x + 1) setDir('left');
+        else if (cursorPos.x < current.x - 1) setDir('right');
+
+        // Set walking mood if moving significantly, otherwise idle
+        if (Math.abs(cursorPos.x - current.x) > 5 || Math.abs(cursorPos.y - current.y) > 5) {
+          setMood('walk');
+        } else if (mood === 'walk') {
+           setMood('idle');
+        }
+
+      } else if (deliveryMode === 'submitting' && deliveryTarget) {
         // Fast glide to contact form
         nextX = current.x + (deliveryTarget.x - current.x) * 0.15 * delta;
         nextY = current.y + (deliveryTarget.y - current.y) * 0.15 * delta;
@@ -554,7 +642,8 @@ export default function RoamingHarshit() {
   // Periodic level jumping when in walk mode
   useEffect(() => {
     const interval = setInterval(() => {
-      if (isHovered.current || tourStep >= 0 || deliveryMode !== 'none' || overrideTarget) return;
+      // Disable jumping when cursor tracking is active (cursorPos always set once moved)
+      if (cursorPos || isHovered.current || tourStep >= 0 || deliveryMode !== 'none' || overrideTarget) return;
       
       const levels = getTargetLevels();
       const currentLevelIndex = levels.findIndex(l => Math.abs(l - targetY) < 10);
@@ -739,7 +828,56 @@ export default function RoamingHarshit() {
                   </div>
                 </div>
               ) : (
-                bubble
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <span>{bubble}</span>
+                  {hoveredContext && (
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const input = (e.target as HTMLFormElement).elements.namedItem('contextInput') as HTMLInputElement;
+                        if (input && input.value.trim()) {
+                          // Dispatch event to PortfolioAgent
+                          const fullCommand = `Regarding ${hoveredContext}: ${input.value}`;
+                          window.dispatchEvent(new CustomEvent('send-agent-message', { detail: { message: fullCommand } }));
+                          input.value = '';
+                          setHoveredContext(null);
+                          setShowBubble(false);
+                        }
+                      }}
+                      style={{ display: 'flex', gap: '4px' }}
+                    >
+                      <input
+                        name="contextInput"
+                        placeholder="Tell me what to do..."
+                        autoFocus
+                        style={{
+                          flex: 1,
+                          background: 'rgba(255,255,255,0.1)',
+                          border: '1px solid rgba(255,255,255,0.2)',
+                          borderRadius: '4px',
+                          padding: '4px 8px',
+                          color: '#fff',
+                          fontSize: '0.75rem',
+                          outline: 'none'
+                        }}
+                      />
+                      <button
+                        type="submit"
+                        style={{
+                          background: 'var(--accent)',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '4px',
+                          padding: '4px 8px',
+                          fontSize: '0.75rem',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Send
+                      </button>
+                    </form>
+                  )}
+                </div>
               )}
               
               <div style={{

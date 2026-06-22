@@ -340,14 +340,70 @@ export default function PortfolioAgent() {
     }
   };
 
-  // Listen to toggle events from the walking avatar
+  // Listen to toggle events from the walking avatar and programmatic messages
   useEffect(() => {
     const handleToggle = () => {
       setIsOpen(prev => !prev);
     };
+
+    const handleProgrammaticMessage = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail && customEvent.detail.message) {
+        setIsOpen(true);
+        // Simulate a form submission with the message
+        setInputVal(customEvent.detail.message);
+        setTimeout(() => {
+           // We need to call the logic directly since we don't have an event object to pass to handleSend
+           processProgrammaticMessage(customEvent.detail.message);
+        }, 100);
+      }
+    };
+
+    // Helper to process message directly without a FormEvent
+    const processProgrammaticMessage = async (userText: string) => {
+        setMessages(prev => [...prev, { sender: 'user', text: userText }]);
+        setInputVal('');
+
+        const processResponse = (rawResponse: string, isLive: boolean) => {
+          try {
+            const json = JSON.parse(rawResponse);
+            if (json.reply) {
+              setMessages(prev => [...prev, { sender: 'agent', text: json.reply, isLive }]);
+            }
+            if (json.action) {
+              handleActionExecution(json.action);
+            }
+          } catch {
+            setMessages(prev => [...prev, { sender: 'agent', text: rawResponse, isLive }]);
+          }
+        };
+
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userText })
+          });
+
+          if (!res.ok) throw new Error('API Key missing or Server Error');
+
+          const data = await res.json();
+          processResponse(data.response.trim(), true);
+        } catch {
+          const fallbackResponse = getLocalAgentResponse(userText);
+          processResponse(fallbackResponse, false);
+        }
+    };
+
+
     window.addEventListener('toggle-portfolio-agent', handleToggle);
-    return () => window.removeEventListener('toggle-portfolio-agent', handleToggle);
-  }, []);
+    window.addEventListener('send-agent-message', handleProgrammaticMessage);
+
+    return () => {
+      window.removeEventListener('toggle-portfolio-agent', handleToggle);
+      window.removeEventListener('send-agent-message', handleProgrammaticMessage);
+    };
+  }, [handleActionExecution]);
 
 
 
