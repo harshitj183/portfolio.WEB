@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const systemPrompt = `
 You are Portfolio Agent, an AI mascot living inside a developer portfolio website.
@@ -97,25 +96,38 @@ Information about Harshit Jaiswal:
 
 export async function POST(req: Request) {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY; // Using same env var for simplicity
     if (!apiKey) {
-      return NextResponse.json({ error: 'GEMINI_API_KEY not configured' }, { status: 500 });
+      return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
     }
 
-    const { message, history } = await req.json();
+    const { message } = await req.json();
 
-    const ai = new GoogleGenerativeAI(apiKey);
-    const model = ai.getGenerativeModel({
-      model: 'gemini-2.5-flash',
-      systemInstruction: systemPrompt,
+    // Call x.ai (Grok) Chat Completions API
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: message }
+        ],
+        model: 'grok-beta',
+        temperature: 0.2,
+        stream: false
+      })
     });
 
-    const chat = model.startChat({
-      history: history || [],
-    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`x.ai API error: ${response.status} - ${errorText}`);
+    }
 
-    const result = await chat.sendMessage(message);
-    const responseText = result.response.text();
+    const data = await response.json();
+    const responseText = data.choices?.[0]?.message?.content || '';
 
     return NextResponse.json({ response: responseText });
   } catch (error: any) {
