@@ -174,11 +174,7 @@ export default function PortfolioAgent() {
 
     // Collapsible Action indicator helper
     const showToast = (txt: string) => {
-      setMessages(prev => [...prev, {
-        sender: 'agent',
-        text: JSON.stringify({ action, description: txt }, null, 2),
-        isAction: true
-      }]);
+      window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: `[Action] ${txt}` } }));
     };
 
     switch (action as AllowedAction | 'create_custom_command' | 'run_custom_command') {
@@ -273,9 +269,9 @@ export default function PortfolioAgent() {
           const commands = JSON.parse(saved);
           commands[trigger.toLowerCase().trim()] = steps;
           localStorage.setItem('custom_commands', JSON.stringify(commands));
-          setMessages(prev => [...prev, { sender: 'agent', text: `💾 Custom command saved! Try typing: "${trigger}"` }]);
+          window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: `💾 Custom command saved! Try typing: "${trigger}"` } }));
         } catch {
-          setMessages(prev => [...prev, { sender: 'agent', text: `⚠ Failed to save custom command.` }]);
+          window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: `⚠ Failed to save custom command.` } }));
         }
         break;
       case 'run_custom_command':
@@ -303,21 +299,21 @@ export default function PortfolioAgent() {
     if (!inputVal.trim()) return;
 
     const userText = inputVal;
-    setMessages(prev => [...prev, { sender: 'user', text: userText }]);
     setInputVal('');
+    
+    window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: 'Thinking...' } }));
 
     const processResponse = (rawResponse: string, isLive: boolean) => {
       try {
         const json = JSON.parse(rawResponse);
         if (json.reply) {
-          setMessages(prev => [...prev, { sender: 'agent', text: json.reply, isLive }]);
+          window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: json.reply } }));
         }
         if (json.action) {
           handleActionExecution(json.action);
         }
       } catch {
-        // Plain text fallback
-        setMessages(prev => [...prev, { sender: 'agent', text: rawResponse, isLive }]);
+        window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: rawResponse } }));
       }
     };
 
@@ -359,22 +355,20 @@ export default function PortfolioAgent() {
       }
     };
 
-    // Helper to process message directly without a FormEvent
     const processProgrammaticMessage = async (userText: string) => {
-        setMessages(prev => [...prev, { sender: 'user', text: userText }]);
         setInputVal('');
 
         const processResponse = (rawResponse: string, isLive: boolean) => {
           try {
             const json = JSON.parse(rawResponse);
             if (json.reply) {
-              setMessages(prev => [...prev, { sender: 'agent', text: json.reply, isLive }]);
+              window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: json.reply } }));
             }
             if (json.action) {
               handleActionExecution(json.action);
             }
           } catch {
-            setMessages(prev => [...prev, { sender: 'agent', text: rawResponse, isLive }]);
+            window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: rawResponse } }));
           }
         };
 
@@ -409,8 +403,6 @@ export default function PortfolioAgent() {
 
   return (
     <>
-
-      {/* ── Chat Panel Modal ── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -418,113 +410,21 @@ export default function PortfolioAgent() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="glass-panel portfolio-agent-panel"
+            style={{
+              position: 'fixed',
+              bottom: '25px',
+              right: '25px',
+              width: '350px',
+              zIndex: 99998,
+            }}
           >
-            {/* Header */}
-            <div style={{
-              padding: '1.2rem',
-              borderBottom: '1px solid var(--border-color)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              background: 'rgba(99, 102, 241, 0.08)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
-                <div>
-                  <h3 style={{ fontSize: '0.92rem', fontWeight: 700, margin: 0, color: '#fff' }}>Portfolio Agent</h3>
-                  <span style={{ fontSize: '0.68rem', color: 'var(--text-secondary)' }}>AI Mascot & Co-Pilot</span>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex' }}
-              >
-                <FiX size={18} />
-              </button>
-            </div>
-
-            {/* Chat Messages */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {messages.map((m, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
-                    maxWidth: '85%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: m.sender === 'user' ? 'flex-end' : 'flex-start',
-                    gap: '0.3rem'
-                  }}
-                >
-                  {m.isAction ? (
-                    <details style={{
-                      alignSelf: 'stretch',
-                      margin: '0.4rem 0',
-                      border: '1px solid rgba(99,102,241,0.2)',
-                      background: 'rgba(99,102,241,0.03)',
-                      borderRadius: '8px',
-                      padding: '0.5rem 0.8rem',
-                      fontSize: '0.75rem',
-                      color: 'var(--accent)',
-                      cursor: 'pointer'
-                    }}>
-                      <summary style={{ outline: 'none', fontWeight: 600 }}>▶ Executed Action Log</summary>
-                      <pre style={{
-                        marginTop: '0.5rem',
-                        padding: '0.5rem',
-                        background: '#09090b',
-                        border: '1px solid var(--border-color)',
-                        borderRadius: '6px',
-                        fontSize: '0.68rem',
-                        color: 'var(--text-secondary)',
-                        overflowX: 'auto',
-                        fontFamily: 'monospace',
-                        cursor: 'default'
-                      }} onClick={e => e.stopPropagation()}>
-                        {m.text}
-                      </pre>
-                    </details>
-                  ) : (
-                    <div
-                      style={{
-                        padding: '0.65rem 0.9rem',
-                        borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                        background: m.sender === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
-                        color: m.sender === 'user' ? '#fff' : '#e2e8f0',
-                        fontSize: '0.82rem',
-                        lineHeight: '1.4',
-                        fontFamily: m.text.startsWith('✨') ? 'monospace' : 'var(--font-primary)'
-                      }}
-                    >
-                      {m.text}
-                    </div>
-                  )}
-                  {m.sender === 'agent' && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.65rem', color: 'var(--text-secondary)', paddingLeft: '0.2rem' }}>
-                      <span style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        background: m.isLive ? '#10b981' : '#ef4444',
-                        boxShadow: m.isLive ? '0 0 6px #10b981' : '0 0 6px #ef4444',
-                        display: 'inline-block'
-                      }} />
-                      {m.isLive ? 'Gemini AI' : 'Local Engine'}
-                    </div>
-                  )}
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Form */}
-            <form onSubmit={handleSend} style={{ padding: '1rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.5rem', background: '#09090b' }}>
+            {/* Input Form only */}
+            <form onSubmit={handleSend} style={{ display: 'flex', gap: '0.5rem', background: '#09090b', padding: '0.8rem', borderRadius: '16px', border: '1px solid var(--accent)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
               <input
                 value={inputVal}
                 onChange={e => setInputVal(e.target.value)}
-                placeholder="Ask for resume or portfolio tour..."
+                placeholder="Ask me anything..."
+                autoFocus
                 style={{
                   flex: 1,
                   background: 'rgba(255,255,255,0.03)',
@@ -557,7 +457,6 @@ export default function PortfolioAgent() {
           </motion.div>
         )}
       </AnimatePresence>
-
     </>
   );
 }

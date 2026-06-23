@@ -193,6 +193,13 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
         />
       </div>
 
+      <div className="mobile-blocker">
+        <h2 style={{ marginBottom: '1rem', color: '#fff' }}>Desktop Required</h2>
+        <p style={{ color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto', lineHeight: 1.6 }}>
+          Currently, this portfolio is optimized for desktop viewing. Please open this link on your computer to explore the content.
+        </p>
+      </div>
+
       <div className="app-container" style={{ position: 'relative', zIndex: 1 }}>
         <CommandPalette />
         <Sidebar />

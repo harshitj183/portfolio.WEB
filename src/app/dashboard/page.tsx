@@ -181,7 +181,7 @@ interface GithubState {
 
 interface LeetcodeState {
   stats: {
-    solved: number;
+    solved: number | string;
     easy: number;
     medium: number;
     hard: number;
@@ -245,7 +245,7 @@ const Dashboard = () => {
         const data = await res.json();
         const stats = data.matchedUserStats?.acSubmissionNum;
         if (stats) {
-          const solved = stats.find((x: any) => x.difficulty === 'All')?.count || 372;
+          const solved = stats.find((x: any) => x.difficulty === 'All')?.count || '350+';
           const easy = stats.find((x: any) => x.difficulty === 'Easy')?.count || 242;
           const medium = stats.find((x: any) => x.difficulty === 'Medium')?.count || 116;
           const hard = stats.find((x: any) => x.difficulty === 'Hard')?.count || 14;
@@ -276,7 +276,7 @@ const Dashboard = () => {
         
         // Final fallback matching current exact stats
         setLeetcode({
-          stats: { solved: 372, easy: 242, medium: 116, hard: 14, totalQ: 3300 },
+          stats: { solved: '350+', easy: 242, medium: 116, hard: 14, totalQ: 3300 },
           loading: false
         });
       }
@@ -312,9 +312,9 @@ const Dashboard = () => {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {[
-              { label: 'Easy', count: leetcode.stats?.easy || 0, color: '#10b981', total: leetcode.stats?.solved || 1 },
-              { label: 'Medium', count: leetcode.stats?.medium || 0, color: '#fbbf24', total: leetcode.stats?.solved || 1 },
-              { label: 'Hard', count: leetcode.stats?.hard || 0, color: '#ef4444', total: leetcode.stats?.solved || 1 },
+              { label: 'Easy', count: leetcode.stats?.easy || 0, color: '#10b981', total: typeof leetcode.stats?.solved === 'number' ? leetcode.stats.solved : 350 },
+              { label: 'Medium', count: leetcode.stats?.medium || 0, color: '#fbbf24', total: typeof leetcode.stats?.solved === 'number' ? leetcode.stats.solved : 350 },
+              { label: 'Hard', count: leetcode.stats?.hard || 0, color: '#ef4444', total: typeof leetcode.stats?.solved === 'number' ? leetcode.stats.solved : 350 },
             ].map((cat, i) => {
               const percentage = leetcode.loading ? 0 : Math.round((cat.count / cat.total) * 100);
               return (
