@@ -206,7 +206,8 @@ h1, h2, h3, h4 {
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--accent) !important;
-  background: #1e1e24 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 0 15px var(--accent-glow) !important;
 }
 
 input::placeholder, textarea::placeholder {

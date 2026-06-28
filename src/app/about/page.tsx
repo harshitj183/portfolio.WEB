@@ -59,7 +59,11 @@ const TimelineItem = ({ role, company, date, desc, isLast }: TimelineItemProps) 
       border: '3px solid var(--bg-color)'
     }} />
     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.8rem', flexWrap: 'wrap' }}>
-      <span className="pill" style={{ fontSize: '0.72rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+      <span style={{ 
+        fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+        padding: '0.4rem 0.8rem', background: 'rgba(255,255,255,0.03)', 
+        borderRadius: '100px', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-secondary)'
+      }}>
         <FiCalendar size={11} /> {date}
       </span>
       <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>{company}</span>

@@ -221,8 +221,8 @@ const Contact = () => {
                 </p>
                 <button
                   onClick={() => setStatus('idle')}
-                  className="pill accent"
-                  style={{ padding: '1.1rem 2.5rem', fontSize: '1rem', cursor: 'pointer', border: 'none' }}
+                  className="premium-action-btn premium-action-primary"
+                  style={{ padding: '1.1rem 2.5rem', fontSize: '1rem', cursor: 'pointer', border: 'none', display: 'inline-flex', width: 'auto' }}
                 >
                   Send Another
                 </button>
@@ -257,7 +257,7 @@ const Contact = () => {
                 <button
                   disabled={status === 'sending'}
                   type="submit"
-                  className="pill accent"
+                  className="premium-action-btn premium-action-primary"
                   style={{
                     width: '100%', padding: '1.2rem', fontSize: '1.05rem', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem',
