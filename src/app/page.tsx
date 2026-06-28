@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiGithub, FiMapPin, FiArrowRight, FiStar, FiExternalLink } from 'react-icons/fi';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
 
@@ -123,6 +124,7 @@ const Home = () => {
               href="/resume.pdf"
               download="Harshit_Jaiswal_Resume.pdf"
               className="pill"
+              aria-label="Download CV"
               style={{ padding: '0.8rem 1.8rem', fontSize: '0.9rem', background: '#1e1e24', color: '#fff', textDecoration: 'none' }}
               title="Download CV"
             >
@@ -133,6 +135,7 @@ const Home = () => {
               target="_blank"
               rel="noreferrer"
               className="pill"
+              aria-label="GitHub Profile"
               style={{ padding: '0.8rem 1.8rem', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
             >
               <FiGithub size={18} /> GitHub
@@ -181,9 +184,11 @@ const Home = () => {
                 boxShadow: '0 0 10px var(--accent-glow)'
               }} />
             </div>
-            <img
+            <Image
               src={GITHUB_AVATAR}
               alt="Harshit Jaiswal"
+              width={120}
+              height={120}
               style={{
                 width: '120px', height: '120px', borderRadius: '12px',
                 objectFit: 'cover', border: '1px solid var(--border-color)',
@@ -253,13 +258,13 @@ const Home = () => {
                 <Link href="/projects" className="nav-item active" style={{ display: 'inline-flex', width: 'auto', gap: '0.6rem', fontSize: '0.85rem' }}>
                   Case Study <FiArrowRight />
                 </Link>
-                <a href={proj.github} target="_blank" rel="noreferrer" className="pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>
+                <a href={proj.github} target="_blank" rel="noreferrer" className="pill" aria-label={`View ${proj.title} on GitHub`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>
                   <FiGithub /> GitHub
                 </a>
               </div>
             </div>
             <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
-              <img src={proj.image} alt={proj.title} style={{ width: '100%', height: '220px', objectFit: 'cover', display: 'block' }} />
+              <Image src={proj.image} alt={proj.title} width={600} height={400} style={{ width: '100%', height: '220px', objectFit: 'cover', display: 'block' }} />
             </div>
           </motion.div>
         </AnimatePresence>
@@ -267,7 +272,7 @@ const Home = () => {
         {/* Dot indicators */}
         <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '2rem' }}>
           {FEATURED.map((_, i) => (
-            <button key={i} onClick={() => goTo(i)} style={{
+            <button key={i} onClick={() => goTo(i)} aria-label={`Go to slide ${i + 1}`} style={{
               width: i === slide ? '24px' : '8px', height: '8px',
               borderRadius: '4px', border: 'none', cursor: 'pointer',
               background: i === slide ? proj.color : 'var(--border-color)',

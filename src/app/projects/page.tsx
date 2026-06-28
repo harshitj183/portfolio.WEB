@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import {
   FiExternalLink, FiCpu, FiLayout, FiSearch,
   FiActivity, FiX, FiLayers, FiTerminal, FiCheckCircle,
@@ -128,9 +129,10 @@ const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
         border: '1px solid var(--glass-border)',
         position: 'relative'
       }}>
-        <img 
+        <Image 
           src={project.image} 
           alt={project.title} 
+          width={600} height={400}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
         />
       </div>
@@ -164,6 +166,7 @@ const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
             target="_blank"
             rel="noreferrer"
             onClick={e => e.stopPropagation()}
+            aria-label="GitHub Repository"
             style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1 }}
             title="Source Code"
           >
@@ -176,6 +179,7 @@ const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
             target="_blank"
             rel="noreferrer"
             onClick={e => e.stopPropagation()}
+            aria-label="Live Demo"
             style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1 }}
             title="Live Demo"
           >
@@ -290,6 +294,7 @@ const Projects = () => {
               <button
                 onClick={() => setSelected(null)}
                 className="modal-close-btn"
+                aria-label="Close Modal"
               >
                 <FiX size={28} />
               </button>
@@ -319,13 +324,13 @@ const Projects = () => {
                 }}>
                   {selected.gallery.map((img, i) => (
                     <div key={i} className="gallery-image-container">
-                      <img src={img} alt={`${selected.title} screenshot ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} width={800} height={600} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   ))}
                 </div>
               ) : selected.image && (
                 <div className="single-image-container">
-                  <img src={selected.image} alt={selected.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Image src={selected.image} alt={selected.title} width={800} height={600} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               )}
 
@@ -361,11 +366,11 @@ const Projects = () => {
               </div>
 
               <div style={{ display: 'flex', gap: '1.2rem', flexWrap: 'wrap' }}>
-                <a href={selected.github} target="_blank" rel="noreferrer" className="pill accent" style={{ padding: '1rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.7rem' }}>
+                <a href={selected.github} target="_blank" rel="noreferrer" aria-label="GitHub Repository" className="pill accent" style={{ padding: '1rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.7rem' }}>
                   <FiGithub /> Source Code
                 </a>
                 {selected.live && (
-                  <a href={selected.live} className="pill" style={{ padding: '1rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.7rem', background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
+                  <a href={selected.live} aria-label="Live Demo" className="pill" style={{ padding: '1rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.7rem', background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
                     <FiExternalLink /> Live Demo
                   </a>
                 )}

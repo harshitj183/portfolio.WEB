@@ -3,7 +3,7 @@
   --bg-secondary: #16161a;
   --border-color: #27272a;
   --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
+  --text-secondary: #d4d4d8;
   --accent: #6366f1;
   --sidebar-width: 280px;
 
@@ -461,4 +461,17 @@ input::placeholder, textarea::placeholder {
   .mobile-blocker {
     display: flex;
   }
+}
+
+/* Accessibility Touch Targets Expansion */
+a, button {
+  position: relative;
+}
+a::after, button::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  bottom: -10px;
+  left: -10px;
 }
