@@ -8,6 +8,7 @@ import {
   FiGithub, FiFilter, FiMessageSquare
 } from 'react-icons/fi';
 import Image from 'next/image';
+import ReadmeViewer from '@/components/ReadmeViewer';
 
 const PROJECTS = [
   {
@@ -412,7 +413,11 @@ const Projects = () => {
                 {selected.desc}
               </p>
 
-              <div className="grid" style={{ gap: '2.5rem', marginBottom: '3.5rem' }}>
+              {selected.github && (
+                <ReadmeViewer githubUrl={selected.github} />
+              )}
+
+              <div className="grid" style={{ gap: '2.5rem', marginBottom: '3.5rem', marginTop: '3.5rem' }}>
                 <div>
                   <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                     <FiTerminal className="text-accent" /> Engineering Log
