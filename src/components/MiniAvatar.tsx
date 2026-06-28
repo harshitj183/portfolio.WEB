@@ -844,7 +844,7 @@ export default function RoamingHarshit() {
         >
         {/* Speech / Tour bubble */}
         <AnimatePresence>
-          {(showBubble || showTourBubble) && (
+          {((showBubble || showTourBubble) && pos.x <= 45 && pos.y <= 25) && (
             <motion.div
               key={showTourBubble ? `tour-${tourStep}` : bubble}
               initial={{ opacity: 0, y: 8, scale: 0.85 }}
