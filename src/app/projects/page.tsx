@@ -237,6 +237,7 @@ const Projects = () => {
   const [activeTag, setActiveTag] = useState<string>('all');
   const [visibleProjectId, setVisibleProjectId] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -424,7 +425,8 @@ const Projects = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.98 }}
                         transition={{ duration: 0.4 }}
-                        style={{ position: 'absolute', inset: 0 }}
+                        style={{ position: 'absolute', inset: 0, cursor: 'zoom-in' }}
+                        onClick={() => setLightboxImage(selected.gallery![currentImageIndex])}
                       >
                         <Image src={selected.gallery[currentImageIndex]} alt={`${selected.title} screenshot ${currentImageIndex + 1}`} fill style={{ objectFit: 'cover' }} />
                       </motion.div>
@@ -497,6 +499,44 @@ const Projects = () => {
                   </div>
                 )}
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Lightbox Overlay */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxImage(null)}
+            style={{
+              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)',
+              zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <button
+              onClick={() => setLightboxImage(null)}
+              style={{
+                position: 'absolute', top: '2rem', right: '2rem', background: 'rgba(255,255,255,0.1)',
+                border: 'none', color: '#fff', borderRadius: '50%', width: '48px', height: '48px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2
+              }}
+            >
+              <FiX size={24} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+              onClick={e => e.stopPropagation()}
+              style={{ position: 'relative', width: '90vw', height: '80vh', maxWidth: '1200px' }}
+            >
+              <Image src={lightboxImage} alt="Fullscreen screenshot" fill style={{ objectFit: 'contain' }} />
             </motion.div>
           </motion.div>
         )}
