@@ -495,7 +495,7 @@ const Projects = () => {
                     <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <FiActivity className="text-accent" /> Architecture Deep Dive
                     </h3>
-                    <ReadmeViewer githubUrl={selected.github} />
+                    <ReadmeViewer githubUrl={selected.github} onImageClick={setLightboxImage} />
                   </div>
                 )}
               </div>

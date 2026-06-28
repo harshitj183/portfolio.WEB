@@ -8,9 +8,10 @@ const Mermaid = dynamic(() => import('./Mermaid'), { ssr: false });
 
 interface ReadmeViewerProps {
   githubUrl: string;
+  onImageClick?: (src: string) => void;
 }
 
-const ReadmeViewer = ({ githubUrl }: ReadmeViewerProps) => {
+const ReadmeViewer = ({ githubUrl, onImageClick }: ReadmeViewerProps) => {
   const [content, setContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +91,13 @@ const ReadmeViewer = ({ githubUrl }: ReadmeViewerProps) => {
             }
             return (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={imageSrc} alt={alt || 'Markdown Image'} {...props} />
+              <img 
+                src={imageSrc} 
+                alt={alt || 'Markdown Image'} 
+                onClick={() => onImageClick && typeof imageSrc === 'string' && onImageClick(imageSrc)}
+                style={{ cursor: onImageClick ? 'zoom-in' : 'default', ...props.style }}
+                {...props} 
+              />
             );
           },
           code: ({ node, inline, className, children, ...props }: any) => {
