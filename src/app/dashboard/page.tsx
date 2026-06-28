@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FiGithub, FiActivity, FiCode, FiZap, FiTrendingUp } from 'react-icons/fi';
+import { FiGithub, FiActivity, FiCode, FiZap, FiTrendingUp, FiAward } from 'react-icons/fi';
 
 /* ── Stat Card ───────────────────────── */
 interface StatCardProps {
@@ -127,6 +127,26 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
           <div key={i} style={{ width: '12px', height: '12px', borderRadius: '2px', background: c, border: '1px solid rgba(255,255,255,0.05)' }} />
         ))}
         <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>More</span>
+      </div>
+    </div>
+  );
+};
+
+/* ── LeetCode Badges ──────────────────── */
+const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: boolean }) => {
+  if (loading || !badges || badges.length === 0) return null;
+  return (
+    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px', marginBottom: '3rem' }}>
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+        <FiAward className="text-accent" /> Earned Badges
+      </h3>
+      <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        {badges.map((b: any) => (
+          <div key={b.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem', background: 'rgba(255,255,255,0.03)', padding: '1.2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', width: '130px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+            <img src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} style={{ width: '70px', height: '70px', objectFit: 'contain', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' }} />
+            <span style={{ fontSize: '0.75rem', textAlign: 'center', color: 'var(--text-secondary)', lineHeight: 1.3, fontWeight: 500 }}>{b.displayName}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -275,12 +295,13 @@ interface LeetcodeState {
     totalQ: number;
   } | null;
   heatmap: number[] | null;
+  badges: any[] | null;
   loading: boolean;
 }
 
 const Dashboard = () => {
   const [github, setGithub] = useState<GithubState>({ stats: null, loading: true, heatmap: null });
-  const [leetcode, setLeetcode] = useState<LeetcodeState>({ stats: null, loading: true, heatmap: null });
+  const [leetcode, setLeetcode] = useState<LeetcodeState>({ stats: null, loading: true, heatmap: null, badges: null });
 
   useEffect(() => {
     // Fetch real GitHub data
@@ -359,8 +380,13 @@ const Dashboard = () => {
       });
 
       try {
-        const res = await fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { signal: AbortSignal.timeout(4000) });
-        const data = await res.json();
+        const [resProfile, resBadges] = await Promise.all([
+          fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { signal: AbortSignal.timeout(4000) }),
+          fetch('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { signal: AbortSignal.timeout(4000) }).catch(() => null)
+        ]);
+        const data = await resProfile.json();
+        const badgesData = resBadges ? await resBadges.json().catch(() => null) : null;
+        
         const stats = data.matchedUserStats?.acSubmissionNum;
         if (stats) {
           const solved = stats.find((x: any) => x.difficulty === 'All')?.count || '350+';
@@ -370,7 +396,8 @@ const Dashboard = () => {
           setLeetcode({
             stats: { solved, easy, medium, hard, totalQ: 3300 },
             loading: false,
-            heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap
+            heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
+            badges: badgesData?.badges || []
           });
         } else throw new Error();
       } catch {
@@ -388,7 +415,8 @@ const Dashboard = () => {
                 totalQ: data.totalQuestions,
               },
               loading: false,
-              heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap
+              heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
+              badges: []
             });
             return;
           }
@@ -398,7 +426,8 @@ const Dashboard = () => {
         setLeetcode({
           stats: { solved: '350+', easy: 242, medium: 116, hard: 14, totalQ: 3300 },
           loading: false,
-          heatmap: fallbackHeatmap
+          heatmap: fallbackHeatmap,
+          badges: []
         });
       }
     };
@@ -455,6 +484,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <LeetcodeBadges badges={leetcode.badges} loading={leetcode.loading} />
 
       {/* GitHub Heatmap */}
       <div id="github-heatmap" style={{ marginBottom: '3rem' }}>
