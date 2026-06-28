@@ -416,14 +416,26 @@ const Projects = () => {
               onClick={e => e.stopPropagation()}
               className="project-drawer"
             >
-              <div className="drawer-header">
-                <h2 style={{ fontSize: '1.2rem', margin: 0 }}>{selected.title}</h2>
-                <button
-                  onClick={() => setSelected(null)}
-                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-                >
-                  <FiX size={20} />
-                </button>
+              <div className="drawer-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'nowrap' }}>
+                <h2 style={{ fontSize: '1.2rem', margin: 0, flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selected.title}</h2>
+                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexShrink: 0 }}>
+                  {selected.github && (
+                    <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', minHeight: '36px' }}>
+                      <FiGithub size={16} /> <span style={{ display: 'none' }} className="sm:inline">Code</span>
+                    </a>
+                  )}
+                  {selected.live && (
+                    <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', minHeight: '36px' }}>
+                      <FiExternalLink size={16} /> <span style={{ display: 'none' }} className="sm:inline">Live</span>
+                    </a>
+                  )}
+                  <button
+                    onClick={() => setSelected(null)}
+                    style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', marginLeft: '0.2rem' }}
+                  >
+                    <FiX size={20} />
+                  </button>
+                </div>
               </div>
 
               <div className="drawer-content">
@@ -468,17 +480,6 @@ const Projects = () => {
                   </div>
                 )}
 
-                {/* Premium Action Buttons */}
-                <div style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-                  <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary">
-                    <FiGithub size={20} /> Source Code
-                  </a>
-                  {selected.live && (
-                    <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary">
-                      <FiExternalLink size={20} /> Live Demo
-                    </a>
-                  )}
-                </div>
 
                 <div style={{ marginBottom: '2.5rem' }}>
                   <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Technologies</h4>
