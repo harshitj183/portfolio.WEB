@@ -12,6 +12,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    // Security: Validate payload length to prevent spam and memory attacks
+    if (name.length > 100 || email.length > 100 || message.length > 2000) {
+      return NextResponse.json({ error: 'Payload too large. Please keep your message concise.' }, { status: 400 });
+    }
+
     // Configure the transporter
     // For Gmail, user needs to generate an App Password:
     // https://myaccount.google.com/apppasswords

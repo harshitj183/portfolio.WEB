@@ -33,6 +33,14 @@ export async function POST(req: Request) {
 
     const { message, history } = await req.json();
 
+    // Security: Validate payload size to prevent abuse and memory exhaustion attacks
+    if (!message || typeof message !== 'string' || message.length > 500) {
+      return NextResponse.json({ error: 'Invalid payload or message too long (max 500 chars).' }, { status: 400 });
+    }
+    if (history && Array.isArray(history) && history.length > 50) {
+      return NextResponse.json({ error: 'History payload too large.' }, { status: 400 });
+    }
+
     // Dynamic Prompt Injection to save tokens
     const isTechQuestion = /code|repo|repository|built|build|architecture|stack|technology|tech|next\.js|react|backend|ui|avatar|how/i.test(message);
     const finalSystemPrompt = isTechQuestion ? baseSystemPrompt + techDetails : baseSystemPrompt;
