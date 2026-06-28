@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiGithub, FiActivity, FiCode, FiZap, FiTrendingUp, FiAward } from 'react-icons/fi';
 import Image from 'next/image';
+import TiltCard from '@/components/TiltCard';
 
 /* ── Stat Card ───────────────────────── */
 interface StatCardProps {
@@ -57,7 +58,7 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
   }
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem' }}>
+    <TiltCard className="glass-panel" style={{ padding: '2rem' }} tiltAngle={3}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0 }}>
           <FiGithub className="text-accent" /> GitHub Contribution Graph
@@ -125,7 +126,7 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
         ))}
         <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>More</span>
       </div>
-    </div>
+    </TiltCard>
   );
 };
 
@@ -167,7 +168,7 @@ const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
   }
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem' }}>
+    <TiltCard className="glass-panel" style={{ padding: '2rem' }} tiltAngle={3}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0 }}>
           <FiCode className="text-accent" /> LeetCode Submission Graph
@@ -232,7 +233,7 @@ const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
         ))}
         <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>More</span>
       </div>
-    </div>
+    </TiltCard>
   );
 };
 
