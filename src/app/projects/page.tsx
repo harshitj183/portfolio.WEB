@@ -353,8 +353,8 @@ const Projects = () => {
             exit={{ opacity: 0 }}
             onClick={() => setSelected(null)}
             style={{
-              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
-              zIndex: 10000, backdropFilter: 'blur(20px)',
+              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+              zIndex: 100000, backdropFilter: 'blur(5px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem'
             }}
           >
