@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import dynamic from 'next/dynamic';
+
+const Mermaid = dynamic(() => import('./Mermaid'), { ssr: false });
 
 interface ReadmeViewerProps {
   githubUrl: string;
@@ -89,6 +92,13 @@ const ReadmeViewer = ({ githubUrl }: ReadmeViewerProps) => {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={imageSrc} alt={alt || 'Markdown Image'} {...props} />
             );
+          },
+          code: ({ node, inline, className, children, ...props }: any) => {
+            const match = /language-(\w+)/.exec(className || '');
+            if (!inline && match && match[1] === 'mermaid') {
+              return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+            }
+            return <code className={className} {...props}>{children}</code>;
           }
         }}
       >

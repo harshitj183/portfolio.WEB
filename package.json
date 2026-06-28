@@ -17,6 +17,7 @@
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
+    "mermaid": "^11.16.0",
     "next": "^16.2.9",
     "nodemailer": "^9.0.1",
     "react": "^19.2.4",
