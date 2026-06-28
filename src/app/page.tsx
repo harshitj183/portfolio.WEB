@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { FiGithub, FiMapPin, FiArrowRight, FiStar, FiExternalLink } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -47,6 +47,33 @@ const Home = () => {
   const [lcSolved, setLcSolved] = useState<string>('350+');
   const [slide, setSlide] = useState(0);
   const [dir, setDir] = useState(1);
+
+  // 3D Tilt Logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   useEffect(() => {
     fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183')
@@ -145,9 +172,28 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Avatar card */}
-        <div id="profile-card" className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center', maxWidth: '300px', width: '100%' }}>
-          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
+        {/* Avatar card Container */}
+        <div style={{ perspective: '1000px', display: 'flex', justifyContent: 'center' }}>
+          <motion.div 
+            id="profile-card" 
+            className="glass-panel" 
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ 
+              padding: '2.5rem', 
+              textAlign: 'center', 
+              maxWidth: '300px', 
+              width: '100%',
+              rotateX,
+              rotateY,
+              transformStyle: "preserve-3d",
+              cursor: "pointer",
+            }}
+            whileHover={{ scale: 1.05 }}
+            animate={{ y: [0, -10, 0] }}
+            transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
+          >
+          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem', transform: "translateZ(50px)" }}>
             {/* Thought/Dream Bubble */}
             <div style={{
               position: 'absolute',
@@ -210,10 +256,11 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', fontSize: '0.8rem', color: '#10b981', fontWeight: 600 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', fontSize: '0.8rem', color: '#10b981', fontWeight: 600, transform: "translateZ(30px)" }}>
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 12px #10b981' }} />
             Available for hire
           </div>
+          </motion.div>
         </div>
       </div>
 
