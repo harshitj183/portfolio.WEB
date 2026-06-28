@@ -62,9 +62,9 @@ h1, h2, h3, h4 {
 
 /* Card Panel (Premium Glassmorphism) */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
@@ -724,9 +724,9 @@ input::placeholder, textarea::placeholder {
   height: 100%;
   width: 100%;
   max-width: 800px;
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(48px);
+  -webkit-backdrop-filter: blur(48px);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
   display: flex;
