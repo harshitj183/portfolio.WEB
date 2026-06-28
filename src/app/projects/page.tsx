@@ -359,102 +359,81 @@ const Projects = () => {
             }}
           >
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               onClick={e => e.stopPropagation()}
-              className="glass-panel case-study-modal"
-              style={{ maxWidth: '1200px', width: '95%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}
+              className="project-drawer"
             >
-              <button
-                onClick={() => setSelected(null)}
-                className="modal-close-btn"
-                style={{ zIndex: 10 }}
-              >
-                <FiX size={28} />
-              </button>
+              <div className="drawer-header">
+                <h2 style={{ fontSize: '1.2rem', margin: 0 }}>{selected.title}</h2>
+                <button
+                  onClick={() => setSelected(null)}
+                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                >
+                  <FiX size={20} />
+                </button>
+              </div>
 
-              <div className="premium-modal-layout">
-                {/* Left Column: Main Content */}
-                <div className="premium-modal-left">
-                  {/* Hero Images Stacked */}
-                  {selected.gallery && selected.gallery.length > 0 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2.5rem' }}>
-                      {selected.gallery.map((img, i) => (
-                        <div key={i} className="gallery-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', minWidth: '100%', position: 'relative' }}>
-                          <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} fill style={{ objectFit: 'cover', borderRadius: '12px' }} />
-                        </div>
-                      ))}
-                    </div>
-                  ) : selected.image && (
-                    <div className="single-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', marginBottom: '2.5rem', position: 'relative' }}>
-                      <Image src={selected.image} alt={selected.title} fill style={{ objectFit: 'cover', borderRadius: '12px' }} />
-                    </div>
-                  )}
-
-                  <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '2rem', fontSize: '1.1rem' }}>
-                    {selected.desc}
-                  </p>
-
-                  {selected.github && (
-                    <ReadmeViewer githubUrl={selected.github} />
-                  )}
-
-                  <div className="grid" style={{ gap: '2.5rem', marginTop: '3.5rem' }}>
-                    <div>
-                      <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                        <FiTerminal className="text-accent" /> Engineering Log
-                      </h3>
-                      <div style={{ background: 'rgba(0,0,0,0.25)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
-                        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '0.95rem' }}>
-                          <span style={{ color: '#f87171', fontWeight: 700 }}>[CHALLENGE] </span>{selected.challenges}
-                          <br /><br />
-                          <span style={{ color: '#34d399', fontWeight: 700 }}>[SOLUTION] </span>{selected.solution}
-                        </p>
+              <div className="drawer-content">
+                {/* Hero Images Stacked */}
+                {selected.gallery && selected.gallery.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem', marginBottom: '2rem' }}>
+                    {selected.gallery.map((img, i) => (
+                      <div key={i} className="gallery-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', position: 'relative' }}>
+                        <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} fill style={{ objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }} />
                       </div>
-                    </div>
+                    ))}
                   </div>
-                </div>
-
-                {/* Right Column: Sticky Sidebar */}
-                <div className="premium-modal-right">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                    <div style={{ background: 'var(--accent)', color: '#fff', padding: '1rem', borderRadius: '16px', fontSize: '1.5rem' }}>
-                      {selected.icon}
-                    </div>
-                    <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', lineHeight: 1.2 }}>{selected.title}</h2>
+                ) : selected.image && (
+                  <div className="single-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', marginTop: '1.5rem', marginBottom: '2rem', position: 'relative' }}>
+                    <Image src={selected.image} alt={selected.title} fill style={{ objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }} />
                   </div>
+                )}
 
-                  <div style={{ marginBottom: '2.5rem' }}>
-                    <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Technologies</h4>
-                    <div style={{ display: 'flex', gap: '0.7rem', flexWrap: 'wrap' }}>
-                      {selected.tech.map(t => <span key={t} className="pill accent" style={{ fontSize: '0.75rem', padding: '0.4rem 1rem' }}>{t}</span>)}
-                    </div>
-                  </div>
-
-                  <div style={{ marginBottom: '2.5rem' }}>
-                    <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Metrics</h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      {selected.metrics.map(m => (
-                        <div key={m} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem', fontSize: '0.9rem', color: '#e4e4e7', lineHeight: 1.4 }}>
-                          <FiCheckCircle className="text-accent" style={{ flexShrink: 0, marginTop: '2px' }} /> {m}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: 'auto' }}>
-                    <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary">
-                      <FiGithub size={20} /> Source Code
+                {/* Premium Action Buttons */}
+                <div style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+                  <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary">
+                    <FiGithub size={20} /> Source Code
+                  </a>
+                  {selected.live && (
+                    <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary">
+                      <FiExternalLink size={20} /> Live Demo
                     </a>
-                    {selected.live && (
-                      <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary">
-                        <FiExternalLink size={20} /> Live Demo
-                      </a>
-                    )}
+                  )}
+                </div>
+
+                <div style={{ marginBottom: '2.5rem' }}>
+                  <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Technologies</h4>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    {selected.tech.map(t => <span key={t} className="pill accent" style={{ fontSize: '0.75rem', padding: '0.3rem 0.8rem' }}>{t}</span>)}
                   </div>
                 </div>
+
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '2rem', fontSize: '1.1rem' }}>
+                  {selected.desc}
+                </p>
+                
+                <div style={{ background: 'rgba(0,0,0,0.25)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--glass-border)', marginBottom: '3rem' }}>
+                  <h3 style={{ fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <FiTerminal className="text-accent" /> Engineering Log
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)', lineHeight: '1.7', fontSize: '0.95rem' }}>
+                    <span style={{ color: '#f87171', fontWeight: 700 }}>[CHALLENGE] </span>{selected.challenges}
+                    <br /><br />
+                    <span style={{ color: '#34d399', fontWeight: 700 }}>[SOLUTION] </span>{selected.solution}
+                  </p>
+                </div>
+
+                {selected.github && (
+                  <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '2rem' }}>
+                    <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <FiActivity className="text-accent" /> Architecture Deep Dive
+                    </h3>
+                    <ReadmeViewer githubUrl={selected.github} />
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>

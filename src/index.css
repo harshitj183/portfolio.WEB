@@ -695,44 +695,49 @@ input::placeholder, textarea::placeholder {
   color: #fff;
 }
 
-/* Premium Modal Layout */
-.premium-modal-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3rem;
-  padding: 1rem 0;
-}
-
-@media (min-width: 900px) {
-  .premium-modal-layout {
-    grid-template-columns: 1fr 340px;
-  }
-}
-
-.premium-modal-left {
+/* Sliding Drawer Layout */
+.project-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.premium-modal-right {
+.drawer-header {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-@media (min-width: 900px) {
-  .premium-modal-right {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
-    max-height: calc(90vh - 4rem);
-    overflow-y: auto;
-    padding-right: 1rem;
-  }
-  
-  /* Hide scrollbar for sticky sidebar */
-  .premium-modal-right::-webkit-scrollbar {
-    width: 0;
-  }
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 2rem 4rem 2rem;
+}
+
+.drawer-content::-webkit-scrollbar {
+  width: 8px;
+}
+.drawer-content::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
 }
 
 .premium-action-btn {
@@ -745,7 +750,7 @@ input::placeholder, textarea::placeholder {
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
-  width: 100%;
+  flex: 1;
 }
 
 .premium-action-primary {
