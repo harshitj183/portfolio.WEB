@@ -230,8 +230,22 @@ const Projects = () => {
   const [selected, setSelected] = useState<Project | null>(null);
   const [activeTag, setActiveTag] = useState<string>('all');
   const [visibleProjectId, setVisibleProjectId] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (selected?.gallery && selected.gallery.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % selected.gallery!.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [selected]);
+
+  useEffect(() => {
+    if (selected) setCurrentImageIndex(0);
+  }, [selected]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -359,9 +373,9 @@ const Projects = () => {
             }}
           >
             <motion.div
-              initial={{ x: '100%' }}
+              initial={{ x: '-100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              exit={{ x: '-100%' }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               onClick={e => e.stopPropagation()}
               className="project-drawer"
@@ -377,14 +391,39 @@ const Projects = () => {
               </div>
 
               <div className="drawer-content">
-                {/* Hero Images Stacked */}
+                {/* Hero Images Animated Slider */}
                 {selected.gallery && selected.gallery.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem', marginBottom: '2rem' }}>
-                    {selected.gallery.map((img, i) => (
-                      <div key={i} className="gallery-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', position: 'relative' }}>
-                        <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} fill style={{ objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', overflow: 'hidden', borderRadius: '12px', marginTop: '1.5rem', marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentImageIndex}
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.98 }}
+                        transition={{ duration: 0.4 }}
+                        style={{ position: 'absolute', inset: 0 }}
+                      >
+                        <Image src={selected.gallery[currentImageIndex]} alt={`${selected.title} screenshot ${currentImageIndex + 1}`} fill style={{ objectFit: 'cover' }} />
+                      </motion.div>
+                    </AnimatePresence>
+                    {selected.gallery.length > 1 && (
+                      <div style={{ position: 'absolute', bottom: '12px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '8px', zIndex: 10 }}>
+                        {selected.gallery.map((_, i) => (
+                          <div 
+                            key={i} 
+                            onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(i); }} 
+                            style={{ 
+                              width: i === currentImageIndex ? '20px' : '8px', 
+                              height: '8px', 
+                              borderRadius: '4px', 
+                              background: i === currentImageIndex ? 'var(--accent)' : 'rgba(255,255,255,0.5)', 
+                              cursor: 'pointer', 
+                              transition: 'all 0.3s ease' 
+                            }} 
+                          />
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
                 ) : selected.image && (
                   <div className="single-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', marginTop: '1.5rem', marginBottom: '2rem', position: 'relative' }}>
