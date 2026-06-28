@@ -365,94 +365,96 @@ const Projects = () => {
               transition={{ duration: 0.2 }}
               onClick={e => e.stopPropagation()}
               className="glass-panel case-study-modal"
-              style={{ maxWidth: '860px', width: '100%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}
+              style={{ maxWidth: '1200px', width: '95%', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}
             >
               <button
                 onClick={() => setSelected(null)}
                 className="modal-close-btn"
+                style={{ zIndex: 10 }}
               >
                 <FiX size={28} />
               </button>
 
-              {/* Header */}
-              <div style={{ display: 'flex', gap: '1.8rem', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap' }}>
-                <div style={{ background: 'var(--accent)', color: '#fff', padding: '1.2rem', borderRadius: '20px', fontSize: '1.8rem', flexShrink: 0 }}>
-                  {selected.icon}
-                </div>
-                <div style={{ flex: 1, minWidth: '200px' }}>
-                  <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', marginBottom: '1rem', lineHeight: 1.2 }}>{selected.title}</h2>
-                  <div style={{ display: 'flex', gap: '0.7rem', flexWrap: 'wrap' }}>
-                    {selected.tech.map(t => <span key={t} className="pill accent" style={{ fontSize: '0.7rem' }}>{t}</span>)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Showcase Image */}
-              {selected.gallery && selected.gallery.length > 0 ? (
-                <div style={{
-                  display: 'flex',
-                  gap: '1rem',
-                  overflowX: 'auto',
-                  marginBottom: '2.5rem',
-                  paddingBottom: '1rem',
-                  scrollSnapType: 'x mandatory'
-                }}>
-                  {selected.gallery.map((img, i) => (
-                    <div key={i} className="gallery-image-container">
-                      <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} fill style={{ objectFit: 'cover' }} />
+              <div className="premium-modal-layout">
+                {/* Left Column: Main Content */}
+                <div className="premium-modal-left">
+                  {/* Hero Images Stacked */}
+                  {selected.gallery && selected.gallery.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                      {selected.gallery.map((img, i) => (
+                        <div key={i} className="gallery-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', minWidth: '100%', position: 'relative' }}>
+                          <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} fill style={{ objectFit: 'cover', borderRadius: '12px' }} />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              ) : selected.image && (
-                <div className="single-image-container">
-                  <Image src={selected.image} alt={selected.title} fill style={{ objectFit: 'cover' }} />
-                </div>
-              )}
+                  ) : selected.image && (
+                    <div className="single-image-container" style={{ width: '100%', height: 'auto', aspectRatio: '16/9', marginBottom: '2.5rem', position: 'relative' }}>
+                      <Image src={selected.image} alt={selected.title} fill style={{ objectFit: 'cover', borderRadius: '12px' }} />
+                    </div>
+                  )}
 
-              <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '3rem', fontSize: '1.05rem' }}>
-                {selected.desc}
-              </p>
+                  <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '2rem', fontSize: '1.1rem' }}>
+                    {selected.desc}
+                  </p>
 
-              {selected.github && (
-                <ReadmeViewer githubUrl={selected.github} />
-              )}
+                  {selected.github && (
+                    <ReadmeViewer githubUrl={selected.github} />
+                  )}
 
-              <div className="grid" style={{ gap: '2.5rem', marginBottom: '3.5rem', marginTop: '3.5rem' }}>
-                <div>
-                  <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    <FiTerminal className="text-accent" /> Engineering Log
-                  </h3>
-                  <div style={{ background: 'rgba(0,0,0,0.25)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '0.95rem' }}>
-                      <span style={{ color: '#f87171', fontWeight: 700 }}>[CHALLENGE] </span>{selected.challenges}
-                      <br /><br />
-                      <span style={{ color: '#34d399', fontWeight: 700 }}>[SOLUTION] </span>{selected.solution}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    <FiActivity className="text-accent" /> System Metrics
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {selected.metrics.map(m => (
-                      <div key={m} style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1rem', color: 'var(--text-secondary)' }}>
-                        <FiCheckCircle className="text-accent" /> {m}
+                  <div className="grid" style={{ gap: '2.5rem', marginTop: '3.5rem' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <FiTerminal className="text-accent" /> Engineering Log
+                      </h3>
+                      <div style={{ background: 'rgba(0,0,0,0.25)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
+                        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '0.95rem' }}>
+                          <span style={{ color: '#f87171', fontWeight: 700 }}>[CHALLENGE] </span>{selected.challenges}
+                          <br /><br />
+                          <span style={{ color: '#34d399', fontWeight: 700 }}>[SOLUTION] </span>{selected.solution}
+                        </p>
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div style={{ display: 'flex', gap: '1.2rem', flexWrap: 'wrap' }}>
-                <a href={selected.github} target="_blank" rel="noreferrer" className="pill accent" style={{ padding: '1rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.7rem' }}>
-                  <FiGithub /> Source Code
-                </a>
-                {selected.live && (
-                  <a href={selected.live} className="pill" style={{ padding: '1rem 2rem', display: 'inline-flex', alignItems: 'center', gap: '0.7rem', background: 'rgba(255,255,255,0.05)', color: '#fff' }}>
-                    <FiExternalLink /> Live Demo
-                  </a>
-                )}
+                {/* Right Column: Sticky Sidebar */}
+                <div className="premium-modal-right">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div style={{ background: 'var(--accent)', color: '#fff', padding: '1rem', borderRadius: '16px', fontSize: '1.5rem' }}>
+                      {selected.icon}
+                    </div>
+                    <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', lineHeight: 1.2 }}>{selected.title}</h2>
+                  </div>
+
+                  <div style={{ marginBottom: '2.5rem' }}>
+                    <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Technologies</h4>
+                    <div style={{ display: 'flex', gap: '0.7rem', flexWrap: 'wrap' }}>
+                      {selected.tech.map(t => <span key={t} className="pill accent" style={{ fontSize: '0.75rem', padding: '0.4rem 1rem' }}>{t}</span>)}
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: '2.5rem' }}>
+                    <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>Metrics</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      {selected.metrics.map(m => (
+                        <div key={m} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem', fontSize: '0.9rem', color: '#e4e4e7', lineHeight: 1.4 }}>
+                          <FiCheckCircle className="text-accent" style={{ flexShrink: 0, marginTop: '2px' }} /> {m}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: 'auto' }}>
+                    <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary">
+                      <FiGithub size={20} /> Source Code
+                    </a>
+                    {selected.live && (
+                      <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary">
+                        <FiExternalLink size={20} /> Live Demo
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
             </motion.div>
           </motion.div>
