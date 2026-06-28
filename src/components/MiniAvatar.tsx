@@ -476,6 +476,21 @@ export default function RoamingHarshit() {
       }
     };
 
+    // Contextual Awareness for Projects
+    const handleProjectView = (e: Event) => {
+      // Don't interrupt if we are currently on a tour
+      if (tourStep >= 0) return;
+      
+      const customEvent = e as CustomEvent;
+      const { title } = customEvent.detail || {};
+      if (title) {
+        setMood('pointing');
+        triggerBubble(`Check out ${title}! 👀`, 3000);
+        setTimeout(() => setMood('walk'), 3000);
+      }
+    };
+    window.addEventListener('project-view', handleProjectView);
+
     // 2. Mascot GoTo Command
     const handleMascotGoto = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -601,6 +616,7 @@ export default function RoamingHarshit() {
       window.removeEventListener('mascot-form-success', handleFormSuccess);
       window.removeEventListener('mascot-speak', handleMascotSpeak);
       window.removeEventListener('mascot-listen', handleMascotListen);
+      window.removeEventListener('project-view', handleProjectView);
     };
   }, [pathname, router, triggerBubble, tourStep, deliveryMode]);
 

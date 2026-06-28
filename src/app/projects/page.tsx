@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiExternalLink, FiCpu, FiLayout, FiSearch,
@@ -130,12 +130,17 @@ interface ProjectCardProps {
   project: Project;
   onOpen: (project: Project) => void;
   index: number;
+  isActive: boolean;
+  cardRef: (el: HTMLDivElement | null) => void;
 }
 
-const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
+const ProjectCard = ({ project, onOpen, isActive, cardRef }: ProjectCardProps) => (
   <div
+    ref={cardRef}
+    data-project-id={project.id}
+    data-project-title={project.title}
     onClick={() => onOpen(project)}
-    className="glass-panel"
+    className={`glass-panel ${isActive ? 'project-highlight' : ''}`}
     style={{ display: 'flex', flexDirection: 'column', padding: '1.8rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
   >
     {project.featured && (
@@ -223,6 +228,40 @@ const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
 const Projects = () => {
   const [selected, setSelected] = useState<Project | null>(null);
   const [activeTag, setActiveTag] = useState<string>('all');
+  const [visibleProjectId, setVisibleProjectId] = useState<number | null>(null);
+  
+  const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pid = Number(entry.target.getAttribute('data-project-id'));
+            const ptitle = entry.target.getAttribute('data-project-title');
+            
+            // Only update and dispatch if the visible project actually changes
+            setVisibleProjectId((prev) => {
+              if (prev !== pid) {
+                window.dispatchEvent(
+                  new CustomEvent('project-view', { detail: { id: pid, title: ptitle } })
+                );
+                return pid;
+              }
+              return prev;
+            });
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    projectRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, [activeTag]);
 
   useEffect(() => {
     const handleAction = (e: Event) => {
@@ -292,8 +331,15 @@ const Projects = () => {
 
       {/* Grid */}
       <div id="projects-grid" className="grid">
-        {filtered.map((project) => (
-          <ProjectCard key={project.id} project={project} onOpen={setSelected} index={0} />
+        {filtered.map((project, index) => (
+          <ProjectCard 
+            key={project.id} 
+            project={project} 
+            onOpen={setSelected} 
+            index={index} 
+            isActive={visibleProjectId === project.id}
+            cardRef={(el) => { projectRefs.current[index] = el; }}
+          />
         ))}
       </div>
 
