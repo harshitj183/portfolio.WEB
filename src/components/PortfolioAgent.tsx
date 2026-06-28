@@ -432,16 +432,18 @@ export default function PortfolioAgent() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-end',
-          gap: '12px'
+          gap: '12px',
+          pointerEvents: 'none'
         }}
       >
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              initial={{ opacity: 0, y: '100%', scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}
+              exit={{ opacity: 0, y: '100%', scale: 0.95 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', pointerEvents: 'auto' }}
             >
               {/* Header with Close Button */}
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
