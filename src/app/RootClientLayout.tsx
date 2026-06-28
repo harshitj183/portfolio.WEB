@@ -190,9 +190,7 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
             objectFit: 'cover',
             opacity: 0.12,
           }}
-        >
-          <track kind="captions" src="/empty.vtt" srcLang="en" label="English" default />
-        </video>
+        />
       </div>
 
       <div className="mobile-blocker">

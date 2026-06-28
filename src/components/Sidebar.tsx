@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { FiGithub, FiLinkedin, FiMail, FiCode, FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiMenu, FiX, FiSearch } from 'react-icons/fi';
 
@@ -31,12 +30,10 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="profile-card">
-        <Image
+        <img
           src={GITHUB_AVATAR}
           alt="Harshit Jaiswal"
           className="avatar"
-          width={80}
-          height={80}
           style={{ width: '80px', height: '80px', borderRadius: '8px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
         />
         <div className="profile-info">
@@ -76,19 +73,19 @@ const Sidebar = () => {
         })}
         {/* Mobile social links inside drawer */}
         <div className="mobile-social-links">
-          <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" aria-label="Mobile GitHub Link" style={{ color: 'var(--text-secondary)' }}><FiGithub size={24} /></a>
-          <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Mobile LinkedIn Link" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={24} /></a>
-          <a href="https://leetcode.com/u/harshitj183/" target="_blank" rel="noreferrer" title="LeetCode" aria-label="Mobile LeetCode Link" style={{ color: 'var(--text-secondary)' }}><FiCode size={24} /></a>
-          <a href="mailto:harshitj183@gmail.com" title="Email" aria-label="Mobile Email Link" style={{ color: 'var(--text-secondary)' }}><FiMail size={24} /></a>
+          <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" style={{ color: 'var(--text-secondary)' }}><FiGithub size={24} /></a>
+          <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={24} /></a>
+          <a href="https://leetcode.com/u/harshitj183/" target="_blank" rel="noreferrer" title="LeetCode" style={{ color: 'var(--text-secondary)' }}><FiCode size={24} /></a>
+          <a href="mailto:harshitj183@gmail.com" title="Email" style={{ color: 'var(--text-secondary)' }}><FiMail size={24} /></a>
         </div>
       </nav>
 
       <div className="desktop-social-container" style={{ marginTop: 'auto' }}>
         <div className="social-links" style={{ display: 'flex', gap: '1.2rem' }}>
-          <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" aria-label="Desktop GitHub Link" style={{ color: 'var(--text-secondary)' }}><FiGithub size={20} /></a>
-          <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Desktop LinkedIn Link" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={20} /></a>
-          <a href="https://leetcode.com/u/harshitj183/" target="_blank" rel="noreferrer" title="LeetCode" aria-label="Desktop LeetCode Link" style={{ color: 'var(--text-secondary)' }}><FiCode size={20} /></a>
-          <a href="mailto:harshitj183@gmail.com" title="Email" aria-label="Desktop Email Link" style={{ color: 'var(--text-secondary)' }}><FiMail size={20} /></a>
+          <a href="https://github.com/harshitj183" target="_blank" rel="noreferrer" title="GitHub" style={{ color: 'var(--text-secondary)' }}><FiGithub size={20} /></a>
+          <a href="https://linkedin.com/in/harshitj183" target="_blank" rel="noreferrer" title="LinkedIn" style={{ color: 'var(--text-secondary)' }}><FiLinkedin size={20} /></a>
+          <a href="https://leetcode.com/u/harshitj183/" target="_blank" rel="noreferrer" title="LeetCode" style={{ color: 'var(--text-secondary)' }}><FiCode size={20} /></a>
+          <a href="mailto:harshitj183@gmail.com" title="Email" style={{ color: 'var(--text-secondary)' }}><FiMail size={20} /></a>
         </div>
       </div>
     </aside>
