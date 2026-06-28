@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSend, FiMail, FiPhone, FiCheckCircle, FiLoader, FiGithub, FiLinkedin, FiCode, FiMapPin, FiCalendar } from 'react-icons/fi';
 
@@ -59,6 +59,18 @@ const InputField = ({ label, type = 'text', name, placeholder, required = true, 
 const Contact = () => {
   const [status, setStatus] = useState<string>('idle'); // idle | sending | success | error
   const formRef = useRef<HTMLFormElement>(null);
+  
+  // Obfuscate phone number from simple scrapers by building it on client
+  const [phoneData, setPhoneData] = useState({ sub: 'Reveal Number', href: '#' });
+  useEffect(() => {
+    const p1 = '+91';
+    const p2 = '97930';
+    const p3 = '09391';
+    setPhoneData({
+      sub: `${p1} ${p2} ${p3}`,
+      href: `tel:${p1}${p2}${p3}`
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -98,8 +110,8 @@ const Contact = () => {
     {
       icon: <FiPhone />,
       label: 'Phone',
-      sub: '+91 97930 09391',
-      href: 'tel:+919793009391',
+      sub: phoneData.sub,
+      href: phoneData.href,
       color: '#10b981'
     },
     {
