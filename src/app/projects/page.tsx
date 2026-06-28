@@ -202,17 +202,23 @@ const ProjectCard = ({ project, onOpen, isActive, cardRef }: ProjectCardProps) =
       <span style={{ color: 'var(--accent)', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.06em' }}>
         VIEW CASE STUDY →
       </span>
-      <div style={{ display: 'flex', gap: '0.8rem' }}>
+      <div style={{ display: 'flex', gap: '0.6rem' }}>
         {project.github && (
           <a
             href={project.github}
             target="_blank"
             rel="noreferrer"
             onClick={e => e.stopPropagation()}
-            style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1 }}
+            style={{ 
+              color: '#fff', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
+              background: 'rgba(255,255,255,0.05)', padding: '0.4rem 0.8rem', borderRadius: '100px',
+              border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s', fontWeight: 500
+            }}
             title="Source Code"
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
           >
-            <FiGithub />
+            <FiGithub size={14} /> Code
           </a>
         )}
         {project.live && (
@@ -221,10 +227,16 @@ const ProjectCard = ({ project, onOpen, isActive, cardRef }: ProjectCardProps) =
             target="_blank"
             rel="noreferrer"
             onClick={e => e.stopPropagation()}
-            style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: 1 }}
+            style={{ 
+              color: '#fff', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
+              background: 'rgba(99,102,241,0.15)', padding: '0.4rem 0.8rem', borderRadius: '100px',
+              border: '1px solid rgba(99,102,241,0.3)', transition: 'all 0.2s', fontWeight: 500
+            }}
             title="Live Demo"
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.25)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,102,241,0.15)'}
           >
-            <FiExternalLink />
+            <FiExternalLink size={14} /> Live
           </a>
         )}
       </div>
