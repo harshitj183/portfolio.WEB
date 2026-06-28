@@ -18,10 +18,6 @@ const StatCard = ({ label, value, suffix = '', icon, loading = false }: StatCard
     className="glass-panel"
     style={{
       padding: '2rem',
-      background: 'var(--bg-secondary)',
-      border: '1px solid var(--border-color)',
-      position: 'relative',
-      borderRadius: '12px'
     }}
   >
     <div style={{
@@ -61,7 +57,7 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
   }
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
+    <div className="glass-panel" style={{ padding: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0 }}>
           <FiGithub className="text-accent" /> GitHub Contribution Graph
@@ -171,7 +167,7 @@ const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
   }
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
+    <div className="glass-panel" style={{ padding: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0 }}>
           <FiCode className="text-accent" /> LeetCode Submission Graph

@@ -83,8 +83,12 @@ const Home = () => {
     <div style={{ padding: '2rem 0' }}>
       {/* Available Badge */}
       <div style={{ marginBottom: '2.5rem' }}>
-        <span className="pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.8rem' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+        <span style={{ 
+          display: 'inline-flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.85rem', 
+          background: 'rgba(255,255,255,0.03)', padding: '0.6rem 1.2rem', borderRadius: '100px', 
+          border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)', fontWeight: 500 
+        }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 12px #10b981' }} />
           Available for full-time & freelance roles
         </span>
       </div>
@@ -115,16 +119,16 @@ const Home = () => {
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <Link
               href="/contact"
-              className="pill accent"
-              style={{ padding: '0.8rem 1.8rem', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
+              className="premium-action-btn premium-action-primary"
+              style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
             >
               Get in touch <FiArrowRight size={16} />
             </Link>
             <a
               href="/resume.pdf"
               download="Harshit_Jaiswal_Resume.pdf"
-              className="pill"
-              style={{ padding: '0.8rem 1.8rem', fontSize: '0.9rem', background: '#1e1e24', color: '#fff', textDecoration: 'none' }}
+              className="premium-action-btn premium-action-secondary"
+              style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
               title="Download CV"
             >
               Download CV
@@ -133,8 +137,8 @@ const Home = () => {
               href="https://github.com/harshitj183"
               target="_blank"
               rel="noreferrer"
-              className="pill"
-              style={{ padding: '0.8rem 1.8rem', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none' }}
+              className="premium-action-btn premium-action-secondary"
+              style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
             >
               <FiGithub size={18} /> GitHub
             </a>
@@ -142,7 +146,7 @@ const Home = () => {
         </div>
 
         {/* Avatar card */}
-        <div id="profile-card" className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center', maxWidth: '300px', width: '100%', borderRadius: '12px' }}>
+        <div id="profile-card" className="glass-panel" style={{ padding: '2.5rem', textAlign: 'center', maxWidth: '300px', width: '100%' }}>
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem' }}>
             {/* Thought/Dream Bubble */}
             <div style={{
@@ -206,8 +210,8 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.78rem', color: '#10b981', fontWeight: 600 }}>
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', fontSize: '0.8rem', color: '#10b981', fontWeight: 600 }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 12px #10b981' }} />
             Available for hire
           </div>
         </div>
@@ -220,7 +224,10 @@ const Home = () => {
         </p>
         <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
           {TECH_STACK.map((tech) => (
-            <span key={tech} className="pill" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+            <span key={tech} style={{ 
+              padding: '0.6rem 1.2rem', fontSize: '0.85rem', background: 'rgba(255,255,255,0.03)', 
+              borderRadius: '100px', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-secondary)'
+            }}>
               {tech}
             </span>
           ))}
@@ -232,7 +239,7 @@ const Home = () => {
         <FiStar className="text-accent" /> Featured Work
       </h2>
 
-      <div className="glass-panel featured-showcase-panel" style={{ marginBottom: '5rem', borderRadius: '12px', overflow: 'hidden', position: 'relative', minHeight: '280px' }}>
+      <div className="glass-panel featured-showcase-panel" style={{ marginBottom: '5rem', position: 'relative', minHeight: '280px', padding: 0 }}>
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={slide}

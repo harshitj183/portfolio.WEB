@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { FiGithub, FiLinkedin, FiMail, FiCode, FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiMenu, FiX, FiSearch } from 'react-icons/fi';
 
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
@@ -64,8 +65,15 @@ const Sidebar = () => {
               className={isActive ? 'nav-item active' : 'nav-item'} 
               onClick={close}
             >
-              <span className="nav-icon">{item.icon}</span>
-              <span className="nav-text" style={{ marginLeft: '1rem' }}>{item.name}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="sidebar-active"
+                  style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.05)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', zIndex: -1, boxShadow: '0 4px 14px 0 rgba(0,0,0,0.2)' }}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="nav-icon" style={{ zIndex: 1 }}>{item.icon}</span>
+              <span className="nav-text" style={{ marginLeft: '1rem', zIndex: 1 }}>{item.name}</span>
             </Link>
           );
         })}
