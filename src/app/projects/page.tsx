@@ -108,7 +108,13 @@ const PROJECTS = [
     gallery: []
   }
 ];
-const TAGS: string[] = ['all', 'fullstack', 'frontend', 'backend', 'ai', 'extension', 'tools'];
+
+const TAGS: string[] = ['all', ...Object.entries(
+  PROJECTS.reduce((acc, p) => {
+    p.tags.forEach(t => acc[t] = (acc[t] || 0) + 1);
+    return acc;
+  }, {} as Record<string, number>)
+).sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => e[0])];
 
 interface Project {
   id: number;
@@ -318,29 +324,46 @@ const Projects = () => {
         Technical breakdowns of high-performance solutions across web architecture, AI, and developer tooling.
       </motion.p>
 
-      {/* Filter Bar */}
+      {/* Premium Animated Filter Bar */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '4rem', alignItems: 'center' }}
+        style={{ 
+          display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '4rem', 
+          alignItems: 'center', background: 'rgba(255,255,255,0.03)', 
+          padding: '0.6rem 1rem', borderRadius: '100px', width: 'fit-content', 
+          border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+        }}
       >
-        <FiFilter style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
+        <FiFilter size={16} style={{ color: 'var(--text-secondary)', marginRight: '0.5rem', marginLeft: '0.5rem' }} />
         {TAGS.map(tag => (
           <button
             key={tag}
             onClick={() => setActiveTag(tag)}
-            className={`pill${activeTag === tag ? ' accent' : ''}`}
             style={{
-              fontSize: '0.75rem', padding: '0.5rem 1.2rem', cursor: 'pointer',
-              fontWeight: activeTag === tag ? 700 : 400, border: 'none', textTransform: 'capitalize'
+              position: 'relative',
+              fontSize: '0.85rem', padding: '0.5rem 1.2rem', cursor: 'pointer',
+              fontWeight: activeTag === tag ? 600 : 400, border: 'none', background: 'transparent',
+              color: activeTag === tag ? '#fff' : 'var(--text-secondary)',
+              textTransform: 'capitalize', zIndex: 1, transition: 'color 0.2s',
+              outline: 'none'
             }}
           >
+            {activeTag === tag && (
+              <motion.div
+                layoutId="active-filter"
+                style={{ position: 'absolute', inset: 0, background: 'var(--accent)', borderRadius: '100px', zIndex: -1, boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.39)' }}
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
             {tag}
           </button>
         ))}
-        <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginLeft: 'auto' }}>
-          {filtered.length} project{filtered.length !== 1 ? 's' : ''}
+        <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.1)', margin: '0 0.8rem' }} />
+        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '0.8rem', fontWeight: 500 }}>
+          <span style={{ width: '8px', height: '8px', background: '#34d399', borderRadius: '50%', display: 'inline-block', boxShadow: '0 0 12px #34d399' }} />
+          {filtered.length} found
         </span>
       </motion.div>
 
