@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fi';
 import Image from 'next/image';
 import ReadmeViewer from '@/components/ReadmeViewer';
+import TiltCard from '@/components/TiltCard';
 
 const PROJECTS = [
   {
@@ -142,13 +143,14 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, onOpen, isActive, cardRef }: ProjectCardProps) => (
-  <div
+  <TiltCard
     ref={cardRef}
     data-project-id={project.id}
     data-project-title={project.title}
     onClick={() => onOpen(project)}
     className={`glass-panel ${isActive ? 'project-highlight' : ''}`}
     style={{ display: 'flex', flexDirection: 'column', padding: '1.8rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+    tiltAngle={10}
   >
     {project.featured && (
       <div style={{
@@ -241,7 +243,7 @@ const ProjectCard = ({ project, onOpen, isActive, cardRef }: ProjectCardProps) =
         )}
       </div>
     </div>
-  </div>
+  </TiltCard>
 );
 
 const Projects = () => {

@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { FiGithub, FiMapPin, FiArrowRight, FiStar, FiExternalLink } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
+import TiltCard from '@/components/TiltCard';
 
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
 
@@ -315,9 +316,9 @@ const Home = () => {
                 </a>
               </div>
             </div>
-            <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)', position: 'relative', height: '220px' }}>
+            <TiltCard tiltAngle={5} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)', position: 'relative', height: '220px' }}>
               <Image src={proj.image} alt={proj.title} fill style={{ objectFit: 'cover', display: 'block' }} />
-            </div>
+            </TiltCard>
           </motion.div>
         </AnimatePresence>
 
