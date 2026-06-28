@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FiGithub, FiActivity, FiCode, FiZap, FiTrendingUp, FiAward } from 'react-icons/fi';
+import Image from 'next/image';
 
 /* ── Stat Card ───────────────────────── */
 interface StatCardProps {
@@ -143,7 +144,7 @@ const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: bo
       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
         {badges.map((b: any) => (
           <div key={b.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem', background: 'rgba(255,255,255,0.03)', padding: '1.2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', width: '130px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-            <img src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} style={{ width: '70px', height: '70px', objectFit: 'contain', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' }} />
+            <Image src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} width={70} height={70} style={{ objectFit: 'contain', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' }} />
             <span style={{ fontSize: '0.75rem', textAlign: 'center', color: 'var(--text-secondary)', lineHeight: 1.3, fontWeight: 500 }}>{b.displayName}</span>
           </div>
         ))}

@@ -7,6 +7,7 @@ import {
   FiActivity, FiX, FiLayers, FiTerminal, FiCheckCircle,
   FiGithub, FiFilter, FiMessageSquare
 } from 'react-icons/fi';
+import Image from 'next/image';
 
 const PROJECTS = [
   {
@@ -159,10 +160,11 @@ const ProjectCard = ({ project, onOpen }: ProjectCardProps) => (
         border: '1px solid var(--glass-border)',
         position: 'relative'
       }}>
-        <img 
+        <Image 
           src={project.image} 
           alt={project.title} 
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+          fill
+          style={{ objectFit: 'cover' }} 
         />
       </div>
     )}
@@ -350,13 +352,13 @@ const Projects = () => {
                 }}>
                   {selected.gallery.map((img, i) => (
                     <div key={i} className="gallery-image-container">
-                      <img src={img} alt={`${selected.title} screenshot ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <Image src={img} alt={`${selected.title} screenshot ${i + 1}`} fill style={{ objectFit: 'cover' }} />
                     </div>
                   ))}
                 </div>
               ) : selected.image && (
                 <div className="single-image-container">
-                  <img src={selected.image} alt={selected.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Image src={selected.image} alt={selected.title} fill style={{ objectFit: 'cover' }} />
                 </div>
               )}
 

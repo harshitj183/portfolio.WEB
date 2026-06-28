@@ -5,7 +5,23 @@ import '../index.css';
 
 export const metadata: Metadata = {
   title: 'Harshit Jaiswal | Full Stack Architect & SDE',
-  description: 'Elite Software Engineering Portfolio of Harshit Jaiswal',
+  description: 'Elite Software Engineering Portfolio of Harshit Jaiswal. Building high-performance AI tools, modern web architectures, and scalable full-stack applications.',
+  keywords: ['Harshit Jaiswal', 'Software Engineer', 'Full Stack Developer', 'AI Agent Engineer', 'Next.js', 'React', 'Node.js', 'Gurugram'],
+  authors: [{ name: 'Harshit Jaiswal' }],
+  creator: 'Harshit Jaiswal',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.harshitj183.in',
+    title: 'Harshit Jaiswal | Software Engineer',
+    description: 'Explore the interactive AI-powered portfolio of Harshit Jaiswal, SDE and AI Architect.',
+    siteName: 'Harshit Jaiswal Portfolio',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Harshit Jaiswal | Full Stack Architect & SDE',
+    description: 'Explore the interactive AI-powered portfolio of Harshit Jaiswal.',
+  },
   manifest: '/manifest.webmanifest',
   icons: {
     icon: '/favicon.png',

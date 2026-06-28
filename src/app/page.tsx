@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiGithub, FiMapPin, FiArrowRight, FiStar, FiExternalLink } from 'react-icons/fi';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
@@ -181,11 +182,13 @@ const Home = () => {
                 boxShadow: '0 0 10px var(--accent-glow)'
               }} />
             </div>
-            <img
+            <Image
               src={GITHUB_AVATAR}
               alt="Harshit Jaiswal"
+              width={120}
+              height={120}
               style={{
-                width: '120px', height: '120px', borderRadius: '12px',
+                borderRadius: '12px',
                 objectFit: 'cover', border: '1px solid var(--border-color)',
                 display: 'block'
               }}
@@ -258,8 +261,8 @@ const Home = () => {
                 </a>
               </div>
             </div>
-            <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
-              <img src={proj.image} alt={proj.title} style={{ width: '100%', height: '220px', objectFit: 'cover', display: 'block' }} />
+            <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)', position: 'relative', height: '220px' }}>
+              <Image src={proj.image} alt={proj.title} fill style={{ objectFit: 'cover', display: 'block' }} />
             </div>
           </motion.div>
         </AnimatePresence>
