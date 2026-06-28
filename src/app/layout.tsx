@@ -22,11 +22,6 @@ export const metadata: Metadata = {
     title: 'Harshit Jaiswal | Full Stack Architect & SDE',
     description: 'Explore the interactive AI-powered portfolio of Harshit Jaiswal.',
   },
-  manifest: '/manifest.webmanifest',
-  icons: {
-    icon: '/favicon.png',
-    apple: '/favicon.png',
-  },
 };
 
 export const viewport: Viewport = {
