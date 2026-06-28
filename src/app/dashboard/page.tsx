@@ -136,7 +136,7 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
 const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: boolean }) => {
   if (loading || !badges || badges.length === 0) return null;
   return (
-    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px', marginBottom: '3rem' }}>
+    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px', height: '100%' }}>
       <h3 style={{ fontSize: '1.1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
         <FiAward className="text-accent" /> Earned Badges
       </h3>
@@ -443,18 +443,37 @@ const Dashboard = () => {
         Real-time metrics across engineering projects and algorithmic problem-solving.
       </p>
 
-      {/* Stats Grid */}
-      <div id="stats-overview" className="grid" style={{ marginBottom: '3rem' }}>
+      <div style={{ width: '100%', height: '1px', background: 'var(--border-color)', margin: '3rem 0' }} />
+
+      {/* ── SOFTWARE ENGINEERING PROFILE ── */}
+      <h2 style={{ fontSize: '1.6rem', marginBottom: '2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+        Software Engineering
+      </h2>
+      <div id="stats-overview" className="grid" style={{ marginBottom: '2.5rem' }}>
         <StatCard label="GitHub Repos" value={github.stats?.repos || 0} icon={<FiGithub />} loading={github.loading} />
-        <StatCard label="LeetCode Solved" value={leetcode.stats?.solved || 0} icon={<FiCode />} loading={leetcode.loading} />
         <StatCard label="Projects Shipped" value={24} suffix="+" icon={<FiZap />} />
         <StatCard label="Current Streak" value={github.stats?.streak || 0} suffix=" days" icon={<FiTrendingUp />} loading={github.loading} />
       </div>
 
-      {/* Middle: Tech + LeetCode distribution */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', marginBottom: '3rem' }}>
+      <div style={{ marginBottom: '3rem' }}>
         <TechRadar />
+      </div>
 
+      <div id="github-heatmap" style={{ marginBottom: '4rem' }}>
+        <GithubHeatmap data={github.heatmap} loading={github.loading} />
+      </div>
+
+      <div style={{ width: '100%', height: '1px', background: 'var(--border-color)', margin: '4rem 0' }} />
+
+      {/* ── PROBLEM SOLVING (DSA) PROFILE ── */}
+      <h2 style={{ fontSize: '1.6rem', marginBottom: '2rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+        Problem Solving (DSA)
+      </h2>
+      <div className="grid" style={{ marginBottom: '2.5rem' }}>
+        <StatCard label="LeetCode Solved" value={leetcode.stats?.solved || 0} icon={<FiCode />} loading={leetcode.loading} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', marginBottom: '3rem' }}>
         <div id="leetcode-distribution" className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <FiActivity className="text-accent" /> LeetCode Distribution
@@ -483,16 +502,12 @@ const Dashboard = () => {
             })}
           </div>
         </div>
+
+        <div>
+          <LeetcodeBadges badges={leetcode.badges} loading={leetcode.loading} />
+        </div>
       </div>
 
-      <LeetcodeBadges badges={leetcode.badges} loading={leetcode.loading} />
-
-      {/* GitHub Heatmap */}
-      <div id="github-heatmap" style={{ marginBottom: '3rem' }}>
-        <GithubHeatmap data={github.heatmap} loading={github.loading} />
-      </div>
-
-      {/* Leetcode Heatmap */}
       <div id="leetcode-heatmap" style={{ marginBottom: '3rem' }}>
         <LeetcodeHeatmap data={leetcode.heatmap} loading={leetcode.loading} />
       </div>
