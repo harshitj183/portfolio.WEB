@@ -42,6 +42,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Harshit Jaiswal",
+              "url": "https://www.harshitj183.in",
+              "image": "https://avatars.githubusercontent.com/u/76927137?v=4",
+              "jobTitle": "Full Stack Architect & SDE",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "Freelance & Open Source"
+              },
+              "sameAs": [
+                "https://github.com/harshitj183",
+                "https://linkedin.com/in/harshitj183",
+                "https://leetcode.com/u/harshitj183"
+              ]
+            })
+          }}
+        />
+      </head>
       <body style={{ margin: 0, background: '#09090b', color: '#fff' }}>
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
