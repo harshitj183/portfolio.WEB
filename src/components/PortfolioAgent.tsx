@@ -156,7 +156,6 @@ function getLocalAgentResponse(userInput: string): string {
 }
 
 export default function PortfolioAgent() {
-  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { sender: 'agent', text: "Hello recruiter! 👋 I am Harshit's AI co-pilot. Ask me for a 'tour', 'resume', or to see 'projects'!", isLive: false }
   ]);
@@ -260,7 +259,6 @@ export default function PortfolioAgent() {
         break;
       case 'start_portfolio_tour':
         showToast("Initializing Guided Interactive Tour...");
-        setIsOpen(false);
         window.dispatchEvent(new CustomEvent('start-mascot-tour'));
         break;
       case 'create_custom_command':
@@ -300,6 +298,7 @@ export default function PortfolioAgent() {
 
     const userText = inputVal;
     setInputVal('');
+    setMessages(prev => [...prev, { sender: 'user', text: userText, isLive: false }]);
     
     window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: 'Thinking...' } }));
 
@@ -308,12 +307,14 @@ export default function PortfolioAgent() {
         const json = JSON.parse(rawResponse);
         if (json.reply) {
           window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: json.reply } }));
+          setMessages(prev => [...prev, { sender: 'agent', text: json.reply, isLive: false }]);
         }
         if (json.action) {
           handleActionExecution(json.action);
         }
       } catch {
         window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: rawResponse } }));
+        setMessages(prev => [...prev, { sender: 'agent', text: rawResponse, isLive: false }]);
       }
     };
 
@@ -339,13 +340,12 @@ export default function PortfolioAgent() {
   // Listen to toggle events from the walking avatar and programmatic messages
   useEffect(() => {
     const handleToggle = () => {
-      setIsOpen(prev => !prev);
+      document.getElementById('agent-input')?.focus();
     };
 
     const handleProgrammaticMessage = (e: Event) => {
       const customEvent = e as CustomEvent;
       if (customEvent.detail && customEvent.detail.message) {
-        setIsOpen(true);
         // Simulate a form submission with the message
         setInputVal(customEvent.detail.message);
         setTimeout(() => {
@@ -357,18 +357,21 @@ export default function PortfolioAgent() {
 
     const processProgrammaticMessage = async (userText: string) => {
         setInputVal('');
+        setMessages(prev => [...prev, { sender: 'user', text: userText, isLive: false }]);
 
         const processResponse = (rawResponse: string, isLive: boolean) => {
           try {
             const json = JSON.parse(rawResponse);
             if (json.reply) {
               window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: json.reply } }));
+              setMessages(prev => [...prev, { sender: 'agent', text: json.reply, isLive: false }]);
             }
             if (json.action) {
               handleActionExecution(json.action);
             }
           } catch {
             window.dispatchEvent(new CustomEvent('mascot-speak', { detail: { text: rawResponse } }));
+            setMessages(prev => [...prev, { sender: 'agent', text: rawResponse, isLive: false }]);
           }
         };
 
@@ -403,60 +406,120 @@ export default function PortfolioAgent() {
 
   return (
     <>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.95 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            style={{
-              position: 'fixed',
-              bottom: '25px',
-              right: '25px',
-              width: '350px',
-              zIndex: 99998,
-            }}
-          >
-            {/* Input Form only */}
-            <form onSubmit={handleSend} style={{ display: 'flex', gap: '0.5rem', background: '#09090b', padding: '0.8rem', borderRadius: '16px', border: '1px solid var(--accent)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
-              <input
-                value={inputVal}
-                onChange={e => setInputVal(e.target.value)}
-                placeholder="Ask me anything..."
-                autoFocus
-                style={{
-                  flex: 1,
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  padding: '0.6rem 0.8rem',
-                  color: '#fff',
-                  fontSize: '0.82rem',
-                  outline: 'none'
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  background: 'var(--accent)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '12px',
-                  width: '36px',
-                  height: '36px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer'
-                }}
-              >
-                <FiSend size={15} />
-              </button>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '25px',
+          right: '25px',
+          zIndex: 99998,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '12px',
+          width: '350px'
+        }}
+      >
+        {/* Chat Messages */}
+        <div style={{ flex: 1, width: '100%', maxHeight: '400px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '10px 0', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {messages.map((m, idx) => (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              key={idx}
+              style={{
+                alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
+                maxWidth: '85%',
+                padding: '0.65rem 0.9rem',
+                borderRadius: m.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                background: m.sender === 'user' ? 'var(--accent)' : 'rgba(30, 30, 35, 0.55)',
+                color: m.sender === 'user' ? '#fff' : '#e2e8f0',
+                fontSize: '0.82rem',
+                lineHeight: '1.4',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                backdropFilter: 'blur(8px)',
+                border: m.sender === 'agent' ? '1px solid rgba(255,255,255,0.05)' : 'none',
+              }}
+            >
+              {m.text}
+            </motion.div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {/* Quick Prompts */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'flex-end' }}>
+                {[
+                  "Start tour 🎓", 
+                  "Open resume 📄", 
+                  "Show React projects 🚀", 
+                  "Book a meeting 📅"
+                ].map((prompt, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('send-agent-message', { detail: { message: prompt } }));
+                    }}
+                    style={{
+                      background: 'rgba(99, 102, 241, 0.15)',
+                      border: '1px solid rgba(99, 102, 241, 0.3)',
+                      borderRadius: '12px',
+                      padding: '5px 10px',
+                      fontSize: '0.75rem',
+                      color: '#e2e8f0',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(4px)',
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.3)'}
+                    onMouseOut={(e) => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)'}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+
+              {/* Input Form only */}
+              <form onSubmit={handleSend} style={{ display: 'flex', gap: '0.5rem', background: '#09090b', padding: '0.8rem', borderRadius: '16px', border: '1px solid var(--accent)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+                <input
+                  id="agent-input"
+                  value={inputVal}
+                  onChange={e => {
+                    setInputVal(e.target.value);
+                    window.dispatchEvent(new CustomEvent('mascot-listen'));
+                  }}
+                  placeholder="Ask me anything..."
+                  style={{
+                    flex: 1,
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '12px',
+                    padding: '0.6rem 0.8rem',
+                    color: '#fff',
+                    fontSize: '0.82rem',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    background: 'var(--accent)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '12px',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <FiSend size={15} />
+                </button>
+              </form>
+        </div>
+      </div>
     </>
   );
 }

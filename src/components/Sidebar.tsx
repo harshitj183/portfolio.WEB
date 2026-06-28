@@ -47,9 +47,7 @@ const Sidebar = () => {
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-        <button className="search-toggle-btn" onClick={() => window.dispatchEvent(new CustomEvent('toggle-command-palette'))} aria-label="Search">
-          <FiSearch size={24} color="#fff" />
-        </button>
+
         <button className="hamburger" onClick={() => setOpen(o => !o)} aria-label="Toggle menu">
           {open ? <FiX size={26} color="#fff" /> : <FiMenu size={26} color="#fff" />}
         </button>

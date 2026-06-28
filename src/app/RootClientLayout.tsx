@@ -179,7 +179,7 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
         overflow: 'hidden',
       }}>
         <video
-          src="/char-animation.mp4"
+          src="/char-animation.webm"
           autoPlay
           loop
           muted

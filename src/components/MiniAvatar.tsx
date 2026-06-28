@@ -5,20 +5,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 
 type WalkDir = 'left' | 'right';
-type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing' | 'running' | 'flying' | 'pointing' | 'talking';
+type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing' | 'running' | 'flying' | 'pointing' | 'talking' | 'jumping' | 'sofa_sleep' | 'sunglasses' | 'lightbulb' | 'hacker_typing' | 'analyzing' | 'building' | 'presenting' | 'listening';
 
 const QUIPS: Record<Mood, string[]> = {
   walk:     ['Just walking around 🚶', 'Exploring your site...', 'Click me to chat! 💬', 'npm install life'],
-  idle:     ['*whistles*', 'Hmm...', 'Waiting for instructions ⏱️', 'Beautiful design! ✨'],
-  typing:   ['Hackerman mode engaged ⌨️', 'Resolving merge conflicts... 🔨', 'Compiling... ⚙️', 'Fixing a bug 🐛'],
-  waving:   ['Hello there! 👋', 'Hi, I\'m Harshit\'s AI! 🤖', 'Welcome to the portfolio! 🎉'],
-  thinking: ['Let me process that... 🧠', 'Analyzing the DOM... 🔍', 'Thinking... 🤔'],
-  sleeping: ['zzZ...', 'Recharging batteries 🔋', 'Wake me up if you need me 😴'],
-  dancing:  ['Woohoo! 🕺', 'This portfolio rocks! 🎸', 'Grooving to the code 🎵'],
-  running:  ['Zoom! 🏃', 'Gotta go fast! 💨', 'Racing to the next section! 🏁'],
-  flying:   ['To infinity and beyond! 🦸‍♂️', 'I\'m Batman! 🦇', 'Taking the aerial route! ✈️'],
-  pointing: ['Look at this! 👉', 'Check this out! 👀', 'Right here! 👇'],
-  talking:  ['Blah blah blah 🗣️', 'Let me tell you about this... 🎤', 'Did you know? 💡']
+  idle:     ['Just hanging out ☕', 'Thinking about code...', 'Hover over me!', 'Nice weather today 🌤️'],
+  typing:   ['Coding hard... 👨‍💻', 'Fixing bugs... 🐛', 'Writing a new AI agent 🤖'],
+  waving:   ['Hello there! 👋', 'Nice to meet you! ✨'],
+  thinking: ['Hmm... 🧐', 'Let me check my database 💾', 'Processing request... ⏳'],
+  sleeping: ['Zzzzz... 💤', 'Compiling in my sleep...', 'Leave me alone 😴'],
+  dancing:  ['Vibin\' to the code 🎵', 'Build succeeded! 🎉', 'Deploying to prod...'],
+  running:  ['Late for a meeting! 🏃', 'Chasing a bug 🐛', 'Need more coffee ☕'],
+  flying:   ['To the cloud! ☁️', 'Deploying fast! 🚀', 'I believe I can code 🎶'],
+  pointing: ['Look at this! 👉', 'Check this out! 👀'],
+  talking:  ['Blah blah blah 🗣️', 'Explaining the architecture...'],
+  jumping:  ['Woohoo! High jump! 🦘', 'Reaching new heights! 🚀'],
+  sofa_sleep: ['Master mode... 😎', 'Just chilling... 🛋️', 'Do not disturb 🤫'],
+  sunglasses: ['Thalaiva style! 🕶️', 'Too cool for bugs 😎', 'Mind it! 🤘'],
+  lightbulb: ['What an idea, sirji! 💡', 'Eureka! 🧠', 'Lightbulb moment! 🌟'],
+  hacker_typing: ['Hacking the mainframe... 🧑‍💻', '1000 WPM! 🚀', 'Compiling next-gen AI...'],
+  analyzing: ['Hmm... interesting data.', 'Let me inspect this closer! 🔍', 'Analyzing metrics...'],
+  building: ['Building scalable systems! 🏗️', 'Fixing the bugs... 🔧', 'Constructing the future.'],
+  presenting: ['As you can see here...', 'Let me demonstrate! 📈', 'Notice this detail...'],
+  listening: ['I am all ears! 👂', 'Listening closely...', 'Tell me more! 📝']
 };
 
 // Helper to get relative climb heights based on viewport height
@@ -111,7 +120,7 @@ const TOUR_STEPS: TourStep[] = [
 ];
 
 // ── Pixel Art Character ───────────────────────────────────────────────────
-const HarshitPixelImage = ({ mood, dir, step, isClimbing }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean }) => {
+const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean; isAtHome: boolean; isMobile?: boolean }) => {
   let src = '/avatar/idle.png';
   const isWalking = mood === 'walk';
   const isDancing = mood === 'dancing';
@@ -140,6 +149,25 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing }: { mood: Mood; dir: W
     src = (Math.floor(step / 1.5) % 2 === 0) ? '/avatar/running.png' : '/avatar/idle.png';
   } else if (mood === 'flying') {
     src = '/avatar/flying.png';
+  } else if (mood === 'jumping') {
+    src = '/avatar/jumping.png';
+  } else if (mood === 'sofa_sleep') {
+    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/sofa_sleep_1.png' : '/avatar/sofa_sleep_2.png';
+  } else if (mood === 'sunglasses') {
+    src = '/avatar/sunglasses.png';
+  } else if (mood === 'lightbulb') {
+    src = '/avatar/lightbulb.png';
+  } else if (mood === 'hacker_typing') {
+    src = '/avatar/hacker_typing.png';
+  } else if (mood === 'analyzing') {
+    src = '/avatar/analyzing.png';
+  } else if (mood === 'building') {
+    src = '/avatar/building.png';
+  } else if (mood === 'presenting') {
+    src = '/avatar/presenting.png';
+  } else if (mood === 'listening') {
+    // Fallback to thinking until the API quota resets and we can generate listening.png
+    src = '/avatar/thinking.png';
   }
 
   const bobY = isClimbing
@@ -152,39 +180,63 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing }: { mood: Mood; dir: W
           ? (Math.sin(step * 0.1) * 10 + 'px')
           : '0px';
   const rotateVal = isDancing ? (step % 2 === 0 ? '7deg' : '-7deg') : (isFlying ? (dir === 'left' ? '-15deg' : '15deg') : (isRunning ? (dir === 'left' ? '-5deg' : '5deg') : '0deg'));
-  const scaleVal = isDancing ? (step % 2 === 0 ? 1.1 : 0.94) : 1;
+  const scaleValStr = isDancing ? (step % 2 === 0 ? 1.1 : 0.94) : 1;
   const flipScaleX = dir === 'left' ? -1 : 1;
 
   return (
     <div
       style={{
-        width: '104px',
-        height: '104px',
+        width: isMobile ? '120px' : '180px',
+        height: isMobile ? '120px' : '180px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transform: `translateY(${bobY}) scaleX(${flipScaleX}) rotate(${rotateVal}) scale(${scaleVal})`,
-        transition: 'transform 0.1s ease',
+        transform: `translateY(${bobY}) scaleX(${flipScaleX}) rotate(${rotateVal}) scale(${scaleValStr})`,
+        transition: 'all 0.3s ease',
         position: 'relative',
         borderRadius: '50%',
-        background: 'rgba(15, 23, 42, 0.6)',
-        boxShadow: '0 0 15px rgba(99, 102, 241, 0.4), inset 0 0 10px rgba(99, 102, 241, 0.4)',
-        border: '2px solid rgba(99, 102, 241, 0.6)',
-        backdropFilter: 'blur(4px)',
-        overflow: 'hidden'
+        background: isAtHome ? 'rgba(15, 23, 42, 0.6)' : 'transparent',
+        boxShadow: isAtHome ? '0 0 15px rgba(99, 102, 241, 0.4), inset 0 0 10px rgba(99, 102, 241, 0.4)' : 'none',
+        border: isAtHome ? '2px solid rgba(99, 102, 241, 0.6)' : '2px solid transparent',
+        backdropFilter: isAtHome ? 'blur(4px)' : 'none',
+        overflow: 'visible' // allow drop shadow to bleed out if needed
       }}
     >
       {/* Decorative high-tech ring */}
-      <div style={{
-        position: 'absolute',
-        top: '-4px', left: '-4px', right: '-4px', bottom: '-4px',
-        borderRadius: '50%',
-        border: '1px dashed rgba(16, 185, 129, 0.5)',
-        animation: 'spin 10s linear infinite',
-        pointerEvents: 'none'
-      }} />
+      {isAtHome && (
+        <div style={{
+          position: 'absolute',
+          top: '-4px', left: '-4px', right: '-4px', bottom: '-4px',
+          borderRadius: '50%',
+          border: '1px dashed rgba(16, 185, 129, 0.5)',
+          animation: 'spin 10s linear infinite',
+          pointerEvents: 'none'
+        }} />
+      )}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes avatar-3d-aura {
+          0% {
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 1)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+            transform: perspective(400px) rotateY(15deg) rotateX(-5deg) scaleY(1);
+          }
+          33% {
+            filter: drop-shadow(0 0 18px rgba(236, 72, 153, 1)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+            transform: perspective(400px) rotateY(-10deg) rotateX(2deg) scaleY(0.96) scaleX(1.02);
+          }
+          66% {
+            filter: drop-shadow(0 0 12px rgba(16, 185, 129, 1)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+            transform: perspective(400px) rotateY(8deg) rotateX(-2deg) scaleY(1.02);
+          }
+          100% {
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 1)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+            transform: perspective(400px) rotateY(15deg) rotateX(-5deg) scaleY(1);
+          }
+        }
+        @keyframes avatar-idle-breathe {
+          0%, 100% { transform: scaleY(1) scaleX(1); }
+          50% { transform: scaleY(0.96) scaleX(1.02); }
+        }
       `}} />
 
       <img
@@ -195,9 +247,37 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing }: { mood: Mood; dir: W
           height: '80%',
           objectFit: 'contain',
           position: 'relative',
-          zIndex: 1
+          zIndex: 1,
+          animation: !isAtHome ? 'avatar-3d-aura 3s ease-in-out infinite' : 'avatar-idle-breathe 2s ease-in-out infinite'
         }}
       />
+      {/* Sleek Digital Soundwaves for Listening Mood */}
+      {mood === 'listening' && (
+        <div style={{
+           position: 'absolute',
+           right: '-30px',
+           top: '30%',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           alignItems: 'center',
+           justifyContent: 'center',
+           gap: '4px',
+           transform: dir === 'left' ? 'scaleX(-1)' : 'none',
+           zIndex: 3
+        }}>
+          <div style={{ width: '4px', height: '10px', background: 'var(--accent)', borderRadius: '2px', animation: 'equalizer 0.8s ease-in-out infinite alternate', animationDelay: '0s' }} />
+          <div style={{ width: '4px', height: '24px', background: 'var(--accent)', borderRadius: '2px', animation: 'equalizer 0.8s ease-in-out infinite alternate', animationDelay: '0.2s' }} />
+          <div style={{ width: '4px', height: '16px', background: 'var(--accent)', borderRadius: '2px', animation: 'equalizer 0.8s ease-in-out infinite alternate', animationDelay: '0.4s' }} />
+          <div style={{ width: '4px', height: '32px', background: 'var(--accent)', borderRadius: '2px', animation: 'equalizer 0.8s ease-in-out infinite alternate', animationDelay: '0.6s' }} />
+          <style>{`
+            @keyframes equalizer {
+              0% { transform: scaleY(0.3); opacity: 0.5; }
+              100% { transform: scaleY(1); opacity: 1; filter: drop-shadow(0 0 5px var(--accent)); }
+            }
+          `}</style>
+        </div>
+      )}
     </div>
   );
 };
@@ -242,6 +322,15 @@ export default function RoamingHarshit() {
   const [bubble, setBubble] = useState('');
   const [showBubble, setShowBubble] = useState(false);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Guided Tour State
   const [tourStep, setTourStep] = useState<number>(-1);
 
@@ -260,6 +349,7 @@ export default function RoamingHarshit() {
   const vel = useRef({ x: 2.6, y: 0 }); // Positive velocity = moves left (away from right edge)
   
   const isHovered = useRef(false);
+  
   const lastTime = useRef(0);
   const frameId = useRef(0);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -334,6 +424,13 @@ export default function RoamingHarshit() {
   }, [tourStep, pathname, router, triggerBubble]);
 
   // Tour Handlers
+  const prevTourStep = () => {
+    const prev = tourStep - 1;
+    if (prev >= 0) {
+      setTourStep(prev);
+    }
+  };
+
   const nextTourStep = () => {
     const next = tourStep + 1;
     if (next >= TOUR_STEPS.length) {
@@ -353,6 +450,21 @@ export default function RoamingHarshit() {
     triggerBubble('Tour complete! Let me know if you have questions. 🎓', 3500);
     setTimeout(() => setMood('walk'), 3500);
   };
+
+  // Keyboard controls for Tour
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (tourStep >= 0) {
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+        if (e.key === 'ArrowRight') nextTourStep();
+        else if (e.key === 'ArrowLeft') prevTourStep();
+        else if (e.key === 'Escape') endTour();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourStep]);
 
   // ── Event Listeners ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -469,6 +581,18 @@ export default function RoamingHarshit() {
     };
     window.addEventListener('mascot-speak', handleMascotSpeak);
 
+    let typingTimeout: NodeJS.Timeout;
+    const handleMascotListen = () => {
+      if (tourStep >= 0 || deliveryMode !== 'none') return;
+      setMood('listening');
+      setDir('right'); // look towards input box
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        setMood('walk');
+      }, 1500);
+    };
+    window.addEventListener('mascot-listen', handleMascotListen);
+
     return () => {
       window.removeEventListener('start-mascot-tour', handleStartTour);
       window.removeEventListener('mascot-goto', handleMascotGoto);
@@ -476,8 +600,9 @@ export default function RoamingHarshit() {
       window.removeEventListener('mascot-form-submitting', handleFormSubmitting);
       window.removeEventListener('mascot-form-success', handleFormSuccess);
       window.removeEventListener('mascot-speak', handleMascotSpeak);
+      window.removeEventListener('mascot-listen', handleMascotListen);
     };
-  }, [pathname, router, triggerBubble]);
+  }, [pathname, router, triggerBubble, tourStep, deliveryMode]);
 
   // ── Idle Inactivity Detection ─────────────────────────────────────────────
   useEffect(() => {
@@ -512,6 +637,41 @@ export default function RoamingHarshit() {
       setTimeout(() => setMood('walk'), 2000);
     }
   }, [isIdle, tourStep, deliveryMode]);
+
+  // Random idle speaking
+  useEffect(() => {
+    const talkInterval = setInterval(() => {
+      // Only talk if we are in the idle corner and not doing anything else
+      if (tourStep < 0 && deliveryMode === 'none' && !overrideTarget && !isHovered.current) {
+        if (posRef.current.x <= 45 && posRef.current.y <= 25) {
+          if (Math.random() < 0.25) {
+            showQuip('idle');
+          }
+        }
+      }
+    }, 12000);
+    return () => clearInterval(talkInterval);
+  }, [tourStep, deliveryMode, overrideTarget, showQuip]);
+
+  // Global Input Focus Listener (Listening Animation)
+  useEffect(() => {
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        if (tourStep < 0 && deliveryMode === 'none' && !overrideTarget) {
+           setMood('listening');
+           showQuip('listening');
+           // Set talking for a brief moment then return to listening
+           setTimeout(() => setMood('listening'), 3000);
+        }
+      }
+    };
+    
+    document.addEventListener('focusin', handleFocusIn);
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn);
+    };
+  }, [tourStep, deliveryMode, overrideTarget, showQuip]);
 
 
   // Contextual Hover State
@@ -557,11 +717,23 @@ export default function RoamingHarshit() {
             setHoveredContext(contextName);
             // Let the animation loop know we are docking to this element
             dockedElementRef.current = closestInteractive as HTMLElement;
-            setMood('pointing');
+            
+            // Set context-aware presentation mood before talking
+            if (pathname === '/dashboard') {
+              setMood('analyzing');
+            } else if (pathname === '/projects') {
+              setMood(Math.random() > 0.5 ? 'building' : 'presenting');
+            } else {
+              setMood('pointing');
+            }
             
             // Set talking quip based on element
             setTimeout(() => {
-              setMood('talking');
+              if (pathname === '/dashboard') {
+                setMood('hacker_typing');
+              } else {
+                setMood('talking');
+              }
               const quip = getComponentQuip(contextName, closestInteractive.tagName);
               triggerBubble(quip, 5000);
             }, 800);
@@ -582,7 +754,7 @@ export default function RoamingHarshit() {
       window.removeEventListener('mousemove', handleMouseMove);
       if (hoverTimer.current) clearTimeout(hoverTimer.current);
     };
-  }, [hoveredContext, triggerBubble]);
+  }, [hoveredContext, triggerBubble, pathname]);
 
   // ── Smooth Roaming/Easing loop ─────────────────────────────────────────────
   useEffect(() => {
@@ -593,6 +765,16 @@ export default function RoamingHarshit() {
         const time = performance.now();
         const delta = Math.min((time - lastTime.current) / 16.666, 3);
         lastTime.current = time;
+
+        if (isMobile) {
+          // On mobile, lock the avatar to the bottom right corner (idle position)
+          setPos({ x: 20, y: 20 });
+          if (mood === 'walk' || mood === 'running' || mood === 'flying') {
+            setMood('idle');
+          }
+          frameId.current = requestAnimationFrame(update);
+          return;
+        }
 
         const current = posRef.current;
         let nextY = current.y + (targetY - current.y) * 0.08 * delta;
@@ -668,7 +850,7 @@ export default function RoamingHarshit() {
           const dist = Math.hypot(cPos.x - current.x, cPos.y - current.y);
           
           let speed = 0.0055;
-          const isInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing';
+          const isInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing' || mood === 'jumping' || mood === 'sofa_sleep' || mood === 'sunglasses' || mood === 'lightbulb' || mood === 'listening';
 
           if (dist > 300) {
              speed = 0.0095;
@@ -679,6 +861,7 @@ export default function RoamingHarshit() {
           } else if (dist > 20) {
              speed = 0.0055;
              if (!isInteracting && mood !== 'walk') setMood('walk');
+             if (showBubble && tourStep < 0) setShowBubble(false);
           } else {
              if (!isInteracting && mood !== 'idle') setMood('idle');
           }
@@ -711,7 +894,7 @@ export default function RoamingHarshit() {
           }
 
           // Return to walk mood if we were doing cursor animations but are now stroll-roaming
-          const isMascotInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing' || mood === 'waving' || mood === 'sleeping';
+          const isMascotInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing' || mood === 'waving' || mood === 'sleeping' || mood === 'jumping' || mood === 'sofa_sleep' || mood === 'sunglasses' || mood === 'lightbulb' || mood === 'listening';
           if (!isMascotInteracting && mood !== 'walk') {
             setMood('walk');
           }
@@ -786,8 +969,7 @@ export default function RoamingHarshit() {
     
     if (idleTimer.current) clearTimeout(idleTimer.current);
     
-    setPos({ x: 40, y: 20 });
-    posRef.current = { x: 40, y: 20 };
+    // We intentionally removed the position reset here so the avatar remembers where it is!
     setMood('waving');
     
     idleTimer.current = setTimeout(() => {
@@ -844,7 +1026,7 @@ export default function RoamingHarshit() {
         >
         {/* Speech / Tour bubble */}
         <AnimatePresence>
-          {((showBubble || showTourBubble) && pos.x <= 45 && pos.y <= 25) && (
+          {(showBubble || showTourBubble) && (
             <motion.div
               key={showTourBubble ? `tour-${tourStep}` : bubble}
               initial={{ opacity: 0, y: 8, scale: 0.85 }}
@@ -857,19 +1039,21 @@ export default function RoamingHarshit() {
                 bottom: '100%',
                 left: dir === 'right' ? '0' : 'auto',
                 right: dir === 'left'  ? '0' : 'auto',
-                marginBottom: '6px',
-                background: '#18181b',
-                border: '1px solid rgba(99,102,241,0.7)',
-                borderRadius: '12px',
-                padding: showTourBubble ? '12px 16px' : '5px 10px',
-                fontSize: '0.8rem',
-                color: '#e2e8f0',
-                width: showTourBubble ? '260px' : 'auto',
-                whiteSpace: showTourBubble ? 'normal' : 'nowrap',
-                fontFamily: 'monospace',
-                fontWeight: 600,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                marginBottom: '10px',
+                background: '#ffffff',
+                border: '2px solid #000000',
+                borderRadius: showTourBubble ? '16px' : '24px', // comic balloon shape
+                padding: showTourBubble ? '12px 16px' : '8px 14px',
+                fontSize: '0.85rem',
+                color: '#000000',
+                width: showTourBubble ? '260px' : 'max-content',
+                maxWidth: '220px',
+                whiteSpace: showTourBubble ? 'normal' : 'normal',
+                fontFamily: '"Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive', // comic font
+                fontWeight: 700,
+                boxShadow: '4px 4px 0px rgba(0,0,0,1)', // bold comic drop shadow
                 pointerEvents: 'auto', // Enable pointer events for bubble interaction
+                zIndex: 10
               }}
             >
               {showTourBubble ? (
@@ -891,84 +1075,57 @@ export default function RoamingHarshit() {
                         background: 'transparent', border: 'none', color: '#f43f5e', fontSize: '0.68rem', cursor: 'pointer', padding: 0, fontWeight: 600
                       }}
                     >
-                      Skip
+                      Skip (Esc)
                     </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        nextTourStep();
-                      }}
-                      style={{
-                        background: 'var(--accent)', border: 'none', color: '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600
-                      }}
-                    >
-                      {tourStep === TOUR_STEPS.length - 1 ? 'Finish 🎉' : 'Next →'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prevTourStep();
+                        }}
+                        disabled={tourStep === 0}
+                        style={{
+                          background: tourStep === 0 ? 'rgba(0,0,0,0.1)' : 'var(--accent)', border: 'none', color: tourStep === 0 ? '#888' : '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: tourStep === 0 ? 'not-allowed' : 'pointer', fontWeight: 600
+                        }}
+                      >
+                        ← Prev
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nextTourStep();
+                        }}
+                        style={{
+                          background: 'var(--accent)', border: 'none', color: '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600
+                        }}
+                      >
+                        {tourStep === TOUR_STEPS.length - 1 ? 'Finish 🎉' : 'Next →'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <span>{bubble}</span>
-                  {hoveredContext && (
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        const input = (e.target as HTMLFormElement).elements.namedItem('contextInput') as HTMLInputElement;
-                        if (input && input.value.trim()) {
-                          // Dispatch event to PortfolioAgent
-                          const fullCommand = `Regarding ${hoveredContext}: ${input.value}`;
-                          window.dispatchEvent(new CustomEvent('send-agent-message', { detail: { message: fullCommand } }));
-                          input.value = '';
-                          setHoveredContext(null);
-                          setShowBubble(false);
-                        }
-                      }}
-                      style={{ display: 'flex', gap: '4px' }}
-                    >
-                      <input
-                        name="contextInput"
-                        placeholder="Tell me what to do..."
-                        autoFocus
-                        style={{
-                          flex: 1,
-                          background: 'rgba(255,255,255,0.1)',
-                          border: '1px solid rgba(255,255,255,0.2)',
-                          borderRadius: '4px',
-                          padding: '4px 8px',
-                          color: '#fff',
-                          fontSize: '0.75rem',
-                          outline: 'none'
-                        }}
-                      />
-                      <button
-                        type="submit"
-                        style={{
-                          background: 'var(--accent)',
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: '4px',
-                          padding: '4px 8px',
-                          fontSize: '0.75rem',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Send
-                      </button>
-                    </form>
-                  )}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {bubble.split('\n').map((line, i) => {
+                    if (line.startsWith('**') && line.endsWith('**')) {
+                      return <strong key={i} style={{ fontSize: '0.92rem', color: 'var(--accent)' }}>{line.replace(/\*\*/g, '')}</strong>;
+                    }
+                    return <span key={i} style={{ fontSize: '0.8rem' }}>{line}</span>;
+                  })}
                 </div>
               )}
               
               <div style={{
-                position: 'absolute', bottom: '-5px',
-                left: dir === 'right' ? '14px' : 'auto',
-                right: dir === 'left'  ? '14px' : 'auto',
-                width: '10px', height: '10px',
-                background: '#18181b',
-                border: '1px solid rgba(99,102,241,0.7)',
-                borderTop: 'none', borderLeft: dir === 'right' ? 'none' : undefined,
-                borderRight: dir === 'left' ? 'none' : undefined,
+                position: 'absolute', bottom: '-7px',
+                left: dir === 'right' ? '20px' : 'auto',
+                right: dir === 'left'  ? '20px' : 'auto',
+                width: '12px', height: '12px',
+                background: '#ffffff',
+                borderBottom: '2px solid #000000',
+                borderRight: '2px solid #000000',
                 transform: 'rotate(45deg)',
+                boxShadow: '3px 3px 0px rgba(0,0,0,1)', // matching tail shadow
+                zIndex: -1
               }} />
             </motion.div>
           )}
@@ -998,6 +1155,8 @@ export default function RoamingHarshit() {
             dir={dir}
             step={step}
             isClimbing={(mood === 'walk' || mood === 'running') && Math.abs(pos.y - (cursorPosRef.current?.y || targetY)) > 40}
+            isAtHome={pos.x <= 45 && pos.y <= 25}
+            isMobile={isMobile}
           />
         </div>
         </motion.div>
