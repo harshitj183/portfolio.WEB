@@ -416,17 +416,17 @@ const Projects = () => {
               onClick={e => e.stopPropagation()}
               className="project-drawer"
             >
-              <div className="drawer-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'nowrap' }}>
-                <h2 style={{ fontSize: '1.2rem', margin: 0, flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selected.title}</h2>
-                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexShrink: 0 }}>
+              <div className="drawer-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <h2 style={{ fontSize: '1.2rem', margin: 0, flex: 1, minWidth: '200px' }}>{selected.title}</h2>
+                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
                   {selected.github && (
-                    <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', minHeight: '36px' }}>
-                      <FiGithub size={16} /> <span style={{ display: 'none' }} className="sm:inline">Code</span>
+                    <a href={selected.github} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
+                      <FiGithub size={16} /> Source Code
                     </a>
                   )}
                   {selected.live && (
-                    <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', minHeight: '36px' }}>
-                      <FiExternalLink size={16} /> <span style={{ display: 'none' }} className="sm:inline">Live</span>
+                    <a href={selected.live} target="_blank" rel="noreferrer" className="premium-action-btn premium-action-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
+                      <FiExternalLink size={16} /> Live Demo
                     </a>
                   )}
                   <button
