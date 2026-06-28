@@ -1,14 +1,13 @@
 import React, { forwardRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, HTMLMotionProps } from 'framer-motion';
 
-export interface TiltCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TiltCardProps extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
   tiltAngle?: number; 
-  motionProps?: HTMLMotionProps<"div">;
 }
 
 const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(({ 
-  children, className = '', style = {}, tiltAngle = 15, motionProps, ...rest 
+  children, className = '', style = {}, tiltAngle = 15, ...rest 
 }, ref) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -29,19 +28,20 @@ const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(({
     const yPct = mouseY / height - 0.5;
     x.set(xPct);
     y.set(yPct);
+    if (rest.onMouseMove) rest.onMouseMove(e);
   };
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     x.set(0);
     y.set(0);
+    if (rest.onMouseLeave) rest.onMouseLeave(e);
   };
 
   return (
-    <div style={{ perspective: '1000px', width: '100%', height: '100%' }} {...rest} ref={ref}>
+    <div style={{ perspective: '1000px', width: '100%', height: '100%' }}>
       <motion.div
+        ref={ref}
         className={className}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
         style={{
           ...style,
           rotateX,
@@ -50,7 +50,9 @@ const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(({
         }}
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        {...motionProps}
+        {...rest}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
       >
         {children}
       </motion.div>
