@@ -1019,8 +1019,8 @@ export default function RoamingHarshit() {
               style={{
                 position: 'absolute',
                 bottom: '100%',
-                left: dir === 'right' ? '0' : 'auto',
-                right: dir === 'left'  ? '0' : 'auto',
+                left: pos.x > 50 ? 'auto' : '-20px',
+                right: pos.x > 50 ? '-20px' : 'auto',
                 marginBottom: '10px',
                 background: '#ffffff',
                 border: '2px solid #000000',
