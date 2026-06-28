@@ -15,11 +15,12 @@ interface StatCardProps {
 }
 
 const StatCard = ({ label, value, suffix = '', icon, loading = false }: StatCardProps) => (
-  <div
+  <TiltCard
     className="glass-panel"
     style={{
       padding: '2rem',
     }}
+    tiltAngle={8}
   >
     <div style={{
       fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.05em',
@@ -31,7 +32,7 @@ const StatCard = ({ label, value, suffix = '', icon, loading = false }: StatCard
     <div style={{ fontSize: '2.2rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>
       {loading ? '...' : `${value}${suffix}`}
     </div>
-  </div>
+  </TiltCard>
 );
 
 /* ── GitHub Heatmap ──────────────────── */
@@ -134,19 +135,19 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
 const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: boolean }) => {
   if (loading || !badges || badges.length === 0) return null;
   return (
-    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px', height: '100%' }}>
+    <TiltCard className="glass-panel" style={{ padding: '2rem', borderRadius: '12px', height: '100%' }} tiltAngle={5}>
       <h3 style={{ fontSize: '1.1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
         <FiAward className="text-accent" /> Earned Badges
       </h3>
-      <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-        {badges.map((b: any) => (
-          <div key={b.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem', background: 'rgba(255,255,255,0.03)', padding: '1.2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', width: '130px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'} onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
-            <Image src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} width={70} height={70} style={{ objectFit: 'contain', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' }} />
-            <span style={{ fontSize: '0.75rem', textAlign: 'center', color: 'var(--text-secondary)', lineHeight: 1.3, fontWeight: 500 }}>{b.displayName}</span>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+        {badges.map((b: any, i: number) => (
+          <div key={i} className="pill" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {b.icon && <img src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} style={{ width: '16px', height: '16px' }} />}
+            <span style={{ fontSize: '0.8rem' }}>{b.displayName}</span>
           </div>
         ))}
       </div>
-    </div>
+    </TiltCard>
   );
 };
 
@@ -249,26 +250,29 @@ const TechRadar = () => {
   ];
 
   return (
-    <div className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
+    <TiltCard className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }} tiltAngle={5}>
       <h3 style={{ fontSize: '1.1rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
         Skill Proficiency
       </h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
-        {items.map((item, idx) => (
-          <div key={idx}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.88rem' }}>
-              <span style={{ fontWeight: 600, color: '#fff' }}>{item.label}</span>
-              <span style={{ color: 'var(--text-secondary)', fontWeight: 700 }}>{item.pct}%</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {items.map(item => (
+          <div key={item.label}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+              <span>{item.label}</span>
+              <span style={{ color: 'var(--text-secondary)' }}>{item.pct}%</span>
             </div>
-            <div style={{ height: '6px', background: '#27272a', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
               <div
-                style={{ height: '100%', width: `${item.pct}%`, background: 'var(--accent)', borderRadius: '4px' }}
+                style={{
+                  height: '100%', width: `${item.pct}%`, background: item.color,
+                  boxShadow: `0 0 10px ${item.color}80`, borderRadius: '3px'
+                }}
               />
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </TiltCard>
   );
 };
 
@@ -287,9 +291,12 @@ interface GithubState {
 interface LeetcodeState {
   stats: {
     solved: number | string;
-    easy: number;
-    medium: number;
-    hard: number;
+    easySolved: number;
+    mediumSolved: number;
+    hardSolved: number;
+    totalEasy: number;
+    totalMedium: number;
+    totalHard: number;
     totalQ: number;
   } | null;
   heatmap: number[] | null;
@@ -388,41 +395,28 @@ const Dashboard = () => {
         const stats = data.matchedUserStats?.acSubmissionNum;
         if (stats) {
           const solved = stats.find((x: any) => x.difficulty === 'All')?.count || '350+';
-          const easy = stats.find((x: any) => x.difficulty === 'Easy')?.count || 242;
-          const medium = stats.find((x: any) => x.difficulty === 'Medium')?.count || 116;
-          const hard = stats.find((x: any) => x.difficulty === 'Hard')?.count || 14;
+          const easy = stats.find((x: any) => x.difficulty === 'Easy');
+          const medium = stats.find((x: any) => x.difficulty === 'Medium');
+          const hard = stats.find((x: any) => x.difficulty === 'Hard');
           setLeetcode({
-            stats: { solved, easy, medium, hard, totalQ: 3300 },
+            stats: { 
+                solved, 
+                easySolved: easy?.count || 0,
+                mediumSolved: medium?.count || 0,
+                hardSolved: hard?.count || 0,
+                totalEasy: easy?.count || 1,
+                totalMedium: medium?.count || 1,
+                totalHard: hard?.count || 1,
+                totalQ: 3300 
+            },
             loading: false,
             heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
             badges: badgesData?.badges || []
           });
         } else throw new Error();
       } catch {
-        // Try Heroku fallback
-        try {
-          const res = await fetch('https://leetcode-stats-api.herokuapp.com/harshitj183', { signal: AbortSignal.timeout(4000) });
-          const data = await res.json();
-          if (data.status === 'success') {
-            setLeetcode({
-              stats: {
-                solved: data.totalSolved,
-                easy: data.easySolved,
-                medium: data.mediumSolved,
-                hard: data.hardSolved,
-                totalQ: data.totalQuestions,
-              },
-              loading: false,
-              heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
-              badges: []
-            });
-            return;
-          }
-        } catch {}
-        
-        // Final fallback matching current exact stats
         setLeetcode({
-          stats: { solved: '350+', easy: 242, medium: 116, hard: 14, totalQ: 3300 },
+          stats: { solved: '350+', easySolved: 242, mediumSolved: 116, hardSolved: 14, totalEasy: 300, totalMedium: 500, totalHard: 200, totalQ: 3300 },
           loading: false,
           heatmap: fallbackHeatmap,
           badges: []
@@ -472,22 +466,12 @@ const Dashboard = () => {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', marginBottom: '3rem' }}>
-        <div id="leetcode-distribution" className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }}>
+        <TiltCard id="leetcode-distribution" className="glass-panel" style={{ padding: '2rem', borderRadius: '12px' }} tiltAngle={5}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <FiActivity className="text-accent" /> LeetCode Distribution
           </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '140px', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
             {[
-              { label: 'Easy', count: leetcode.stats?.easy || 0, color: '#10b981', total: typeof leetcode.stats?.solved === 'number' ? leetcode.stats.solved : 350 },
-              { label: 'Medium', count: leetcode.stats?.medium || 0, color: '#fbbf24', total: typeof leetcode.stats?.solved === 'number' ? leetcode.stats.solved : 350 },
-              { label: 'Hard', count: leetcode.stats?.hard || 0, color: '#ef4444', total: typeof leetcode.stats?.solved === 'number' ? leetcode.stats.solved : 350 },
-            ].map((cat, i) => {
-              const percentage = leetcode.loading ? 0 : Math.round((cat.count / cat.total) * 100);
-              return (
-                <div key={i}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.88rem' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>{cat.label} ({cat.count})</span>
                     <span style={{ fontWeight: 700, color: cat.color }}>{percentage}%</span>
                   </div>
                   <div style={{ height: '6px', background: '#27272a', borderRadius: '4px', overflow: 'hidden' }}>

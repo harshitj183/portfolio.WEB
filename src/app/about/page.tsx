@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FiTerminal, FiBriefcase, FiAward, FiBook, FiActivity, FiCode, FiHeart, FiMapPin, FiCalendar, FiLayout, FiDatabase, FiCpu, FiCompass, FiBookOpen, FiFileText, FiShield, FiTrendingUp, FiZap, FiMoon, FiTarget } from 'react-icons/fi';
+import TiltCard from '@/components/TiltCard';
 
 const SKILL_CATEGORIES = [
   {
@@ -149,7 +150,7 @@ const About = () => {
         </h2>
         <div className="grid">
           {SKILL_CATEGORIES.map((cat) => (
-            <div key={cat.title} className="glass-panel" style={{ padding: '2.5rem' }}>
+            <TiltCard key={cat.title} className="glass-panel" style={{ padding: '2.5rem' }} tiltAngle={4}>
               <h3 style={{ marginBottom: '2rem', color: 'var(--accent)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 {cat.icon} {cat.title}
               </h3>
@@ -160,7 +161,7 @@ const About = () => {
                   </span>
                 ))}
               </div>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </motion.div>
@@ -170,13 +171,13 @@ const About = () => {
         <h2 style={{ fontSize: '1.8rem', marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <FiBriefcase className="text-accent" /> Field Records
         </h2>
-        <div className="glass-panel responsive-timeline-panel">
+        <TiltCard className="glass-panel responsive-timeline-panel" tiltAngle={2}>
           <div style={{ borderLeft: '2px solid var(--glass-border)', paddingLeft: '0.5rem' }}>
             {experiences.map((exp, idx) => (
               <TimelineItem key={idx} {...exp} isLast={idx === experiences.length - 1} />
             ))}
           </div>
-        </div>
+        </TiltCard>
       </motion.div>
 
       {/* Credentials + Education */}
@@ -187,7 +188,7 @@ const About = () => {
         className="grid"
         style={{ marginBottom: '5rem' }}
       >
-        <div className="glass-panel about-info-panel">
+        <TiltCard className="glass-panel about-info-panel" tiltAngle={3}>
           <h2 style={{ fontSize: '1.3rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <FiAward className="text-accent" /> Credentials
           </h2>
@@ -205,9 +206,9 @@ const About = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </TiltCard>
 
-        <div className="glass-panel about-info-panel">
+        <TiltCard className="glass-panel about-info-panel" tiltAngle={3}>
           <h2 style={{ fontSize: '1.3rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <FiBook className="text-accent" /> Academic
           </h2>
@@ -243,7 +244,7 @@ const About = () => {
               ))}
             </div>
           </div>
-        </div>
+        </TiltCard>
       </motion.div>
     </motion.div>
   );
