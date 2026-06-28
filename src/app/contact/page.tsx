@@ -5,11 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiSend, FiMail, FiPhone, FiCheckCircle, FiLoader, FiGithub, FiLinkedin, FiCode, FiMapPin, FiCalendar } from 'react-icons/fi';
 
 /* 
-  Contact form wired to Formspree.
-  Replace YOUR_FORM_ID below with your actual Formspree form ID.
-  Sign up free at https://formspree.io — takes 30 seconds.
+  Contact form wired to /api/contact.
 */
-const FORMSPREE_ID = 'YOUR_FORM_ID'; // e.g. 'xpwajbkd'
 
 interface InputFieldProps {
   label: string;
@@ -72,10 +69,10 @@ const Contact = () => {
     const formData = new FormData(formRef.current);
 
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        body: formData,
-        headers: { Accept: 'application/json' }
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (res.ok) {
@@ -268,11 +265,9 @@ const Contact = () => {
                   )}
                 </button>
 
-                <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.78rem', color: 'var(--text-secondary)', opacity: 0.6 }}>
-                  {FORMSPREE_ID === 'YOUR_FORM_ID'
-                    ? '⚙ Connect Formspree to enable live email delivery'
-                    : '🔒 Secured via Formspree · No spam'}
-                </p>
+                <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.7rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+                  <FiCode /> Secured via Next.js Backend
+                </div>
               </motion.form>
             )}
           </AnimatePresence>
