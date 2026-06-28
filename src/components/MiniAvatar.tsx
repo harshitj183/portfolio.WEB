@@ -847,56 +847,25 @@ export default function RoamingHarshit() {
         } else if (cursorPosRef.current && (time - lastMouseMoveTimeRef.current < 4000) && !overrideTarget && tourStep < 0 && deliveryMode === 'none') {
           // Follow cursor with dynamic animations
           const cPos = cursorPosRef.current;
-          const dist = Math.hypot(cPos.x - current.x, cPos.y - current.y);
-          
-          let speed = 0.0055;
           const isInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing' || mood === 'jumping' || mood === 'sofa_sleep' || mood === 'sunglasses' || mood === 'lightbulb' || mood === 'listening';
 
-          if (dist > 300) {
-             speed = 0.0095;
-             if (!isInteracting && mood !== 'flying') setMood('flying');
-          } else if (dist > 150) {
-             speed = 0.0075;
-             if (!isInteracting && mood !== 'running' && mood !== 'flying') setMood('running');
-          } else if (dist > 20) {
-             speed = 0.0055;
-             if (!isInteracting && mood !== 'walk') setMood('walk');
-             if (showBubble && tourStep < 0) setShowBubble(false);
-          } else {
-             if (!isInteracting && mood !== 'idle') setMood('idle');
-          }
+          if (!isInteracting && mood !== 'idle') setMood('idle');
 
-          nextX = current.x + (cPos.x - current.x) * speed * delta;
-          nextY = current.y + (cPos.y - current.y) * speed * delta;
+          nextX = 25;
+          nextY = 430;
 
-          if (cPos.x > current.x + 1) setDir('left');
-          else if (cPos.x < current.x - 1) setDir('right');
+          if (cPos.x > 100) setDir('left');
+          else setDir('right');
 
         } else {
-          // Normal random horizontal stroll (Stroller mode when mouse is inactive)
-          nextX = current.x + vel.current.x * delta;
-          const charWidth = 84;
-          const padding = 20;
-          const maxW = typeof window !== 'undefined' ? window.innerWidth : 1200;
+          // Normal mode (Stroller mode disabled, avatar stays fixed)
+          nextX = 25;
+          nextY = 430;
 
-          const minX = padding;
-          const sidebarWidth = maxW > 1024 ? 280 : 0;
-          const maxX = maxW - sidebarWidth - charWidth - padding;
-
-          if (nextX > maxX) {
-            nextX = maxX;
-            vel.current.x = -Math.abs(vel.current.x);
-            setDir('right');
-          } else if (nextX < minX) {
-            nextX = minX;
-            vel.current.x = Math.abs(vel.current.x);
-            setDir('left');
-          }
-
-          // Return to walk mood if we were doing cursor animations but are now stroll-roaming
+          // Return to idle mood if we were doing cursor animations but are now inactive
           const isMascotInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing' || mood === 'waving' || mood === 'sleeping' || mood === 'jumping' || mood === 'sofa_sleep' || mood === 'sunglasses' || mood === 'lightbulb' || mood === 'listening';
-          if (!isMascotInteracting && mood !== 'walk') {
-            setMood('walk');
+          if (!isMascotInteracting && mood !== 'idle') {
+            setMood('idle');
           }
 
           // Tech stack easter egg typing
@@ -1010,12 +979,11 @@ export default function RoamingHarshit() {
       <div
         style={{
           position: 'fixed',
-          right: 0,
-          bottom: 0,
+          right: '25px',
+          bottom: '430px',
           zIndex: 99999,
           userSelect: 'none',
           pointerEvents: 'none', // Let clicks pass through empty spaces
-          transform: `translate3d(-${pos.x}px, -${pos.y}px, 0)`,
         }}
       >
         <motion.div
