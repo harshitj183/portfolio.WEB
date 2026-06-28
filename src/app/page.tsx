@@ -8,8 +8,8 @@ import Link from 'next/link';
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
 
 const TECH_STACK = [
-  'React', 'TypeScript', 'Bun', 'Node.js', 'MongoDB', 'Next.js',
-  'Framer Motion', 'Docker', 'C++', 'PostgreSQL', 'GitHub Actions', 'Vite'
+  'C++', 'JavaScript', 'TypeScript', 'Python', 'React', 'Next.js',
+  'Node.js', 'Bun.js', 'PostgreSQL', 'MongoDB', 'Tailwind CSS', 'SQL'
 ];
 
 const FEATURED = [
