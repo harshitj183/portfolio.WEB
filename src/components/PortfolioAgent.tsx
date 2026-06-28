@@ -330,6 +330,12 @@ export default function PortfolioAgent() {
       }
     };
 
+    // Hardcoded bypass for the specific prompt to guarantee no filtering
+    if (userText === "Show me projects 🚀") {
+      processResponse(JSON.stringify({ reply: "Opening projects...", action: { action: 'goto_projects' } }), false);
+      return;
+    }
+
     // Call API route with rule-based fallback
     try {
       const res = await fetch('/api/chat', {
@@ -491,7 +497,7 @@ export default function PortfolioAgent() {
                 {[
                   "Start tour 🎓", 
                   "Open resume 📄", 
-                  "Show React projects 🚀", 
+                  "Show me projects 🚀", 
                   "Book a meeting 📅"
                 ].map((prompt, i) => (
                   <button
