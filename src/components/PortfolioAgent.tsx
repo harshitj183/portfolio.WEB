@@ -157,15 +157,27 @@ function getLocalAgentResponse(userInput: string): string {
 
 export default function PortfolioAgent() {
   const [messages, setMessages] = useState<Message[]>([
-    { sender: 'agent', text: "Hello recruiter! 👋 I am Harshit's AI co-pilot. Ask me for a 'tour', 'resume', or to see 'projects'!", isLive: false }
+    { sender: 'agent', text: 'Hi! I am the Harshit AI Agent. How can I assist you today?' }
   ]);
   const [inputVal, setInputVal] = useState('');
+  const [isOpen, setIsOpen] = useState(true); // Default to true for SSR, then check in useEffect
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom
-  useEffect(() => {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    // On mount, if it's mobile, start closed. If desktop, stay open.
+    if (window.innerWidth <= 1024) {
+      setIsOpen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
   }, [messages]);
 
   const handleActionExecution = (actionObj: any) => {
@@ -340,7 +352,8 @@ export default function PortfolioAgent() {
   // Listen to toggle events from the walking avatar and programmatic messages
   useEffect(() => {
     const handleToggle = () => {
-      document.getElementById('agent-input')?.focus();
+      setIsOpen(prev => !prev);
+      setTimeout(() => document.getElementById('agent-input')?.focus(), 100);
     };
 
     const handleProgrammaticMessage = (e: Event) => {
@@ -407,18 +420,44 @@ export default function PortfolioAgent() {
   return (
     <>
       <div
+        className="portfolio-agent-container"
         style={{
-          position: 'fixed',
-          bottom: '25px',
-          right: '25px',
           zIndex: 99998,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-end',
-          gap: '12px',
-          width: '350px'
+          gap: '12px'
         }}
       >
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}
+            >
+              {/* Header with Close Button */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  style={{
+                    background: 'rgba(0,0,0,0.5)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '50%',
+                    width: '28px',
+                    height: '28px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backdropFilter: 'blur(4px)'
+                  }}
+                >
+                  <FiX size={16} />
+                </button>
+              </div>
         {/* Chat Messages */}
         <div style={{ flex: 1, width: '100%', maxHeight: '400px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '10px 0', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {messages.map((m, idx) => (
@@ -518,7 +557,10 @@ export default function PortfolioAgent() {
                   <FiSend size={15} />
                 </button>
               </form>
-        </div>
+            </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );

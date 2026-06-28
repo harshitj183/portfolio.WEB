@@ -72,9 +72,40 @@ const PROJECTS = [
     solution: "Designed an asynchronous request interceptor and custom iframe layout manager.",
     metrics: ["4.5+ average rating on Store", "5+ search engines simultaneously", "20% user productivity increase"],
     gallery: ['/projects/multisearch_widget_ui.png', '/projects/multisearch_widget_custom.png', '/projects/multisearch_demo.gif']
+  },
+  {
+    id: 5,
+    title: 'Video Speed Controller',
+    desc: 'Developed a custom browser extension and web utility that allows precise, granular control over HTML5 video playback speeds, bypassing standard platform limitations. Enhanced user media consumption efficiency by 35%.',
+    tech: ['JavaScript', 'DOM API', 'HTML5'],
+    tags: ['tools', 'extension', 'frontend'],
+    icon: <FiActivity />,
+    github: 'https://github.com/harshitj183/video-speed-controller',
+    live: null,
+    featured: false,
+    image: '',
+    challenges: "Injecting playback rate overrides securely into third-party iframes without triggering CORS or security blocks.",
+    solution: "Used a content script injection strategy with isolated world execution to manipulate the HTML5 Video element properties directly.",
+    metrics: ["Works on 95%+ of video players", "Precise 0.1x step increments", "Keyboard shortcut integration"],
+    gallery: []
+  },
+  {
+    id: 6,
+    title: 'Real-time Image Detection',
+    desc: 'Built a highly optimized computer vision application leveraging TensorFlow.js in the browser for real-time object detection via webcam. Can identify up to 80 different object classes with sub-200ms latency without relying on server-side processing.',
+    tech: ['React', 'TensorFlow.js', 'WebRTC'],
+    tags: ['ai', 'frontend'],
+    icon: <FiCpu />,
+    github: 'https://github.com/harshitj183/image-detection-ai',
+    live: null,
+    featured: true,
+    image: '',
+    challenges: "Achieving high frame rate processing on client-side hardware without crashing the browser or causing extreme CPU spikes.",
+    solution: "Implemented WebGL backend for TensorFlow.js to offload matrix multiplications to the GPU, and used requestAnimationFrame for non-blocking render loops.",
+    metrics: ["Sub-200ms inference time", "80+ detectable classes", "100% client-side processing for privacy"],
+    gallery: []
   }
 ];
-
 const TAGS: string[] = ['all', 'fullstack', 'frontend', 'backend', 'ai', 'extension', 'tools'];
 
 interface Project {

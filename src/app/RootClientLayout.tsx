@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import SpotlightEffect from '../components/SpotlightEffect';
 
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false });
 const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
@@ -28,84 +29,73 @@ function startAmbientTyping(ctx: AudioContext) {
       // Pick random "key type" for variety
       const keyType = Math.random();
 
-      let clickFreq: number, thudFreq: number, clickVol: number, thudVol: number, noiseVol: number, thudDecay: number;
-
-      if (keyType > 0.95) {
-        // Enter key (~5% chance) - deeper, louder
-        clickFreq = 1200; thudFreq = 100; clickVol = 0.18; thudVol = 0.25; noiseVol = 0.12; thudDecay = 0.12;
-      } else if (keyType > 0.85) {
-        // Space bar (~10% chance) - medium thud
-        clickFreq = 1400; thudFreq = 120; clickVol = 0.15; thudVol = 0.2; noiseVol = 0.1; thudDecay = 0.1;
-      } else {
-        // Regular key (~85% chance)
-        clickFreq = 1600 + Math.random() * 400; // 1600-2000 Hz
-        thudFreq = 140 + Math.random() * 40;
-        clickVol = 0.1 + Math.random() * 0.08;
-        thudVol = 0.15 + Math.random() * 0.1;
-        noiseVol = 0.06 + Math.random() * 0.04;
-        thudDecay = 0.05 + Math.random() * 0.03;
-      }
-
-      // Slight pitch randomization
-      const pitch = 1 + (Math.random() * 0.12 - 0.06);
-
-      // Click transient
+      let pitchMod = 1 + (Math.random() * 0.1 - 0.05);
+      
+      // 1. Sharp Click (switch actuation)
       const clickOsc = ctx.createOscillator();
       const clickGain = ctx.createGain();
       clickOsc.type = 'square';
-      clickOsc.frequency.setValueAtTime(clickFreq * pitch, now);
+      clickOsc.frequency.setValueAtTime((keyType > 0.9 ? 350 : 450) * pitchMod, now);
       clickOsc.connect(clickGain);
       clickGain.connect(ctx.destination);
-      clickGain.gain.setValueAtTime(clickVol, now);
-      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.012);
+      clickGain.gain.setValueAtTime(0.08, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
       clickOsc.start(now);
-      clickOsc.stop(now + 0.025);
+      clickOsc.stop(now + 0.02);
 
-      // Bottom-out thud
-      const thudOsc = ctx.createOscillator();
-      const thudGain = ctx.createGain();
-      thudOsc.type = 'triangle';
-      thudOsc.frequency.setValueAtTime(thudFreq * pitch, now);
-      thudOsc.connect(thudGain);
-      thudGain.connect(ctx.destination);
-      thudGain.gain.setValueAtTime(thudVol, now);
-      thudGain.gain.exponentialRampToValueAtTime(0.001, now + thudDecay);
-      thudOsc.start(now);
-      thudOsc.stop(now + 0.15);
-
-      // Noise burst for realism
-      const nLen = 0.025;
+      // 2. Plastic Clack (switch body & keycap)
+      // We use a short burst of noise passed through a bandpass filter
+      const nLen = 0.03;
       const nBuf = ctx.createBuffer(1, ctx.sampleRate * nLen, ctx.sampleRate);
       const nData = nBuf.getChannelData(0);
       for (let i = 0; i < nData.length; i++) {
-        nData[i] = (Math.random() * 2 - 1) * 0.4;
+        nData[i] = Math.random() * 2 - 1; // white noise
       }
       const nSrc = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
       const nGain = ctx.createGain();
+      
       nSrc.buffer = nBuf;
-      nSrc.connect(nGain);
+      filter.type = 'bandpass';
+      filter.frequency.value = keyType > 0.9 ? 800 : 1200; // lower for space/enter
+      filter.Q.value = 1.2;
+      
+      nSrc.connect(filter);
+      filter.connect(nGain);
       nGain.connect(ctx.destination);
-      nGain.gain.setValueAtTime(noiseVol, now);
-      nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+      
+      nGain.gain.setValueAtTime(0.12, now);
+      nGain.gain.exponentialRampToValueAtTime(0.001, now + nLen);
       nSrc.start(now);
       nSrc.stop(now + nLen);
+
+      // 3. Deep Thud (bottom out)
+      const thudOsc = ctx.createOscillator();
+      const thudGain = ctx.createGain();
+      thudOsc.type = 'triangle';
+      thudOsc.frequency.setValueAtTime((keyType > 0.9 ? 80 : 110) * pitchMod, now);
+      thudOsc.connect(thudGain);
+      thudGain.connect(ctx.destination);
+      thudGain.gain.setValueAtTime(0.15, now);
+      thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      thudOsc.start(now);
+      thudOsc.stop(now + 0.07);
     } catch {
       // ignore
     }
 
-    // Schedule next click with human-like timing
-    // Fast typing: 50-120ms between keys, with occasional pauses (thinking)
+    // Slower, more deliberate typing cadence (Mechanical style)
     let delay: number;
     const pauseChance = Math.random();
-    if (pauseChance > 0.92) {
-      // Longer thinking pause (~8% chance)
-      delay = 300 + Math.random() * 500; // 300-800ms
-    } else if (pauseChance > 0.80) {
-      // Short pause between words (~12% chance)
-      delay = 150 + Math.random() * 200; // 150-350ms
+    if (pauseChance > 0.95) {
+      // Long thinking pause
+      delay = 800 + Math.random() * 1000;
+    } else if (pauseChance > 0.85) {
+      // Word gap pause
+      delay = 350 + Math.random() * 300;
     } else {
-      // Fast typing
-      delay = 50 + Math.random() * 80; // 50-130ms
+      // Regular keystrokes (slowed down)
+      delay = 140 + Math.random() * 120; // 140-260ms
     }
 
     setTimeout(playOneClick, delay);
@@ -192,15 +182,8 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
           }}
         />
       </div>
-
-      <div className="mobile-blocker">
-        <h2 style={{ marginBottom: '1rem', color: '#fff' }}>Desktop Required</h2>
-        <p style={{ color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto', lineHeight: 1.6 }}>
-          Currently, this portfolio is optimized for desktop viewing. Please open this link on your computer to explore the content.
-        </p>
-      </div>
-
       <div className="app-container" style={{ position: 'relative', zIndex: 1 }}>
+        <SpotlightEffect />
         <CommandPalette />
         <Sidebar />
         <MiniAvatar />

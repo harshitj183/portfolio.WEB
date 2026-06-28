@@ -67,6 +67,30 @@ h1, h2, h3, h4 {
   border-radius: 12px;
   padding: 2rem;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, -800px) var(--mouse-y, -800px),
+    rgba(255, 255, 255, 0.04),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-panel:hover::before {
+  opacity: 1;
 }
 
 .glass-panel:hover {
@@ -437,28 +461,123 @@ input::placeholder, textarea::placeholder {
   }
 }
 
-/* ── Mobile Blocker ── */
-.mobile-blocker {
-  display: none;
+/* ── Mobile Layout & Responsiveness ── */
+.portfolio-agent-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--bg-color);
-  z-index: 999999;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
+  bottom: 25px;
+  right: 25px;
+  width: 100%;
+  max-width: 350px;
+  padding: 0;
+}
+
+.mini-avatar-container {
+  position: fixed;
+  right: 25px;
+  bottom: 430px;
+}
+
+@media (max-width: 480px) {
+  .portfolio-agent-container {
+    bottom: 15px;
+    right: 0px;
+    padding: 0 15px;
+    max-width: 100%;
+  }
+
+  .mini-avatar-container {
+    bottom: 530px; /* Stay just above the chat panel */
+    right: 15px;
+  }
 }
 
 @media (max-width: 1024px) {
   .app-container {
-    display: none !important;
+    flex-direction: column;
+    padding: 0;
   }
-  .mobile-blocker {
+
+  .sidebar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-color);
+    padding: 1rem;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+  }
+
+  .profile-card {
+    flex-direction: row;
+    text-align: left;
+    margin-bottom: 0;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .profile-info h2 {
+    font-size: 1.2rem !important;
+  }
+  .profile-info p {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
+    z-index: 99;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .mobile-social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .desktop-social-container {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1.5rem 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1025px) {
+  .hamburger {
+    display: none;
   }
 }

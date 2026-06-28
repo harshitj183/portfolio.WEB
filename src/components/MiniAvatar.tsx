@@ -977,10 +977,8 @@ export default function RoamingHarshit() {
   return (
     <>
       <div
+        className="mini-avatar-container"
         style={{
-          position: 'fixed',
-          right: '25px',
-          bottom: '430px',
           zIndex: 99999,
           userSelect: 'none',
           pointerEvents: 'none', // Let clicks pass through empty spaces
