@@ -10,6 +10,7 @@ import {
 import Image from 'next/image';
 import ReadmeViewer from '@/components/ReadmeViewer';
 import TiltCard from '@/components/TiltCard';
+import ProjectFileTree from '@/components/ProjectFileTree';
 
 const PROJECTS = [
   {
@@ -411,9 +412,9 @@ const Projects = () => {
             }}
           >
             <motion.div
-              initial={{ x: '-100%' }}
+              initial={{ x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
+              exit={{ x: '100%' }}
               transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
               onClick={e => e.stopPropagation()}
               className="project-drawer"
@@ -514,6 +515,18 @@ const Projects = () => {
                   </div>
                 )}
               </div>
+            </motion.div>
+
+            {/* Left side Project File Tree */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+              onClick={e => e.stopPropagation()}
+              className="project-file-tree-container"
+            >
+              <ProjectFileTree githubUrl={selected.github} />
             </motion.div>
           </motion.div>
         )}

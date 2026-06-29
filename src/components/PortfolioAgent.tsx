@@ -448,6 +448,7 @@ export default function PortfolioAgent() {
               {/* Header with Close Button */}
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
+                  aria-label="Close Chat"
                   onClick={() => setIsOpen(false)}
                   style={{
                     background: 'rgba(0,0,0,0.5)',
@@ -549,6 +550,7 @@ export default function PortfolioAgent() {
                 />
                 <button
                   type="submit"
+                  aria-label="Send Message"
                   style={{
                     background: 'var(--accent)',
                     color: '#fff',

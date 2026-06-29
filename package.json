@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@google/generative-ai": "^0.24.1",
     "@harshitj183/ai-skills": "^2.2.9",
     "@microsoft/clarity": "^1.0.2",
     "canvas-confetti": "^1.9.4",
     "eslint-plugin-react-refresh": "^0.5.3",
+    "fast-glob": "^3.3.3",
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
@@ -38,5 +40,11 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.4.0",
     "typescript": "^6.0.3"
-  }
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ]
 }

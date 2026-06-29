@@ -25,7 +25,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-weight: 700;
   color: #fff;
   letter-spacing: -0.02em;
@@ -54,10 +57,11 @@ h1, h2, h3, h4 {
   top: 0;
   background: var(--bg-secondary);
   border-right: 1px solid var(--border-color);
-  padding: 3rem 2rem;
+  padding: 2.5rem 1.8rem;
   display: flex;
   flex-direction: column;
   z-index: 100;
+  overflow: hidden;
 }
 
 /* Card Panel (Premium Glassmorphism) */
@@ -77,6 +81,7 @@ h1, h2, h3, h4 {
 .glow-primary {
   box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
 }
+
 .glow-primary:hover {
   box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.6);
 }
@@ -84,6 +89,7 @@ h1, h2, h3, h4 {
 .glow-success {
   box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
 }
+
 .glow-success:hover {
   box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.6);
 }
@@ -95,11 +101,9 @@ h1, h2, h3, h4 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    600px circle at var(--mouse-x, -800px) var(--mouse-y, -800px),
-    rgba(255, 255, 255, 0.04),
-    transparent 40%
-  );
+  background: radial-gradient(600px circle at var(--mouse-x, -800px) var(--mouse-y, -800px),
+      rgba(255, 255, 255, 0.04),
+      transparent 40%);
   opacity: 0;
   transition: opacity 0.5s;
   pointer-events: none;
@@ -170,8 +174,16 @@ h1, h2, h3, h4 {
 .nav-links {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 3rem;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
 }
 
 .profile-info {
@@ -193,24 +205,44 @@ h1, h2, h3, h4 {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-color); }
-::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
 
 /* Text utilities */
-.text-accent { color: var(--accent); }
-.text-muted { color: var(--text-secondary); }
+.text-accent {
+  color: var(--accent);
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
 
 /* Form inputs */
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--accent) !important;
   background: rgba(255, 255, 255, 0.05) !important;
   box-shadow: 0 0 15px var(--accent-glow) !important;
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: rgba(255, 255, 255, 0.3);
 }
 
@@ -235,6 +267,10 @@ input::placeholder, textarea::placeholder {
 }
 
 /* Mobile UI */
+.mobile-header-title {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .sidebar {
     width: 100%;
@@ -258,25 +294,15 @@ input::placeholder, textarea::placeholder {
     padding: 6rem 1.5rem 2rem 1.5rem;
   }
 
-  .profile-card {
-    margin-bottom: 0 !important;
-    display: flex;
+  .desktop-profile {
+    display: none !important;
+  }
+
+  .mobile-header-title {
+    display: flex !important;
     align-items: center;
-    gap: 1rem;
-  }
-
-  .profile-card h2, .profile-card p {
-    display: none;
-  }
-
-  .profile-info {
-    margin-top: 0 !important;
-  }
-
-  .avatar {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 8px !important;
+    gap: 0.4rem;
+    z-index: 1001;
   }
 
   .nav-links {
@@ -334,7 +360,9 @@ input::placeholder, textarea::placeholder {
 }
 
 @media (min-width: 1025px) {
-  .hamburger { display: none; }
+  .hamburger {
+    display: none;
+  }
 }
 
 .hero-content-grid {
@@ -360,29 +388,37 @@ input::placeholder, textarea::placeholder {
   .hero-content-grid {
     gap: 2rem;
   }
+
   .featured-showcase-panel {
     padding: 1.5rem !important;
   }
+
   .featured-project-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+
   .responsive-timeline-panel {
     padding: 1.5rem 1.2rem !important;
   }
+
   .about-info-panel {
     padding: 1.5rem !important;
   }
+
   .case-study-modal {
     padding: 1.5rem 1.2rem !important;
   }
+
   .modal-close-btn {
     top: 1rem !important;
     right: 1rem !important;
   }
+
   .gallery-image-container {
     height: 220px !important;
   }
+
   .single-image-container {
     height: 220px !important;
   }
@@ -444,8 +480,8 @@ input::placeholder, textarea::placeholder {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-  border: 1px solid rgba(99,102,241,0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 @media (max-width: 480px) {
@@ -480,6 +516,7 @@ input::placeholder, textarea::placeholder {
   from {
     box-shadow: 0 0 8px var(--accent);
   }
+
   to {
     box-shadow: 0 0 25px var(--accent);
   }
@@ -510,7 +547,8 @@ input::placeholder, textarea::placeholder {
   }
 
   .mini-avatar-container {
-    bottom: 530px; /* Stay just above the chat panel */
+    bottom: 530px;
+    /* Stay just above the chat panel */
     right: 15px;
   }
 }
@@ -548,6 +586,7 @@ input::placeholder, textarea::placeholder {
   .profile-info h2 {
     font-size: 1.2rem !important;
   }
+
   .profile-info p {
     display: none;
   }
@@ -631,9 +670,19 @@ input::placeholder, textarea::placeholder {
   line-height: 1.3;
 }
 
-.markdown-article h1 { font-size: 2.2rem; }
-.markdown-article h2 { font-size: 1.8rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem; }
-.markdown-article h3 { font-size: 1.4rem; }
+.markdown-article h1 {
+  font-size: 2.2rem;
+}
+
+.markdown-article h2 {
+  font-size: 1.8rem;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 0.5rem;
+}
+
+.markdown-article h3 {
+  font-size: 1.4rem;
+}
 
 .markdown-article p {
   margin-bottom: 1.2rem;
@@ -682,7 +731,8 @@ input::placeholder, textarea::placeholder {
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.9em;
-  color: #fb7185; /* Soft pink for inline code */
+  color: #fb7185;
+  /* Soft pink for inline code */
 }
 
 .markdown-article pre code {
@@ -721,15 +771,15 @@ input::placeholder, textarea::placeholder {
 .project-drawer {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   height: 100%;
   width: 100%;
   max-width: 800px;
   background: rgba(5, 5, 5, 0.85);
   backdrop-filter: blur(48px);
   -webkit-backdrop-filter: blur(48px);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -757,8 +807,9 @@ input::placeholder, textarea::placeholder {
 .drawer-content::-webkit-scrollbar {
   width: 8px;
 }
+
 .drawer-content::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
@@ -776,8 +827,9 @@ input::placeholder, textarea::placeholder {
 }
 
 .premium-action-primary {
-  background: var(--accent);
+  background: #4f46e5;
   color: #fff;
+  font-weight: 600;
   box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
 }
 
@@ -796,4 +848,29 @@ input::placeholder, textarea::placeholder {
 .premium-action-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
+}
+
+/* Project File Tree Panel */
+.project-file-tree-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  /* width is controlled dynamically by the child component */
+  background: rgba(5, 5, 5, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+  z-index: 100001;
+}
+
+.file-tree-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 1024px) {
+  .project-file-tree-container {
+    display: none !important;
+  }
 }

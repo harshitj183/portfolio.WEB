@@ -1,9 +1,41 @@
 import type { NextConfig } from "next";
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const withPWA = withPWAInit({
+  dest: "public",
+  fallbacks: {
+    document: "/~offline",
+  },
+  disable: process.env.NODE_ENV === "development",
+});
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  turbopack: {},
   typescript: {
     ignoreBuildErrors: true,
+  },
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|png|webp|avif|ico|mp4|webm|mp3)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
   images: {
     remotePatterns: [
@@ -24,7 +56,9 @@ const nextConfig: NextConfig = {
         hostname: 'assets.leetcode.com',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 604800, // 7 days cache for remote images
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

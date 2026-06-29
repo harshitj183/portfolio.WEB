@@ -71,11 +71,20 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
         overflow: 'hidden',
       }}>
         <video
-          src="/char-animation.webm"
+          ref={(el) => {
+            if (el && !el.src) {
+              // Short delay so video doesn't block FCP/LCP
+              setTimeout(() => {
+                el.src = '/char-animation.webm';
+                el.load();
+              }, 300);
+            }
+          }}
           autoPlay
           loop
           muted
           playsInline
+          preload="none"
           style={{
             width: '100%',
             height: '100%',

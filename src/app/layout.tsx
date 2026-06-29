@@ -38,6 +38,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Preconnect to important origins to reduce DNS/TCP latency */}
+        <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+        <link rel="preconnect" href="https://assets.leetcode.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -62,7 +65,7 @@ export default function RootLayout({
         />
       </head>
       <body style={{ margin: 0, background: '#09090b', color: '#fff' }}>
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};

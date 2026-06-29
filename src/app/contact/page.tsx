@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSend, FiMail, FiPhone, FiCheckCircle, FiLoader, FiGithub, FiLinkedin, FiCode, FiMapPin, FiCalendar } from 'react-icons/fi';
+import PostmanAnimation from '@/components/PostmanAnimation';
 
 /* 
   Contact form wired to /api/contact.
@@ -57,7 +58,7 @@ const InputField = ({ label, type = 'text', name, placeholder, required = true, 
 );
 
 const Contact = () => {
-  const [status, setStatus] = useState<string>('idle'); // idle | sending | success | error
+  const [status, setStatus] = useState<string>('idle'); // idle | sending | animating | success | error
   const formRef = useRef<HTMLFormElement>(null);
   
   // Obfuscate phone number from simple scrapers by building it on client
@@ -88,8 +89,7 @@ const Contact = () => {
       });
 
       if (res.ok) {
-        setStatus('success');
-        window.dispatchEvent(new CustomEvent('mascot-form-success'));
+        setStatus('animating');
         formRef.current?.reset();
       } else {
         setStatus('error');
@@ -196,9 +196,13 @@ const Contact = () => {
         </div>
 
         {/* Form */}
-        <div>
+        <div style={{ position: 'relative' }}>
           <AnimatePresence mode="wait">
-            {status === 'success' ? (
+            {status === 'animating' ? (
+              <motion.div key="animating" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="glass-panel" style={{ height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <PostmanAnimation onAnimationComplete={() => setStatus('success')} />
+              </motion.div>
+            ) : status === 'success' ? (
               <motion.div
                 key="success"
                 initial={{ opacity: 0, scale: 0.9 }}

@@ -470,8 +470,18 @@ const Dashboard = () => {
           <h3 style={{ fontSize: '1.1rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <FiActivity className="text-accent" /> LeetCode Distribution
           </h3>
-          <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '140px', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {[
+              { label: 'Easy', count: leetcode.stats?.easySolved || 0, color: '#10b981', total: leetcode.stats?.totalEasy || 350 },
+              { label: 'Medium', count: leetcode.stats?.mediumSolved || 0, color: '#fbbf24', total: leetcode.stats?.totalMedium || 350 },
+              { label: 'Hard', count: leetcode.stats?.hardSolved || 0, color: '#ef4444', total: leetcode.stats?.totalHard || 350 },
+            ].map((cat, i) => {
+              const percentage = leetcode.loading ? 0 : Math.round((cat.count / cat.total) * 100);
+              return (
+                <div key={i}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.88rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>{cat.label} ({cat.count})</span>
                     <span style={{ fontWeight: 700, color: cat.color }}>{percentage}%</span>
                   </div>
                   <div style={{ height: '6px', background: '#27272a', borderRadius: '4px', overflow: 'hidden' }}>
@@ -483,7 +493,7 @@ const Dashboard = () => {
               );
             })}
           </div>
-        </div>
+        </TiltCard>
 
         <div>
           <LeetcodeBadges badges={leetcode.badges} loading={leetcode.loading} />

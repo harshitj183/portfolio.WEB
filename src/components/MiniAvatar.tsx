@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 type WalkDir = 'left' | 'right';
 type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing' | 'running' | 'flying' | 'pointing' | 'talking' | 'jumping' | 'sofa_sleep' | 'sunglasses' | 'lightbulb' | 'hacker_typing' | 'analyzing' | 'building' | 'presenting' | 'listening';
@@ -120,54 +121,53 @@ const TOUR_STEPS: TourStep[] = [
 ];
 
 // ── Pixel Art Character ───────────────────────────────────────────────────
-const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean; isAtHome: boolean; isMobile?: boolean }) => {
-  let src = '/avatar/idle.png';
+const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, deliveryMode }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean; isAtHome: boolean; isMobile?: boolean; deliveryMode?: string }) => {
+  let src = '/avatar/idle.webp';
   const isWalking = mood === 'walk';
   const isDancing = mood === 'dancing';
   const isRunning = mood === 'running';
   const isFlying = mood === 'flying';
   
   if (mood === 'waving') {
-    src = '/avatar/waving.png';
+    src = '/avatar/waving.webp';
   } else if (mood === 'idle') {
-    src = '/avatar/idle.png';
+    src = '/avatar/idle.webp';
   } else if (mood === 'typing') {
-    src = '/avatar/typing.png';
+    src = '/avatar/typing.webp';
   } else if (mood === 'thinking') {
-    src = '/avatar/thinking.png';
+    src = '/avatar/thinking.webp';
   } else if (mood === 'sleeping') {
-    src = '/avatar/sleeping.png';
+    src = '/avatar/sleeping.webp';
   } else if (mood === 'pointing') {
-    src = '/avatar/pointing.png';
+    src = '/avatar/pointing.webp';
   } else if (mood === 'talking') {
-    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/talking_1.png' : '/avatar/talking_2.png';
+    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/talking_1.webp' : '/avatar/talking_2.webp';
   } else if (mood === 'dancing') {
-    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/dancing.png' : '/avatar/idle.png';
+    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/dancing.webp' : '/avatar/idle.webp';
   } else if (mood === 'walk') {
-    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/walk.png' : '/avatar/idle.png';
+    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/walk.webp' : '/avatar/idle.webp';
   } else if (mood === 'running') {
-    src = (Math.floor(step / 1.5) % 2 === 0) ? '/avatar/running.png' : '/avatar/idle.png';
+    src = (Math.floor(step / 1.5) % 2 === 0) ? '/avatar/running.webp' : '/avatar/idle.webp';
   } else if (mood === 'flying') {
-    src = '/avatar/flying.png';
+    src = '/avatar/flying.webp';
   } else if (mood === 'jumping') {
-    src = '/avatar/jumping.png';
+    src = '/avatar/jumping.webp';
   } else if (mood === 'sofa_sleep') {
-    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/sofa_sleep_1.png' : '/avatar/sofa_sleep_2.png';
+    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/sofa_sleep_1.webp' : '/avatar/sofa_sleep_2.webp';
   } else if (mood === 'sunglasses') {
-    src = '/avatar/sunglasses.png';
+    src = '/avatar/sunglasses.webp';
   } else if (mood === 'lightbulb') {
-    src = '/avatar/lightbulb.png';
+    src = '/avatar/lightbulb.webp';
   } else if (mood === 'hacker_typing') {
-    src = '/avatar/hacker_typing.png';
+    src = '/avatar/hacker_typing.webp';
   } else if (mood === 'analyzing') {
-    src = '/avatar/analyzing.png';
+    src = '/avatar/analyzing.webp';
   } else if (mood === 'building') {
-    src = '/avatar/building.png';
+    src = '/avatar/building.webp';
   } else if (mood === 'presenting') {
-    src = '/avatar/presenting.png';
+    src = '/avatar/presenting.webp';
   } else if (mood === 'listening') {
-    // Fallback to thinking until the API quota resets and we can generate listening.png
-    src = '/avatar/thinking.png';
+    src = '/avatar/thinking.webp';
   }
 
   const bobY = isClimbing
@@ -239,9 +239,11 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile }: 
         }
       `}} />
 
-      <img
+      <Image
         src={src}
         alt="Harshit Jaiswal Avatar"
+        width={200}
+        height={200}
         style={{
           width: '80%',
           height: '80%',
@@ -251,6 +253,19 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile }: 
           animation: !isAtHome ? 'avatar-3d-aura 3s ease-in-out infinite' : 'avatar-idle-breathe 2s ease-in-out infinite'
         }}
       />
+      {/* Letter Delivery Overlay */}
+      {(deliveryMode === 'delivering' || deliveryMode === 'returning') && (
+        <div style={{
+           position: 'absolute',
+           right: '10px',
+           top: '50%',
+           fontSize: '40px',
+           zIndex: 5,
+           filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.5))'
+        }}>
+          ✉️
+        </div>
+      )}
       {/* Sleek Digital Soundwaves for Listening Mood */}
       {mood === 'listening' && (
         <div style={{
@@ -335,7 +350,7 @@ export default function RoamingHarshit() {
   const [tourStep, setTourStep] = useState<number>(-1);
 
   // Delivery Animation State (Contact Page)
-  const [deliveryMode, setDeliveryMode] = useState<'none' | 'submitting' | 'delivering'>('none');
+  const [deliveryMode, setDeliveryMode] = useState<'none' | 'submitting' | 'delivering' | 'returning'>('none');
   const [deliveryTarget, setDeliveryTarget] = useState<{ x: number; y: number } | null>(null);
 
   // Goto Action Target Override
@@ -529,21 +544,12 @@ export default function RoamingHarshit() {
       setMood('dancing');
       triggerBubble('Hiyah! Theme switch! 🎨', 2500);
       
-      // Jump vertical bounce
-      let jumpCount = 0;
-      const jumpInterval = setInterval(() => {
-        setPos(p => {
-          let jumpY = p.y;
-          if (jumpCount < 10) jumpY += 10;
-          else if (jumpCount < 20) jumpY -= 10;
-          return { x: p.x, y: Math.max(20, jumpY) };
-        });
-        jumpCount++;
-        if (jumpCount >= 20) {
-          clearInterval(jumpInterval);
-          setMood('walk');
-        }
-      }, 25);
+      // Jump vertical bounce via Framer Motion spring physics
+      setOverrideTarget({ x: pos.x, y: pos.y + 100 });
+      setTimeout(() => {
+        setOverrideTarget(null);
+        setMood('walk');
+      }, 600);
 
       const isAlt = document.documentElement.classList.toggle('theme-alt');
       localStorage.setItem('theme-selection', isAlt ? 'alt' : 'default');
@@ -551,8 +557,8 @@ export default function RoamingHarshit() {
 
     // 4. Contact Form Animation triggers
     const handleFormSubmitting = () => {
-      setMood('walk');
-      triggerBubble('Packaging your message... 📦', 3000);
+      setMood('running');
+      triggerBubble('Postman on the way! 🚴‍♂️', 3000);
       
       const formEl = document.getElementById('contact-form');
       if (formEl) {
@@ -570,14 +576,22 @@ export default function RoamingHarshit() {
 
     const handleFormSuccess = () => {
       setDeliveryMode('delivering');
-      triggerBubble('Running to deliver! 🏃‍♂️💨', 2000);
+      triggerBubble('Got the letter! Delivering... 🚴‍♂️💨', 2000);
       
       setTimeout(() => {
-        setDeliveryMode('none');
-        setMood('dancing');
-        triggerBubble('Transmission delivered! 🚀', 4000);
-        setTimeout(() => setMood('walk'), 4000);
-      }, 2500);
+        // Teleport to off-screen left to simulate a round trip
+        setPos({ x: typeof window !== 'undefined' ? window.innerWidth + 150 : 1000, y: 430 });
+        if (posRef.current) posRef.current = { x: typeof window !== 'undefined' ? window.innerWidth + 150 : 1000, y: 430 };
+        
+        setDeliveryMode('returning');
+        setMood('running');
+        triggerBubble('Mission accomplished! 😎', 3000);
+        
+        setTimeout(() => {
+          setDeliveryMode('none');
+          setMood('walk');
+        }, 3000);
+      }, 4000);
     };
 
     window.addEventListener('start-mascot-tour', handleStartTour);
@@ -803,12 +817,21 @@ export default function RoamingHarshit() {
           // Fast glide to contact form
           nextX = current.x + (deliveryTarget.x - current.x) * 0.15 * delta;
           nextY = current.y + (deliveryTarget.y - current.y) * 0.15 * delta;
-          setMood('typing');
+          setMood(prev => prev !== 'running' ? 'running' : prev);
+          
+          const newDir = deliveryTarget.x > current.x ? 'left' : 'right';
+          setDir(prev => prev !== newDir ? newDir : prev);
         } else if (deliveryMode === 'delivering') {
           // Run off-screen to the right
           nextX = current.x + (-150 - current.x) * 0.18 * delta;
-          setDir('right');
-          setMood('walk');
+          setDir(prev => prev !== 'right' ? 'right' : prev);
+          setMood(prev => prev !== 'running' ? 'running' : prev);
+        } else if (deliveryMode === 'returning') {
+          // Fly back to idle position from off-screen left
+          nextX = current.x + (25 - current.x) * 0.08 * delta;
+          nextY = current.y + (430 - current.y) * 0.08 * delta;
+          setDir(prev => prev !== 'left' ? 'left' : prev); 
+          setMood(prev => prev !== 'flying' ? 'flying' : prev);
         } else if (overrideTarget) {
           // Chat Action Easing
           nextX = current.x + (overrideTarget.x - current.x) * 0.0065 * delta;
@@ -1004,7 +1027,7 @@ export default function RoamingHarshit() {
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.2, type: 'spring', stiffness: 260, damping: 20 }}
-          style={{ position: 'relative', width: '100%', height: '100%', pointerEvents: 'none' }}
+          style={{ position: 'relative', width: '100%', height: '100%', pointerEvents: 'none', willChange: 'transform' }}
         >
         {/* Speech / Tour bubble */}
         <AnimatePresence>
@@ -1139,6 +1162,7 @@ export default function RoamingHarshit() {
             isClimbing={(mood === 'walk' || mood === 'running') && Math.abs(pos.y - (cursorPosRef.current?.y || targetY)) > 40}
             isAtHome={pos.x <= 45 && pos.y <= 25}
             isMobile={isMobile}
+            deliveryMode={deliveryMode}
           />
         </div>
         </motion.div>

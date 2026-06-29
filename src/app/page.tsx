@@ -238,6 +238,9 @@ const Home = () => {
               alt="Harshit Jaiswal"
               width={120}
               height={120}
+              priority
+              quality={75}
+              sizes="120px"
               style={{
                 borderRadius: '12px',
                 objectFit: 'cover', border: '1px solid var(--border-color)',
@@ -317,20 +320,25 @@ const Home = () => {
               </div>
             </div>
             <TiltCard tiltAngle={5} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)', position: 'relative', height: '220px' }}>
-              <Image src={proj.image} alt={proj.title} fill style={{ objectFit: 'cover', display: 'block' }} />
+              <Image src={proj.image} alt={proj.title} fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover', display: 'block' }} />
             </TiltCard>
           </motion.div>
         </AnimatePresence>
 
         {/* Dot indicators */}
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '2rem' }}>
+        <div style={{ display: 'flex', gap: '4px', justifyContent: 'center', marginTop: '2rem' }}>
           {FEATURED.map((_, i) => (
-            <button key={i} onClick={() => goTo(i)} style={{
-              width: i === slide ? '24px' : '8px', height: '8px',
-              borderRadius: '4px', border: 'none', cursor: 'pointer',
-              background: i === slide ? proj.color : 'var(--border-color)',
-              transition: 'all 0.3s ease', padding: 0,
-            }} />
+            <button key={i} aria-label={`Go to slide ${i + 1}`} onClick={() => goTo(i)} style={{
+              width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: 'none', cursor: 'pointer', padding: 0
+            }}>
+              <span style={{
+                width: i === slide ? '24px' : '8px', height: '8px',
+                borderRadius: '4px',
+                background: i === slide ? proj.color : 'var(--border-color)',
+                transition: 'all 0.3s ease',
+              }} />
+            </button>
           ))}
         </div>
 
