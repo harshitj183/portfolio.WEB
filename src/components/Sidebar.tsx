@@ -181,13 +181,13 @@ const Sidebar = () => {
         </div>
         {mainNav.map((item, idx) => renderNavLink(item, idx))}
 
-        {/* Other section */}
+        {/* Other section commented out
         <div style={{ fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', opacity: 0.5, margin: '1.2rem 0 0.6rem', paddingLeft: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           Other
           <span style={{ fontSize: '0.5rem', background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: 'var(--accent)', borderRadius: '4px', padding: '0px 4px', letterSpacing: '0.05em' }}>Coming</span>
         </div>
         {comingSoonNav.map((item, idx) => renderNavLink(item, mainNav.length + idx))}
-
+        */}
         {/* Mobile social */}
         <div className="mobile-social-links">
           {socialLinks.map(({ href, icon, label }) => (
