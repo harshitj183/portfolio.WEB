@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+import { AdminNotification } from '@/emails/AdminNotification';
+import { AutoResponder } from '@/emails/AutoResponder';
+import * as React from 'react';
 
 export async function POST(request: Request) {
   try {
@@ -12,44 +15,46 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Security: Validate payload length to prevent spam and memory attacks
     if (name.length > 100 || email.length > 100 || message.length > 2000) {
       return NextResponse.json({ error: 'Payload too large. Please keep your message concise.' }, { status: 400 });
     }
 
-    // Configure the transporter
-    // For Gmail, user needs to generate an App Password:
-    // https://myaccount.google.com/apppasswords
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+    const resendApiKey = process.env.RESEND_API_KEY || 'dummy_key_for_build';
+    const resend = new Resend(resendApiKey);
+    const adminEmail = process.env.EMAIL_USER as string;
+
+    // Use custom domain if available, fallback to onboarding for testing
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Harshit Jaiswal <hello@harshitj183.in>';
+
+    // Send the notification to the admin (you)
+    const { data: adminData, error: adminError } = await resend.emails.send({
+      from: fromEmail,
+      to: adminEmail,
+      subject: `New Portfolio Message from ${name}`,
+      replyTo: email,
+      react: AdminNotification({ name, email, message }) as React.ReactElement,
     });
 
-    // Setup email data
-    const mailOptions = {
-      from: `"${name}" <${process.env.EMAIL_USER}>`, // Sender address (needs to be your auth email for Gmail)
-      replyTo: email, // If you reply to the email, it goes to the sender
-      to: process.env.EMAIL_USER, // Send it to yourself
-      subject: `New Portfolio Message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `
-        <h3>New Contact Form Submission</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p style="white-space: pre-wrap;">${message}</p>
-      `,
-    };
+    if (adminError) {
+      console.error('Error sending admin email:', adminError);
+      return NextResponse.json({ error: 'Failed to send message.' }, { status: 500 });
+    }
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+    // Send autoresponder to the user
+    try {
+      await resend.emails.send({
+        from: fromEmail,
+        to: email,
+        subject: `Thanks for reaching out, ${name}!`,
+        react: AutoResponder({ name }) as React.ReactElement,
+      });
+    } catch (autoResponderError) {
+      console.warn('Autoresponder skipped (likely unverified domain on free tier):', autoResponderError);
+    }
 
-    return NextResponse.json({ success: true, message: 'Email sent successfully' }, { status: 200 });
-  } catch (error: any) {
-    console.error('Error sending email:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    return NextResponse.json({ success: true, data: adminData });
+  } catch (err) {
+    console.error('Unexpected error in contact route:', err);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

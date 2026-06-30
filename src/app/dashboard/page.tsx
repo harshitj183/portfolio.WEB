@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FiGithub, FiActivity, FiCode, FiZap, FiTrendingUp, FiAward } from 'react-icons/fi';
 import Image from 'next/image';
 import TiltCard from '@/components/TiltCard';
+import useSWR from 'swr';
 
 /* ── Stat Card ───────────────────────── */
 interface StatCardProps {
@@ -142,7 +143,7 @@ const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: bo
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
         {badges.map((b: any, i: number) => (
           <div key={i} className="pill" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {b.icon && <img src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} style={{ width: '16px', height: '16px' }} />}
+            {b.icon && <Image src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} width={16} height={16} style={{ objectFit: 'contain' }} />}
             <span style={{ fontSize: '0.8rem' }}>{b.displayName}</span>
           </div>
         ))}
@@ -304,129 +305,118 @@ interface LeetcodeState {
   loading: boolean;
 }
 
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+};
+
+const githubFetcher = async () => {
+  try {
+    const res = await fetch('https://api.github.com/users/harshitj183');
+    const data = await res.json();
+    const reposRes = await fetch('https://api.github.com/users/harshitj183/repos?per_page=100');
+    const repos = await reposRes.json();
+    const totalStars = repos.reduce((acc: number, r: any) => acc + (r.stargazers_count || 0), 0);
+    
+    const heatmap = Array.from({ length: 364 }, (_, i) => {
+      const r = seededRandom(i + 2026);
+      if (r > 0.8) return Math.floor(r * 5);
+      if (r > 0.5) return 1;
+      return 0;
+    });
+
+    return {
+      stats: {
+        repos: data.public_repos || 30,
+        followers: data.followers || 12,
+        stars: totalStars,
+        streak: 42,
+      },
+      heatmap: heatmap
+    };
+  } catch {
+    const heatmap = Array.from({ length: 364 }, (_, i) => {
+      const r = seededRandom(i + 2024);
+      return r > 0.7 ? Math.floor(r * 5) : (r > 0.4 ? 1 : 0);
+    });
+    return {
+      stats: { repos: 30, followers: 12, stars: 8, streak: 42 },
+      heatmap
+    };
+  }
+};
+
+const leetcodeFetcher = async () => {
+  const parseCalendar = (calendarObj: any) => {
+    if (!calendarObj) return null;
+    try {
+      const calendar = typeof calendarObj === 'string' ? JSON.parse(calendarObj) : calendarObj;
+      const heatmap = Array(364).fill(0);
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const msInDay = 24 * 60 * 60 * 1000;
+      for (const [timestamp, count] of Object.entries(calendar)) {
+        const date = new Date(parseInt(timestamp) * 1000);
+        date.setHours(0,0,0,0);
+        const diffDays = Math.floor((now.getTime() - date.getTime()) / msInDay);
+        if (diffDays >= 0 && diffDays < 364) {
+          heatmap[363 - diffDays] += count as number;
+        }
+      }
+      return heatmap;
+    } catch(e) { return null; }
+  };
+
+  const fallbackHeatmap = Array.from({ length: 364 }, (_, i) => {
+    const r = seededRandom(i + 5000);
+    return r > 0.8 ? Math.floor(r * 4) : (r > 0.55 ? 1 : 0);
+  });
+
+  try {
+    const [resProfile, resBadges] = await Promise.all([
+      fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { signal: AbortSignal.timeout(4000) }),
+      fetch('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { signal: AbortSignal.timeout(4000) }).catch(() => null)
+    ]);
+    const data = await resProfile.json();
+    const badgesData = resBadges ? await resBadges.json().catch(() => null) : null;
+    
+    const stats = data.matchedUserStats?.acSubmissionNum;
+    if (stats) {
+      const solved = stats.find((x: any) => x.difficulty === 'All')?.count || '350+';
+      const easy = stats.find((x: any) => x.difficulty === 'Easy');
+      const medium = stats.find((x: any) => x.difficulty === 'Medium');
+      const hard = stats.find((x: any) => x.difficulty === 'Hard');
+      return {
+        stats: { 
+            solved, 
+            easySolved: easy?.count || 0,
+            mediumSolved: medium?.count || 0,
+            hardSolved: hard?.count || 0,
+            totalEasy: easy?.count || 1,
+            totalMedium: medium?.count || 1,
+            totalHard: hard?.count || 1,
+            totalQ: 3300 
+        },
+        heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
+        badges: badgesData?.badges || []
+      };
+    } else throw new Error();
+  } catch {
+    return {
+      stats: { solved: '350+', easySolved: 242, mediumSolved: 116, hardSolved: 14, totalEasy: 300, totalMedium: 500, totalHard: 200, totalQ: 3300 },
+      heatmap: fallbackHeatmap,
+      badges: []
+    };
+  }
+};
+
 const Dashboard = () => {
-  const [github, setGithub] = useState<GithubState>({ stats: null, loading: true, heatmap: null });
-  const [leetcode, setLeetcode] = useState<LeetcodeState>({ stats: null, loading: true, heatmap: null, badges: null });
+  const { data: githubData, isLoading: githubLoading } = useSWR('github', githubFetcher, { revalidateOnFocus: false });
+  const { data: leetcodeData, isLoading: leetcodeLoading } = useSWR('leetcode', leetcodeFetcher, { revalidateOnFocus: false });
 
-  useEffect(() => {
-    // Fetch real GitHub data
-    const fetchGithub = async () => {
-      const seededRandom = (seed: number) => {
-        const x = Math.sin(seed++) * 10000;
-        return x - Math.floor(x);
-      };
+  const github = { stats: githubData?.stats || null, heatmap: githubData?.heatmap || null, loading: githubLoading };
+  const leetcode = { stats: leetcodeData?.stats || null, heatmap: leetcodeData?.heatmap || null, badges: leetcodeData?.badges || null, loading: leetcodeLoading };
 
-      try {
-        const res = await fetch('https://api.github.com/users/harshitj183');
-        const data = await res.json();
-        const reposRes = await fetch('https://api.github.com/users/harshitj183/repos?per_page=100');
-        const repos = await reposRes.json();
-        const totalStars = repos.reduce((acc: number, r: any) => acc + (r.stargazers_count || 0), 0);
-        
-        const heatmap = Array.from({ length: 364 }, (_, i) => {
-          const r = seededRandom(i + 2026);
-          if (r > 0.8) return Math.floor(r * 5);
-          if (r > 0.5) return 1;
-          return 0;
-        });
-
-        setGithub({
-          stats: {
-            repos: data.public_repos || 30,
-            followers: data.followers || 12,
-            stars: totalStars,
-            streak: 42,
-          },
-          loading: false,
-          heatmap: heatmap
-        });
-      } catch {
-        const heatmap = Array.from({ length: 364 }, (_, i) => {
-          const r = seededRandom(i + 2024);
-          return r > 0.7 ? Math.floor(r * 5) : (r > 0.4 ? 1 : 0);
-        });
-        setGithub({
-          stats: { repos: 30, followers: 12, stars: 8, streak: 42 },
-          loading: false,
-          heatmap
-        });
-      }
-    };
-
-    const fetchLeetcode = async () => {
-      const seededRandom = (seed: number) => {
-        const x = Math.sin(seed++) * 10000;
-        return x - Math.floor(x);
-      };
-      
-      const parseCalendar = (calendarObj: any) => {
-        if (!calendarObj) return null;
-        try {
-          const calendar = typeof calendarObj === 'string' ? JSON.parse(calendarObj) : calendarObj;
-          const heatmap = Array(364).fill(0);
-          const now = new Date();
-          now.setHours(0,0,0,0);
-          const msInDay = 24 * 60 * 60 * 1000;
-          for (const [timestamp, count] of Object.entries(calendar)) {
-            const date = new Date(parseInt(timestamp) * 1000);
-            date.setHours(0,0,0,0);
-            const diffDays = Math.floor((now.getTime() - date.getTime()) / msInDay);
-            if (diffDays >= 0 && diffDays < 364) {
-              heatmap[363 - diffDays] += count as number;
-            }
-          }
-          return heatmap;
-        } catch(e) { return null; }
-      };
-
-      const fallbackHeatmap = Array.from({ length: 364 }, (_, i) => {
-        const r = seededRandom(i + 5000);
-        return r > 0.8 ? Math.floor(r * 4) : (r > 0.55 ? 1 : 0);
-      });
-
-      try {
-        const [resProfile, resBadges] = await Promise.all([
-          fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { signal: AbortSignal.timeout(4000) }),
-          fetch('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { signal: AbortSignal.timeout(4000) }).catch(() => null)
-        ]);
-        const data = await resProfile.json();
-        const badgesData = resBadges ? await resBadges.json().catch(() => null) : null;
-        
-        const stats = data.matchedUserStats?.acSubmissionNum;
-        if (stats) {
-          const solved = stats.find((x: any) => x.difficulty === 'All')?.count || '350+';
-          const easy = stats.find((x: any) => x.difficulty === 'Easy');
-          const medium = stats.find((x: any) => x.difficulty === 'Medium');
-          const hard = stats.find((x: any) => x.difficulty === 'Hard');
-          setLeetcode({
-            stats: { 
-                solved, 
-                easySolved: easy?.count || 0,
-                mediumSolved: medium?.count || 0,
-                hardSolved: hard?.count || 0,
-                totalEasy: easy?.count || 1,
-                totalMedium: medium?.count || 1,
-                totalHard: hard?.count || 1,
-                totalQ: 3300 
-            },
-            loading: false,
-            heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
-            badges: badgesData?.badges || []
-          });
-        } else throw new Error();
-      } catch {
-        setLeetcode({
-          stats: { solved: '350+', easySolved: 242, mediumSolved: 116, hardSolved: 14, totalEasy: 300, totalMedium: 500, totalHard: 200, totalQ: 3300 },
-          loading: false,
-          heatmap: fallbackHeatmap,
-          badges: []
-        });
-      }
-    };
-
-    fetchGithub();
-    fetchLeetcode();
-  }, []);
 
   return (
     <div style={{ padding: '2rem 0' }}>
@@ -447,9 +437,7 @@ const Dashboard = () => {
         <StatCard label="Current Streak" value={github.stats?.streak || 0} suffix=" days" icon={<FiTrendingUp />} loading={github.loading} />
       </div>
 
-      <div style={{ marginBottom: '3rem' }}>
-        <TechRadar />
-      </div>
+
 
       <div id="github-heatmap" style={{ marginBottom: '4rem' }}>
         <GithubHeatmap data={github.heatmap} loading={github.loading} />

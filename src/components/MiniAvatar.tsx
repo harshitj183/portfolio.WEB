@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useAvatar } from '../context/AvatarContext';
 
 type WalkDir = 'left' | 'right';
 type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing' | 'running' | 'flying' | 'pointing' | 'talking' | 'jumping' | 'sofa_sleep' | 'sunglasses' | 'lightbulb' | 'hacker_typing' | 'analyzing' | 'building' | 'presenting' | 'listening';
@@ -321,6 +322,7 @@ function randomBetween(a: number, b: number) { return a + Math.random() * (b - a
 export default function RoamingHarshit() {
   const pathname = usePathname();
   const router = useRouter();
+  const { currentMessage, currentMood } = useAvatar();
   
   // State for rendering repaint
   const [pos, setPos]           = useState({ x: 40, y: 20 });
@@ -384,6 +386,14 @@ export default function RoamingHarshit() {
     const arr = QUIPS[m];
     triggerBubble(arr[Math.floor(Math.random() * arr.length)]);
   }, [triggerBubble]);
+
+  // Sync with AvatarContext
+  useEffect(() => {
+    if (currentMessage) {
+      if (currentMood) setMood(currentMood as Mood);
+      triggerBubble(currentMessage, 4000);
+    }
+  }, [currentMessage, currentMood, triggerBubble]);
 
   // Load theme and saved tour status on mount
   useEffect(() => {

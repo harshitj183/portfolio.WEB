@@ -10,6 +10,7 @@ import {
   FiLayout, FiActivity, FiMessageSquare, FiMenu, FiX, FiFileText,
   FiBook, FiCpu, FiEdit3, FiPackage, FiStar, FiGitCommit
 } from 'react-icons/fi';
+import { useAvatar } from '../context/AvatarContext';
 
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
 
@@ -25,6 +26,7 @@ const Sidebar = () => {
   const [open, setOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const close = () => setOpen(false);
+  const { logActivity } = useAvatar();
 
   const mainNav: NavItem[] = [
     { to: '/',          name: 'Home',      icon: <FiCommand size={17} />,      desc: 'Overview'        },
@@ -55,11 +57,17 @@ const Sidebar = () => {
     const cur = pathname || '';
     const isActive = !item.soon && (item.to === '/' ? cur === '/' : cur.startsWith(item.to));
 
+    const handleMouseEnter = () => {
+      if (item.soon) return;
+      logActivity(`User is currently looking at the ${item.name} navigation link.`);
+    };
+
     const inner = (
       <div
         className={item.soon ? 'nav-item nav-item-soon' : isActive ? 'nav-item active' : 'nav-item'}
         style={{ cursor: 'pointer', opacity: item.soon ? 0.5 : 1 }}
         onClick={item.soon ? () => alert('This page is currently under construction and will be available soon!') : close}
+        onMouseEnter={handleMouseEnter}
       >
         {isActive && (
           <motion.div

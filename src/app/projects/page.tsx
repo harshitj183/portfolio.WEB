@@ -11,6 +11,7 @@ import Image from 'next/image';
 import ReadmeViewer from '@/components/ReadmeViewer';
 import TiltCard from '@/components/TiltCard';
 import ProjectFileTree from '@/components/ProjectFileTree';
+import { useAvatar } from '@/context/AvatarContext';
 
 const PROJECTS = [
   {
@@ -141,14 +142,16 @@ interface ProjectCardProps {
   index: number;
   isActive: boolean;
   cardRef: (el: HTMLDivElement | null) => void;
+  onMouseEnter: () => void;
 }
 
-const ProjectCard = ({ project, onOpen, isActive, cardRef }: ProjectCardProps) => (
+const ProjectCard = ({ project, onOpen, isActive, cardRef, onMouseEnter }: ProjectCardProps) => (
   <TiltCard
     ref={cardRef}
     data-project-id={project.id}
     data-project-title={project.title}
     onClick={() => onOpen(project)}
+    onMouseEnter={onMouseEnter}
     className={`glass-panel ${isActive ? 'project-highlight' : ''}`}
     style={{ display: 'flex', flexDirection: 'column', padding: '1.8rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
     tiltAngle={10}
@@ -253,6 +256,7 @@ const Projects = () => {
   const [visibleProjectId, setVisibleProjectId] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const { logActivity } = useAvatar();
   
   const projectRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -277,7 +281,6 @@ const Projects = () => {
             const pid = Number(entry.target.getAttribute('data-project-id'));
             const ptitle = entry.target.getAttribute('data-project-title');
             
-            // Only update and dispatch if the visible project actually changes
             setVisibleProjectId((prev) => {
               if (prev !== pid) {
                 window.dispatchEvent(
@@ -340,7 +343,6 @@ const Projects = () => {
         Technical breakdowns of high-performance solutions across web architecture, AI, and developer tooling.
       </motion.p>
 
-      {/* Premium Animated Filter Bar */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -383,7 +385,6 @@ const Projects = () => {
         </span>
       </motion.div>
 
-      {/* Grid */}
       <div id="projects-grid" className="grid">
         {filtered.map((project, index) => (
           <ProjectCard 
@@ -393,11 +394,13 @@ const Projects = () => {
             index={index} 
             isActive={visibleProjectId === project.id}
             cardRef={(el) => { projectRefs.current[index] = el; }}
+            onMouseEnter={() => {
+              logActivity(`User is currently looking at the ${project.title} project card.`);
+            }}
           />
         ))}
       </div>
 
-      {/* Modal */}
       <AnimatePresence>
         {selected && (
           <motion.div

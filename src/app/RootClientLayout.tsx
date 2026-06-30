@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import SpotlightEffect from '../components/SpotlightEffect';
+import { AvatarProvider } from '../context/AvatarContext';
 
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false });
 const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
@@ -93,19 +94,21 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
           }}
         />
       </div>
-      <div className="app-container" style={{ position: 'relative', zIndex: 1 }}>
-        <SpotlightEffect />
-        <CommandPalette />
-        <Sidebar />
-        <MiniAvatar />
-        <PortfolioAgent />
-        <main className="main-content">
-          {children}
-          <footer style={{ borderTop: '1px solid var(--border-color)', marginTop: '8rem', paddingTop: '3rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-            <p>© 2026 Harshit Jaiswal. Built with Next.js & Bun.</p>
-          </footer>
-        </main>
-      </div>
+      <AvatarProvider>
+        <div className="app-container" style={{ position: 'relative', zIndex: 1 }}>
+          <SpotlightEffect />
+          <CommandPalette />
+          <Sidebar />
+          <MiniAvatar />
+          <PortfolioAgent />
+          <main className="main-content">
+            {children}
+            <footer style={{ borderTop: '1px solid var(--border-color)', marginTop: '8rem', paddingTop: '3rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+              <p>© 2026 Harshit Jaiswal. Built with Next.js & Bun.</p>
+            </footer>
+          </main>
+        </div>
+      </AvatarProvider>
     </>
   );
 }

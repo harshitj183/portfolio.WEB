@@ -1,17 +1,18 @@
 import type { NextConfig } from "next";
-import withPWAInit from "@ducanh2912/next-pwa";
+import withSerwistInit from "@serwist/next";
 
-const withPWA = withPWAInit({
-  dest: "public",
-  fallbacks: {
-    document: "/~offline",
-  },
+const withSerwist = withSerwistInit({
+  swSrc: "src/sw.ts",
+  swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
 });
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   turbopack: {},
+  experimental: {
+    optimizePackageImports: ['react-icons'],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -61,4 +62,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+export default withSerwist(nextConfig);

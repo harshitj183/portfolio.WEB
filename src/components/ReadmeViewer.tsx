@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import dynamic from 'next/dynamic';
+import useSWR from 'swr';
 
 const Mermaid = dynamic(() => import('./Mermaid'), { ssr: false });
 
@@ -11,55 +12,38 @@ interface ReadmeViewerProps {
   onImageClick?: (src: string) => void;
 }
 
+const fetcher = async (githubUrl: string) => {
+  const urlObj = new URL(githubUrl);
+  const pathParts = urlObj.pathname.split('/').filter(Boolean);
+  
+  if (pathParts.length < 2) {
+    throw new Error('Invalid GitHub URL');
+  }
+  
+  const owner = pathParts[0];
+  const repo = pathParts[1];
+  
+  let branch = 'main';
+  let response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`);
+  
+  if (!response.ok) {
+    branch = 'master';
+    response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`);
+  }
+  
+  if (!response.ok) {
+    throw new Error('README not found in this repository.');
+  }
+  
+  const text = await response.text();
+  return { text, owner, repo, branch };
+};
+
 const ReadmeViewer = ({ githubUrl, onImageClick }: ReadmeViewerProps) => {
-  const [content, setContent] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [repoData, setRepoData] = useState<{ owner: string; repo: string; branch: string } | null>(null);
-
-  useEffect(() => {
-    const fetchReadme = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        // Parse GitHub URL to get owner/repo
-        // e.g., https://github.com/harshitj183/unified-college-interaction-system-web
-        const urlObj = new URL(githubUrl);
-        const pathParts = urlObj.pathname.split('/').filter(Boolean);
-        
-        if (pathParts.length < 2) {
-          throw new Error('Invalid GitHub URL');
-        }
-        
-        const owner = pathParts[0];
-        const repo = pathParts[1];
-        
-        // Try to fetch main branch first, then master
-        let branch = 'main';
-        let response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`);
-        
-        if (!response.ok) {
-          branch = 'master';
-          response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`);
-        }
-        
-        if (!response.ok) {
-          throw new Error('README not found in this repository.');
-        }
-        
-        const text = await response.text();
-        setContent(text);
-        setRepoData({ owner, repo, branch });
-      } catch (err: any) {
-        setError(err.message || 'Failed to load README');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReadme();
-  }, [githubUrl]);
+  const { data, error, isLoading } = useSWR(githubUrl, fetcher, { revalidateOnFocus: false, dedupingInterval: 600000 });
+  const content = data?.text || null;
+  const loading = isLoading;
+  const repoData = data ? { owner: data.owner, repo: data.repo, branch: data.branch } : null;
 
   if (loading) {
     return (
@@ -94,6 +78,8 @@ const ReadmeViewer = ({ githubUrl, onImageClick }: ReadmeViewerProps) => {
               <img 
                 src={imageSrc} 
                 alt={alt || 'Markdown Image'} 
+                loading="lazy"
+                decoding="async"
                 onClick={() => onImageClick && typeof imageSrc === 'string' && onImageClick(imageSrc)}
                 style={{ cursor: onImageClick ? 'zoom-in' : 'default', ...props.style }}
                 {...props} 

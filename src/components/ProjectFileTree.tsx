@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiFolder, FiFile, FiFileText, FiCode, FiTerminal, FiChevronRight, FiChevronDown, FiDatabase, FiImage } from 'react-icons/fi';
+import { useAvatar } from '../context/AvatarContext';
+import Image from 'next/image';
 
 interface ProjectFileTreeProps {
   githubUrl?: string | null;
@@ -63,6 +65,7 @@ export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
   // File Viewer States
   const [activeFile, setActiveFile] = useState<{ name: string, path: string, content?: string, url?: string, isImage?: boolean } | null>(null);
   const [fetchingFile, setFetchingFile] = useState(false);
+  const { logActivity } = useAvatar();
 
   useEffect(() => {
     let isMounted = true;
@@ -226,6 +229,13 @@ export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
     return nodes.map((node) => (
       <div key={node.path} style={{ display: 'flex', flexDirection: 'column' }}>
         <div
+          onMouseEnter={() => {
+            if (node.type === 'blob') {
+              logActivity(`User is looking at file ${node.name} in the project tree.`);
+            } else {
+              logActivity(`User is looking at folder ${node.name} in the project tree.`);
+            }
+          }}
           onClick={() => node.type === 'tree' ? toggleNode(node.path) : handleFileClick(node)}
           style={{
             display: 'flex', alignItems: 'center', gap: '0.4rem',
@@ -303,7 +313,9 @@ export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
               </div>
               <div style={{ flex: 1, overflow: 'auto', background: activeFile.isImage ? 'transparent' : '#0d0d0d', display: 'flex', justifyContent: activeFile.isImage ? 'center' : 'flex-start', alignItems: activeFile.isImage ? 'center' : 'flex-start' }}>
                 {activeFile.isImage ? (
-                  <img src={activeFile.url} alt={activeFile.name} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }} />
+                  <div style={{ position: 'relative', width: '90%', height: '90%' }}>
+                    <Image src={activeFile.url!} alt={activeFile.name} fill style={{ objectFit: 'contain', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }} />
+                  </div>
                 ) : (
                   <pre style={{ margin: 0, padding: '1.5rem', fontSize: '0.85rem', fontFamily: 'monospace', color: '#e5e7eb', width: '100%' }}>
                     <code>{activeFile.content}</code>

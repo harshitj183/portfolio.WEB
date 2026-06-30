@@ -1,7 +1,14 @@
 import type { Metadata, Viewport } from 'next';
 import RootClientLayout from './RootClientLayout';
 import Script from 'next/script';
+import { Inter } from 'next/font/google';
 import '../index.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-primary',
+});
 
 export const metadata: Metadata = {
   title: 'Harshit Jaiswal | Full Stack Architect & SDE',
@@ -64,7 +71,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body style={{ margin: 0, background: '#09090b', color: '#fff' }}>
+      <body className={inter.variable} style={{ margin: 0, background: '#09090b', color: '#fff' }}>
         <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
