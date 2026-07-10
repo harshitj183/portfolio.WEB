@@ -16,5 +16,23 @@ export default function AboutLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfilePage",
+              "mainEntity": {
+                "@id": "https://www.harshitj183.in/#person"
+              }
+            })
+          }}
+        />
+      </head>
+      {children}
+    </>
+  );
 }

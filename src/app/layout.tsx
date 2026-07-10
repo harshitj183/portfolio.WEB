@@ -53,36 +53,50 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Person",
-              "name": "Harshit Jaiswal",
-              "url": "https://www.harshitj183.in",
-              "image": "https://avatars.githubusercontent.com/u/76927137?v=4",
-              "jobTitle": "Full Stack Architect & SDE",
-              "description": "Harshit Jaiswal is a Software Development Engineer (SDE) and AI Architect specializing in Full Stack Web Development, MERN stack, and Artificial Intelligence.",
-              "gender": "Male",
-              "nationality": "Indian",
-              "email": "harshitj183@gmail.com",
-              "alumniOf": {
-                "@type": "CollegeOrUniversity",
-                "name": "KR Mangalam University"
-              },
-              "knowsAbout": [
-                "Software Engineering",
-                "Full Stack Development",
-                "MERN Stack",
-                "Artificial Intelligence",
-                "React",
-                "Node.js",
-                "Next.js"
-              ],
-              "worksFor": {
-                "@type": "Organization",
-                "name": "Freelance & Open Source"
-              },
-              "sameAs": [
-                "https://github.com/harshitj183",
-                "https://linkedin.com/in/harshitj183",
-                "https://leetcode.com/u/harshitj183"
+              "@graph": [
+                {
+                  "@type": "Person",
+                  "@id": "https://www.harshitj183.in/#person",
+                  "name": "Harshit Jaiswal",
+                  "url": "https://www.harshitj183.in",
+                  "image": "https://avatars.githubusercontent.com/u/76927137?v=4",
+                  "jobTitle": "Full Stack Architect & SDE",
+                  "description": "Harshit Jaiswal is a Software Development Engineer (SDE) and AI Architect specializing in Full Stack Web Development, MERN stack, and Artificial Intelligence.",
+                  "gender": "Male",
+                  "nationality": "Indian",
+                  "email": "harshitj183@gmail.com",
+                  "alumniOf": {
+                    "@type": "CollegeOrUniversity",
+                    "name": "KR Mangalam University"
+                  },
+                  "knowsAbout": [
+                    "Software Engineering",
+                    "Full Stack Development",
+                    "MERN Stack",
+                    "Artificial Intelligence",
+                    "React",
+                    "Node.js",
+                    "Next.js"
+                  ],
+                  "worksFor": {
+                    "@type": "Organization",
+                    "name": "Freelance & Open Source"
+                  },
+                  "sameAs": [
+                    "https://github.com/harshitj183",
+                    "https://linkedin.com/in/harshitj183",
+                    "https://leetcode.com/u/harshitj183"
+                  ]
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://www.harshitj183.in/#website",
+                  "url": "https://www.harshitj183.in",
+                  "name": "Harshit Jaiswal Portfolio",
+                  "publisher": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  }
+                }
               ]
             })
           }}
