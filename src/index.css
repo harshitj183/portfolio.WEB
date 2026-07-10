@@ -591,21 +591,7 @@ textarea::placeholder {
     display: none;
   }
 
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--bg-color);
-    border-bottom: 1px solid var(--border-color);
-    padding: 1rem;
-    z-index: 99;
-  }
 
-  .nav-links.open {
-    display: flex;
-  }
 
   .mobile-social-links {
     display: flex;
