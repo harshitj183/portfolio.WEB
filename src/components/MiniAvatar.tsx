@@ -963,7 +963,7 @@ export default function RoamingHarshit() {
           if (!isInteracting && mood !== 'idle') setMood('idle');
 
           nextX = 25;
-          nextY = 430;
+          nextY = typeof window !== 'undefined' ? Math.min(480, window.innerHeight - 200) : 480;
 
           if (cPos.x > 100) setDir('left');
           else setDir('right');
@@ -971,7 +971,7 @@ export default function RoamingHarshit() {
         } else {
           // Normal mode (Stroller mode disabled, avatar stays fixed)
           nextX = 25;
-          nextY = 430;
+          nextY = typeof window !== 'undefined' ? Math.min(480, window.innerHeight - 200) : 480;
 
           // Return to idle mood if we were doing cursor animations but are now inactive
           const isMascotInteracting = mood === 'pointing' || mood === 'talking' || mood === 'thinking' || mood === 'typing' || mood === 'waving' || mood === 'sleeping' || mood === 'jumping' || mood === 'sofa_sleep' || mood === 'sunglasses' || mood === 'lightbulb' || mood === 'listening';
@@ -1093,6 +1093,9 @@ export default function RoamingHarshit() {
           zIndex: 99999,
           userSelect: 'none',
           pointerEvents: 'none', // Let clicks pass through empty spaces
+          right: `${pos.x}px`,
+          bottom: `${pos.y}px`,
+          transition: 'right 0.1s ease-out, bottom 0.1s ease-out'
         }}
       >
         <motion.div
