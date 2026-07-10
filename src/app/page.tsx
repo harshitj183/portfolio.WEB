@@ -108,7 +108,7 @@ const Home = () => {
 
   const proj = FEATURED[slide];
   return (
-    <div style={{ padding: '2rem 0' }}>
+    <main style={{ padding: '2rem 0' }}>
       {/* Available Badge */}
       <div style={{ marginBottom: '2.5rem' }}>
         <span style={{ 
@@ -122,7 +122,7 @@ const Home = () => {
       </div>
 
       {/* Hero Section */}
-      <div id="hero-section" style={{ marginBottom: '2rem' }}>
+      <header id="hero-section" style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: 'clamp(3rem, 7vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: '1.1', marginBottom: '1.5rem', maxWidth: '900px' }}>
           Harshit Jaiswal
           <br />
@@ -130,10 +130,10 @@ const Home = () => {
             SDE | AI Agent Engineer | Freelancer | Author
           </span>
         </h1>
-      </div>
+      </header>
 
       {/* Hero content row */}
-      <div className="hero-content-grid">
+      <section aria-label="Introduction and Links" className="hero-content-grid">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1rem' }}>
             <FiMapPin size={16} />
@@ -149,6 +149,7 @@ const Home = () => {
               href="/contact"
               className="premium-action-btn premium-action-primary"
               style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
+              aria-label="Get in touch with Harshit Jaiswal for hiring or freelance"
             >
               Get in touch <FiArrowRight size={16} />
             </Link>
@@ -157,7 +158,8 @@ const Home = () => {
               download="Harshit_Jaiswal_Resume.pdf"
               className="premium-action-btn premium-action-secondary"
               style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
-              title="Download CV"
+              title="Download Harshit Jaiswal's CV"
+              aria-label="Download Harshit Jaiswal's CV PDF"
             >
               Download CV
             </a>
@@ -167,6 +169,7 @@ const Home = () => {
               rel="noreferrer"
               className="premium-action-btn premium-action-secondary"
               style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
+              aria-label="View Harshit Jaiswal's GitHub Profile"
             >
               <FiGithub size={18} /> GitHub
             </a>
@@ -235,7 +238,7 @@ const Home = () => {
             </div>
             <Image
               src={GITHUB_AVATAR}
-              alt="Harshit Jaiswal"
+              alt="Harshit Jaiswal - Full Stack Software Development Engineer and AI Architect profile picture"
               width={120}
               height={120}
               priority
@@ -267,10 +270,10 @@ const Home = () => {
           </div>
           </motion.div>
         </div>
-      </div>
+      </section>
 
       {/* Tech Stack Ticker (Now a clean static list) */}
-      <div id="tech-stack" style={{ marginBottom: '5rem' }}>
+      <section id="tech-stack" aria-label="Technology Stack" style={{ marginBottom: '5rem' }}>
         <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontWeight: 600 }}>
           Tech Stack
         </p>
@@ -284,14 +287,14 @@ const Home = () => {
             </span>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Featured Project Showcase */}
       <h2 id="featured-work" style={{ fontSize: '1.8rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <FiStar className="text-accent" /> Featured Work
       </h2>
 
-      <div className="glass-panel featured-showcase-panel" style={{ marginBottom: '5rem', position: 'relative', minHeight: '280px', padding: 0 }}>
+      <section aria-labelledby="featured-work" className="glass-panel featured-showcase-panel" style={{ marginBottom: '5rem', position: 'relative', minHeight: '280px', padding: 0 }}>
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={slide}
@@ -356,7 +359,7 @@ const Home = () => {
             transformOrigin: 'left',
           }}
         />
-      </div>
+      </section>
 
       {/* Browse All CTA */}
       <div style={{ textAlign: 'center' }}>
@@ -364,11 +367,12 @@ const Home = () => {
           href="/projects"
           className="nav-item"
           style={{ display: 'inline-flex', padding: '1rem 2.5rem', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', gap: '0.8rem' }}
+          aria-label="Browse All Projects by Harshit Jaiswal"
         >
           Browse All Projects <FiArrowRight />
         </Link>
       </div>
-    </div>
+    </main>
   );
 };
 
