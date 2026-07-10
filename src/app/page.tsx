@@ -240,6 +240,7 @@ const Home = () => {
               height={120}
               priority
               quality={75}
+              fetchPriority="high"
               sizes="120px"
               style={{
                 borderRadius: '12px',
@@ -254,8 +255,8 @@ const Home = () => {
               { val: lcSolved, label: 'LeetCode' },
               { val: '4+ Yrs', label: 'Experience' },
             ].map(({ val, label }) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff' }}>{val}</div>
+              <div key={label} style={{ textAlign: 'center', minWidth: '60px' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{val}</div>
                 <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
               </div>
             ))}
@@ -320,7 +321,7 @@ const Home = () => {
               </div>
             </div>
             <TiltCard tiltAngle={5} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)', position: 'relative', height: '220px' }}>
-              <Image src={proj.image} alt={proj.title} fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover', display: 'block' }} />
+              <Image src={proj.image} alt={proj.title} fill sizes="(max-width: 768px) 100vw, 50vw" priority={slide === 0} style={{ objectFit: 'cover', display: 'block' }} />
             </TiltCard>
           </motion.div>
         </AnimatePresence>
