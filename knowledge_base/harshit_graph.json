@@ -1,0 +1,187 @@
+{
+  "lastUpdated": "2026-07-06T18:51:01.600Z",
+  "profile": {
+    "name": "Harshit Jaiswal",
+    "location": "Gurugram, Haryana, India (Delhi NCR)",
+    "role": "SDE | AI Agent Engineer",
+    "bio": "A Computer Science Engineering student with a focus on building scalable industrial-grade web architectures. Bridges technical rigor with strategic project management — turning complex problems into elegant, production-ready systems.",
+    "education": [
+      {
+        "university": "KR Mangalam University",
+        "degree": "B.Tech in Computer Science Engineering",
+        "duration": "2023 - 2027",
+        "highlights": [
+          "Project-Based Learning Recognition (PBL) Certified for 'Unified College Interaction System' by Projexa AI (May 2026)",
+          "Ranked among top-performing students in AMCAT Assessment"
+        ]
+      },
+      {
+        "university": "S Tulsi Inter College, Rajapur, UP",
+        "degree": "Higher Secondary Certificate (12th Grade Science)",
+        "duration": "2021 - 2022"
+      }
+    ],
+    "experience": [
+      {
+        "company": "SenpaiHost (Remote)",
+        "role": "Project Manager Intern",
+        "period": "Jun 2025 – Aug 2025",
+        "description": "Orchestrated web development lifecycles for 10+ concurrent projects, translating client requirements into technical execution plans, improving delivery efficiency by 20%. Directed project timelines across a 5-member team. Conducted code reviews resulting in a 15% decrease in post-deployment bugs."
+      },
+      {
+        "company": "SenpaiHost (Remote)",
+        "role": "WordPress Developer Intern",
+        "period": "Aug 2024 – Sep 2024",
+        "description": "Built dynamic WordPress websites, integrating custom themes. Upgraded website performance and caching, reducing load times by 40%. Collaborated on responsive layouts increasing mobile user engagement by 25%."
+      },
+      {
+        "company": "Self-Employed",
+        "role": "Freelance Web Developer",
+        "period": "Jan 2020 – Present",
+        "description": "Produced 24+ full-stack web projects for diverse clients. Spearheaded SEO strategies and DNS management across 15+ domains, boosting organic search traffic by 30%."
+      }
+    ],
+    "skills": {
+      "languages": [
+        "C++ (Intermediate)",
+        "JavaScript (ES6+)",
+        "TypeScript",
+        "Python",
+        "SQL"
+      ],
+      "frontend": [
+        "React",
+        "Next.js",
+        "Node.js",
+        "Bun.js",
+        "HTML5",
+        "CSS3",
+        "Tailwind CSS",
+        "WordPress"
+      ],
+      "backend": [
+        "PostgreSQL",
+        "MongoDB",
+        "MySQL",
+        "Firebase Authentication",
+        "REST APIs"
+      ],
+      "tools": [
+        "Git",
+        "GitHub",
+        "VS Code",
+        "Postman",
+        "Linux (Basic)",
+        "Bash / Shell",
+        "CLI",
+        "Cloudflare"
+      ],
+      "exploring": [
+        "AI Engineering",
+        "DevOps Fundamentals (Docker, AWS, CI/CD)",
+        "System Design"
+      ],
+      "core": [
+        "Data Structures and Algorithms (DSA)",
+        "Object-Oriented Programming (OOP)",
+        "SDLC",
+        "SEO",
+        "Prompt Engineering"
+      ]
+    },
+    "credentials_and_achievements": [
+      "Project-Based Learning Recognition (PBL) - Projexa AI",
+      "Research Paper Publication - 'Innovative Systems and Ethical Data Practices' in IJSREM (Oct 2024)",
+      "Cybersecurity Analyst Job Simulation - Tata Group (Forage, Apr 2025)",
+      "Top performer in AMCAT Assessment"
+    ],
+    "quick_facts": [
+      "Runs on Bun, not Node",
+      "Peak productivity: midnight",
+      "Chess player (blitz)",
+      "Fascinated by distributed systems"
+    ],
+    "contact": {
+      "email": "hello@harshitj183.in",
+      "linkedin": "https://linkedin.com/in/harshitj183",
+      "github": "https://github.com/harshitj183"
+    }
+  },
+  "github": [
+    {
+      "name": "CodeForces",
+      "description": "Codeforces solutions pushed by CFPusher",
+      "stars": 0,
+      "language": "C++",
+      "url": "https://github.com/harshitj183/CodeForces"
+    },
+    {
+      "name": "Leetcode",
+      "description": "Collection of LeetCode questions to ace the coding interview! - Created using [LeetHub](https://github.com/QasimWani/LeetHub)",
+      "stars": 0,
+      "language": "C++",
+      "url": "https://github.com/harshitj183/Leetcode"
+    },
+    {
+      "name": "openbiz",
+      "description": "Udyam Registration Portal Clone - Full Stack Application (Next.js + Express + PostgreSQL)",
+      "stars": 0,
+      "language": "TypeScript",
+      "url": "https://github.com/harshitj183/openbiz"
+    },
+    {
+      "name": "ai-skills",
+      "description": "The Ultimate Library of curated AI Agent Skills. Contains 17 Mega-Skills and 8 Master Roles spanning React, Node.js, MCP, Supabase, and DevOps infrastructure to give your AI ultra-precise context.",
+      "stars": 2,
+      "language": "Python",
+      "url": "https://github.com/harshitj183/ai-skills"
+    },
+    {
+      "name": "portfolio.WEB",
+      "description": null,
+      "stars": 0,
+      "language": "TypeScript",
+      "url": "https://github.com/harshitj183/portfolio.WEB"
+    },
+    {
+      "name": "realtime-chat-app",
+      "description": null,
+      "stars": 0,
+      "language": "JavaScript",
+      "url": "https://github.com/harshitj183/realtime-chat-app"
+    },
+    {
+      "name": "unified-college-interaction-system-web",
+      "description": "• To create a centralized platform for college-related information • To provide easy access to clubs, events, and registrations • To enable students to find faculty contact details efficiently • To offer a structured discussion forum for academic and general queries • To reduce dependency on unorganized communication channels",
+      "stars": 1,
+      "language": "JavaScript",
+      "url": "https://github.com/harshitj183/unified-college-interaction-system-web"
+    },
+    {
+      "name": "MultiSearch.Extension",
+      "description": "MultiSearchExtension is a powerful browser extension that allows users to perform multiple searches across different search engines simultaneously. This extension is designed to enhance productivity by providing quick and comprehensive search results from various sources.",
+      "stars": 3,
+      "language": "JavaScript",
+      "url": "https://github.com/harshitj183/MultiSearch.Extension"
+    },
+    {
+      "name": "harshitj183",
+      "description": "about me",
+      "stars": 1,
+      "language": "JavaScript",
+      "url": "https://github.com/harshitj183/harshitj183"
+    },
+    {
+      "name": "food-waste-management",
+      "description": null,
+      "stars": 0,
+      "language": "HTML",
+      "url": "https://github.com/harshitj183/food-waste-management"
+    }
+  ],
+  "leetcode": {
+    "totalSolved": 386,
+    "ranking": "N/A",
+    "reputation": 0
+  }
+}

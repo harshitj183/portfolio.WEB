@@ -301,18 +301,47 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, de
 // Helper to get contextual quips for different components
 const getComponentQuip = (name: string, tag: string): string => {
   const n = name.toLowerCase();
-  if (tag === 'A' || tag === 'BUTTON' || n.includes('nav') || n.includes('link') || n.includes('button') || n.includes('menu')) {
-    return "Need help navigating here? Click me to chat! 💬";
-  }
+  
+  // Specific Contextual Interactions - Contact & Socials
+  if (n.includes('+91') || n.includes('phone') || n.includes('call')) return "That's Harshit's direct line! Want to give him a call? 📞";
+  if (n.includes('@gmail.com') || n.includes('email')) return "Send an email! He replies pretty quickly. ✉️";
+  if (n.includes('github') || n.includes('repo')) return "Check out his open-source code on GitHub! 💻";
+  if (n.includes('linkedin') || n.includes('connect')) return "Connect with him on LinkedIn for professional updates. 🤝";
+  
+  // Projects
+  if (n.includes('ucis') || n.includes('unified college')) return "Ah, UCIS! His flagship college interaction system. It's massive! 🚀";
+  if (n.includes('ai skills') || n.includes('library')) return "He built this AI library using modern Generative AI techniques! 🧠";
+  if (n.includes('chat') || n.includes('real-time')) return "Real-time, low-latency chat systems are his specialty. 💬";
+  
+  // Education & Experience
+  if (n.includes('education') || n.includes('b.tech') || n.includes('university') || n.includes('mangalam')) return "Harshit is pursuing his B.Tech at KR Mangalam University! 🎓";
+  if (n.includes('experience') || n.includes('senpaihost') || n.includes('intern')) return "He worked as a Developer Intern at SenpaiHost! 💼";
+  if (n.includes('freelance') || n.includes('self-employed')) return "He has built 24+ full-stack projects for clients as a freelancer! 💻";
+  
+  // Skills & Tech
+  if (n.includes('c++') || n.includes('dsa') || n.includes('algorithms')) return "He has solved over 250+ LeetCode problems in C++! 💻";
+  if (n.includes('docker') || n.includes('devops') || n.includes('cloud')) return "He loves containerizing applications with Docker! 🐳";
+  if (n.includes('database') || n.includes('postgresql') || n.includes('mongodb')) return "He designs highly robust and scalable database schemas! 🗄️";
+  if (n.includes('bun')) return "Did you know this site runs on Bun instead of Node? Super fast! ⚡";
+  if (n.includes('react') || n.includes('next.js') || n.includes('frontend')) return "He builds sleek, modern UIs using Next.js and React! ✨";
+  
+  // Generic UI Components
+  if (n.includes('resume') || n.includes('cv') || n.includes('download')) return "Want to see his professional journey? Download the resume! 📄";
+  if (n.includes('theme') || n.includes('mode') || n.includes('color')) return "Switching themes! I love changing colors! 🎨";
   if (n.includes('hero')) return "This is Harshit's main landing! SDE & AI Agent Engineer. 🚀";
-  if (n.includes('profile')) return "Check out Harshit's profile card! 350+ Leetcode solutions, available for hire. 🏆";
+  if (n.includes('profile')) return "Check out Harshit's profile card! Available for hire. 🏆";
   if (n.includes('tech-stack') || n.includes('skills')) return "Here is Harshit's tech arsenal: React, TS, Node, C++, Docker... 💻";
-  if (n.includes('featured') || n.includes('work')) return "This showcase highlights Harshit's flagship UCIS and other systems! 🌟";
-  if (n.includes('projects') || n.includes('grid')) return "A directory of Harshit's case studies and live projects. 📁";
-  if (n.includes('stats')) return "Track live engineering stats, contributions, and solved problems! 📊";
+  if (n.includes('featured') || n.includes('work')) return "This showcase highlights his best engineering systems! 🌟";
+  if (n.includes('projects') || n.includes('grid') || n.includes('dossier')) return "A directory of Harshit's case studies and live projects. 📁";
+  if (n.includes('stats') || n.includes('dashboard') || n.includes('metrics')) return "Track live engineering stats, contributions, and solved problems! 📊";
   if (n.includes('leetcode')) return "LeetCode Analytics! Harshit loves data structures & algorithms. 🧩";
-  if (n.includes('github') || n.includes('heatmap')) return "Check out the green GitHub calendar! Continuous commit momentum. 🟩";
+  if (n.includes('heatmap') || n.includes('calendar')) return "Check out the green GitHub calendar! Continuous commit momentum. 🟩";
   if (n.includes('contact') || n.includes('form') || n.includes('direct')) return "Need to hire or collaborate? Send a message directly! ✉️";
+  
+  if (tag === 'A' || tag === 'BUTTON' || n.includes('nav') || n.includes('link') || n.includes('button') || n.includes('menu')) {
+    return "Need help navigating here? Just ask me in the chat! 💬";
+  }
+  
   return `You are looking at the ${name}. Tell me if you want to explore this!`;
 };
 
@@ -631,6 +660,33 @@ export default function RoamingHarshit() {
       }, 1500);
     };
     window.addEventListener('mascot-listen', handleMascotListen);
+    
+    // 5. Situational Intent Graph & Visibility tracking
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // User came back! Evaluate intent graph
+        const history = interactionHistory.current.join(' ');
+        
+        if ((history.includes('phone') || history.includes('+91')) && (history.includes('email') || history.includes('@gmail'))) {
+           setMood('thinking');
+           triggerBubble("I noticed you checking the phone and email earlier. Any doubts about hiring? Ask me directly! 💬", 5000);
+           interactionHistory.current = []; // Reset graph after acting on it
+        } else if ((history.includes('github') || history.includes('repo')) && (history.includes('leetcode'))) {
+           setMood('analyzing');
+           triggerBubble("Checking out his stats? He codes in C++ every day. Let me know if you want his resume! 📄", 5000);
+           interactionHistory.current = [];
+        } else if (history.includes('ucis') && history.includes('ai skills')) {
+           setMood('building');
+           triggerBubble("You seem really interested in his engineering work! Want me to summarize his tech stack? 🚀", 5000);
+           interactionHistory.current = [];
+        } else {
+           setMood('waving');
+           triggerBubble("Welcome back! Let's continue. ✨", 3000);
+        }
+        setTimeout(() => setMood('walk'), 5000);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('start-mascot-tour', handleStartTour);
@@ -641,6 +697,7 @@ export default function RoamingHarshit() {
       window.removeEventListener('mascot-speak', handleMascotSpeak);
       window.removeEventListener('mascot-listen', handleMascotListen);
       window.removeEventListener('project-view', handleProjectView);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [pathname, router, triggerBubble, tourStep, deliveryMode]);
 
@@ -714,9 +771,10 @@ export default function RoamingHarshit() {
   }, [tourStep, deliveryMode, overrideTarget, showQuip]);
 
 
-  // Contextual Hover State
+  // Contextual Hover State & Intent Graph
   const [hoveredContext, setHoveredContext] = useState<string | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const interactionHistory = useRef<string[]>([]);
 
   // ── Cursor Tracking & Context Detection ──────────────────────────────────
   useEffect(() => {
@@ -755,6 +813,10 @@ export default function RoamingHarshit() {
           if (hoverTimer.current) clearTimeout(hoverTimer.current);
           hoverTimer.current = setTimeout(() => {
             setHoveredContext(contextName);
+            // Push to intent graph
+            interactionHistory.current.push(contextName!.toLowerCase());
+            if (interactionHistory.current.length > 5) interactionHistory.current.shift();
+            
             // Let the animation loop know we are docking to this element
             dockedElementRef.current = closestInteractive as HTMLElement;
             

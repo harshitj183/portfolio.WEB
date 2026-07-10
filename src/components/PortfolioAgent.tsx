@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageSquare, FiX, FiSend, FiPlay, FiCompass } from 'react-icons/fi';
 
@@ -162,6 +162,7 @@ export default function PortfolioAgent() {
   const [inputVal, setInputVal] = useState('');
   const [isOpen, setIsOpen] = useState(true); // Default to true for SSR, then check in useEffect
   const router = useRouter();
+  const pathname = usePathname();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom
@@ -338,10 +339,15 @@ export default function PortfolioAgent() {
 
     // Call API route with rule-based fallback
     try {
+      const mappedHistory = messages.slice(1).map(m => ({
+        role: m.sender === 'user' ? 'user' : 'model',
+        parts: [{ text: m.text }]
+      }));
+
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userText })
+        body: JSON.stringify({ message: userText, history: mappedHistory, currentPath: pathname })
       });
 
       if (!res.ok) throw new Error('API Key missing or Server Error');
@@ -395,10 +401,15 @@ export default function PortfolioAgent() {
         };
 
         try {
+          const mappedHistory = messages.slice(1).map(m => ({
+            role: m.sender === 'user' ? 'user' : 'model',
+            parts: [{ text: m.text }]
+          }));
+
           const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })
+            body: JSON.stringify({ message: userText, history: mappedHistory, currentPath: pathname })
           });
 
           if (!res.ok) throw new Error('API Key missing or Server Error');
