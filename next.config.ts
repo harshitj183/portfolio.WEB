@@ -19,20 +19,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // For standard assets in public/ (which don't have content hashes in their filename), 
+        // we use a strong stale-while-revalidate caching strategy instead of immutable 
+        // so that updates are eventualy propagated without cache busting issues.
         source: '/:all*(svg|jpg|png|webp|avif|ico|mp4|webm|mp3)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
           },
         ],
       },
