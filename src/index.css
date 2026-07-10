@@ -17,6 +17,14 @@
   padding: 0;
 }
 
+html {
+  /* Advanced Fluid Typography: 
+     Calculates dynamic font-size so that smaller laptops (13") shrink down
+     proportionally to match the exact visual layout of large monitors (1920px+) */
+  font-size: clamp(13px, 0.6vw + 6px, 18px);
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
@@ -527,15 +535,17 @@ textarea::placeholder {
   position: fixed;
   bottom: 25px;
   right: 25px;
-  width: 100%;
-  max-width: 350px;
+  width: 350px;
+  max-width: calc(100vw - 40px);
   padding: 0;
+  z-index: 99998;
 }
 
 .mini-avatar-container {
   position: fixed;
   right: 25px;
-  bottom: 430px;
+  bottom: 400px;
+  z-index: 99999;
 }
 
 @media (max-width: 480px) {

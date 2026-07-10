@@ -479,7 +479,7 @@ export default function PortfolioAgent() {
                 </button>
               </div>
         {/* Chat Messages */}
-        <div style={{ flex: 1, width: '100%', maxHeight: '400px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '10px 0', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div style={{ flex: 1, width: '100%', maxHeight: '300px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '10px 0', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {messages.map((m, idx) => (
             <motion.div
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
