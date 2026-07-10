@@ -18,52 +18,50 @@ export default function ProjectsLayout({
 }) {
   return (
     <>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ItemList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "item": {
-                    "@type": "SoftwareApplication",
-                    "name": "Unified College Interaction System",
-                    "url": "https://github.com/harshitj183/unified-college-interaction-system-web",
-                    "applicationCategory": "WebApplication",
-                    "operatingSystem": "All"
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "item": {
-                    "@type": "SoftwareApplication",
-                    "name": "AI Skills - Global Context Library",
-                    "url": "https://github.com/harshitj183/ai-skills",
-                    "applicationCategory": "DeveloperApplication",
-                    "operatingSystem": "All"
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 3,
-                  "item": {
-                    "@type": "SoftwareApplication",
-                    "name": "Real-time Chat Application",
-                    "url": "https://github.com/harshitj183/realtime-chat-app",
-                    "applicationCategory": "WebApplication",
-                    "operatingSystem": "All"
-                  }
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "SoftwareApplication",
+                  "name": "Unified College Interaction System",
+                  "url": "https://github.com/harshitj183/unified-college-interaction-system-web",
+                  "applicationCategory": "WebApplication",
+                  "operatingSystem": "All"
                 }
-              ]
-            })
-          }}
-        />
-      </head>
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "SoftwareApplication",
+                  "name": "AI Skills - Global Context Library",
+                  "url": "https://github.com/harshitj183/ai-skills",
+                  "applicationCategory": "DeveloperApplication",
+                  "operatingSystem": "All"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "SoftwareApplication",
+                  "name": "Real-time Chat Application",
+                  "url": "https://github.com/harshitj183/realtime-chat-app",
+                  "applicationCategory": "WebApplication",
+                  "operatingSystem": "All"
+                }
+              }
+            ]
+          })
+        }}
+      />
       {children}
     </>
   );

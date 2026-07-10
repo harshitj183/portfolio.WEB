@@ -18,21 +18,19 @@ export default function ContactLayout({
 }) {
   return (
     <>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ContactPage",
-              "url": "https://www.harshitj183.in/contact",
-              "mainEntity": {
-                "@id": "https://www.harshitj183.in/#person"
-              }
-            })
-          }}
-        />
-      </head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "url": "https://www.harshitj183.in/contact",
+            "mainEntity": {
+              "@id": "https://www.harshitj183.in/#person"
+            }
+          })
+        }}
+      />
       {children}
     </>
   );
