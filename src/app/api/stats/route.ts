@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export const revalidate = 3600; // Revalidate at most every hour
+export const runtime = 'edge'; // Deploy to Edge CDN for maximum speed
 
 export async function GET() {
   try {
