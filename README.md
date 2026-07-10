@@ -1,16 +1,42 @@
-# React + Vite
+# Harshit Jaiswal - Elite Software Engineering Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the open-source repository for my AI-powered engineering portfolio! Built with cutting-edge web technologies, this platform showcases my professional experience, flagship projects, and engineering capabilities.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
+**[https://www.harshitj183.in](https://www.harshitj183.in)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🧠 Meet "Portfolio Agent" (AI Mascot)
+This portfolio isn't just static text—it features an embedded **AI Agent** acting as my personal representative!
+- **Context-Aware:** It reads the screen and reacts when you hover over my phone number, email, or GitHub links.
+- **Multilingual:** Speak to it in English, Hindi, or Hinglish, and it will reply naturally.
+- **Action-Oriented:** Ask it to change the theme, open my resume, or highlight specific projects, and it will navigate the site for you.
 
-## React Compiler
+## 🛠 Tech Stack
+- **Framework:** Next.js (App Router), React
+- **Language:** TypeScript
+- **Styling:** CSS Modules, Framer Motion for smooth animations
+- **Backend/AI:** Custom Route Handlers integrated with Gemini AI Models
+- **Deployment:** Vercel
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚙️ Running Locally
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/harshitj183/portfolio-2026.git
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Expanding the ESLint configuration
+## 🤝 Contact
+Looking to collaborate or hire? 
+- LinkedIn: [linkedin.com/in/harshitj183](https://linkedin.com/in/harshitj183)
+- Email: [harshitj183@gmail.com](mailto:harshitj183@gmail.com)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+*Designed & Engineered by Harshit Jaiswal*
