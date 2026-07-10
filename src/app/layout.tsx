@@ -58,6 +58,23 @@ export default function RootLayout({
               "url": "https://www.harshitj183.in",
               "image": "https://avatars.githubusercontent.com/u/76927137?v=4",
               "jobTitle": "Full Stack Architect & SDE",
+              "description": "Harshit Jaiswal is a Software Development Engineer (SDE) and AI Architect specializing in Full Stack Web Development, MERN stack, and Artificial Intelligence.",
+              "gender": "Male",
+              "nationality": "Indian",
+              "email": "harshitj183@gmail.com",
+              "alumniOf": {
+                "@type": "CollegeOrUniversity",
+                "name": "KR Mangalam University"
+              },
+              "knowsAbout": [
+                "Software Engineering",
+                "Full Stack Development",
+                "MERN Stack",
+                "Artificial Intelligence",
+                "React",
+                "Node.js",
+                "Next.js"
+              ],
               "worksFor": {
                 "@type": "Organization",
                 "name": "Freelance & Open Source"
