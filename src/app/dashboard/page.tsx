@@ -5,6 +5,7 @@ import { FiGithub, FiActivity, FiCode, FiZap, FiTrendingUp, FiAward } from 'reac
 import Image from 'next/image';
 import TiltCard from '@/components/TiltCard';
 import useSWR from 'swr';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /* ── Stat Card ───────────────────────── */
 interface StatCardProps {
@@ -133,7 +134,7 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
 };
 
 /* ── LeetCode Badges ──────────────────── */
-const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: boolean }) => {
+const LeetcodeBadges = ({ badges, loading, onBadgeClick }: { badges: any[] | null; loading: boolean; onBadgeClick: (b: any) => void }) => {
   if (loading || !badges || badges.length === 0) return null;
   return (
     <TiltCard className="glass-panel" style={{ padding: '2rem', borderRadius: '12px', height: '100%' }} tiltAngle={5}>
@@ -142,9 +143,15 @@ const LeetcodeBadges = ({ badges, loading }: { badges: any[] | null; loading: bo
       </h3>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
         {badges.map((b: any, i: number) => (
-          <div key={i} className="pill" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {b.icon && <Image src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} width={16} height={16} style={{ objectFit: 'contain' }} />}
-            <span style={{ fontSize: '0.8rem' }}>{b.displayName}</span>
+          <div 
+            key={i} 
+            className="pill glow-primary" 
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.2s', border: '1px solid rgba(255,215,0,0.3)' }}
+            onClick={() => onBadgeClick(b)}
+            title="Click to view 3D Badge"
+          >
+            {b.icon && <Image src={b.icon.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon} alt={b.displayName} width={18} height={18} style={{ objectFit: 'contain' }} />}
+            <span style={{ fontSize: '0.8rem', color: '#ffd700' }}>{b.displayName}</span>
           </div>
         ))}
       </div>
@@ -416,6 +423,7 @@ const Dashboard = () => {
 
   const github = { stats: githubData?.stats || null, heatmap: githubData?.heatmap || null, loading: githubLoading };
   const leetcode = { stats: leetcodeData?.stats || null, heatmap: leetcodeData?.heatmap || null, badges: leetcodeData?.badges || null, loading: leetcodeLoading };
+  const [selectedBadge, setSelectedBadge] = useState<any | null>(null);
 
 
   return (
@@ -484,13 +492,67 @@ const Dashboard = () => {
         </TiltCard>
 
         <div>
-          <LeetcodeBadges badges={leetcode.badges} loading={leetcode.loading} />
+          <LeetcodeBadges badges={leetcode.badges} loading={leetcode.loading} onBadgeClick={setSelectedBadge} />
         </div>
       </div>
 
       <div id="leetcode-heatmap" style={{ marginBottom: '3rem' }}>
         <LeetcodeHeatmap data={leetcode.heatmap} loading={leetcode.loading} />
       </div>
+
+      <AnimatePresence>
+        {selectedBadge && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedBadge(null)}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(10px)',
+              zIndex: 99999,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            <motion.div
+              animate={{ rotateY: 360 }}
+              transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+              style={{ perspective: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              {selectedBadge.icon && (
+                <Image 
+                  src={selectedBadge.icon.startsWith('/') ? `https://leetcode.com${selectedBadge.icon}` : selectedBadge.icon} 
+                  alt={selectedBadge.displayName} 
+                  width={220} height={220} 
+                  style={{ filter: 'drop-shadow(0 0 40px rgba(255,215,0,0.7)) drop-shadow(0 0 10px rgba(255,255,255,0.4))' }} 
+                />
+              )}
+            </motion.div>
+            <motion.h2 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              style={{ marginTop: '2.5rem', color: '#ffd700', fontSize: '2.2rem', letterSpacing: '0.05em', textShadow: '0 0 20px rgba(255,215,0,0.5)', textAlign: 'center' }}
+            >
+              {selectedBadge.displayName}
+            </motion.h2>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 0.5 }}
+              style={{ color: '#fff', marginTop: '1rem', fontSize: '0.9rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}
+            >
+              Click anywhere to close
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
