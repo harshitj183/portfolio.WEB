@@ -325,12 +325,22 @@ const githubFetcher = async () => {
     const repos = await reposRes.json();
     const totalStars = repos.reduce((acc: number, r: any) => acc + (r.stargazers_count || 0), 0);
     
-    const heatmap = Array.from({ length: 364 }, (_, i) => {
-      const r = seededRandom(i + 2026);
-      if (r > 0.8) return Math.floor(r * 5);
-      if (r > 0.5) return 1;
-      return 0;
-    });
+    let heatmap = Array(364).fill(0);
+    try {
+      const heatmapRes = await fetch('https://github-contributions-api.deno.dev/harshitj183.json');
+      if (heatmapRes.ok) {
+        const heatmapData = await heatmapRes.json();
+        if (heatmapData?.contributions) {
+          const flatHeatmap = heatmapData.contributions.flat();
+          const last364 = flatHeatmap.slice(-364).map((d: any) => d.contributionCount);
+          if (last364.length > 0) {
+            heatmap = last364;
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Github heatmap fetch error:', e);
+    }
 
     return {
       stats: {
@@ -339,16 +349,12 @@ const githubFetcher = async () => {
         stars: totalStars,
         streak: 42,
       },
-      heatmap: heatmap
+      heatmap
     };
   } catch {
-    const heatmap = Array.from({ length: 364 }, (_, i) => {
-      const r = seededRandom(i + 2024);
-      return r > 0.7 ? Math.floor(r * 5) : (r > 0.4 ? 1 : 0);
-    });
     return {
-      stats: { repos: 30, followers: 12, stars: 8, streak: 42 },
-      heatmap
+      stats: { repos: 0, followers: 0, stars: 0, streak: 0 },
+      heatmap: Array(364).fill(0)
     };
   }
 };
@@ -374,44 +380,47 @@ const leetcodeFetcher = async () => {
     } catch(e) { return null; }
   };
 
-  const fallbackHeatmap = Array.from({ length: 364 }, (_, i) => {
-    const r = seededRandom(i + 5000);
-    return r > 0.8 ? Math.floor(r * 4) : (r > 0.55 ? 1 : 0);
-  });
-
   try {
-    const [resProfile, resBadges] = await Promise.all([
-      fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { signal: AbortSignal.timeout(4000) }),
-      fetch('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { signal: AbortSignal.timeout(4000) }).catch(() => null)
-    ]);
-    const data = await resProfile.json();
+    let data;
+    try {
+      const res = await fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { signal: AbortSignal.timeout(4000) });
+      if (!res.ok) throw new Error('Alfa API failed');
+      data = await res.json();
+    } catch (e) {
+      const backupRes = await fetch('https://leetcode-api-faisalshohag.vercel.app/harshitj183', { signal: AbortSignal.timeout(5000) });
+      data = await backupRes.json();
+    }
+
+    const resBadges = await fetch('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { signal: AbortSignal.timeout(4000) }).catch(() => null);
     const badgesData = resBadges ? await resBadges.json().catch(() => null) : null;
     
-    const stats = data.matchedUserStats?.acSubmissionNum;
-    if (stats) {
-      const solved = stats.find((x: any) => x.difficulty === 'All')?.count || '350+';
-      const easy = stats.find((x: any) => x.difficulty === 'Easy');
-      const medium = stats.find((x: any) => x.difficulty === 'Medium');
-      const hard = stats.find((x: any) => x.difficulty === 'Hard');
-      return {
-        stats: { 
-            solved, 
-            easySolved: easy?.count || 0,
-            mediumSolved: medium?.count || 0,
-            hardSolved: hard?.count || 0,
-            totalEasy: easy?.count || 1,
-            totalMedium: medium?.count || 1,
-            totalHard: hard?.count || 1,
-            totalQ: 3300 
-        },
-        heatmap: parseCalendar(data.submissionCalendar) || fallbackHeatmap,
-        badges: badgesData?.badges || []
-      };
-    } else throw new Error();
+    // Normalize data between the two APIs
+    const solved = data.totalSolved || (data.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'All')?.count) || 0;
+    const easy = data.easySolved || (data.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'Easy')?.count) || 0;
+    const medium = data.mediumSolved || (data.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'Medium')?.count) || 0;
+    const hard = data.hardSolved || (data.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'Hard')?.count) || 0;
+    const totalEasy = data.totalEasy || 800;
+    const totalMedium = data.totalMedium || 1700;
+    const totalHard = data.totalHard || 700;
+    
+    return {
+      stats: { 
+          solved, 
+          easySolved: easy,
+          mediumSolved: medium,
+          hardSolved: hard,
+          totalEasy,
+          totalMedium,
+          totalHard,
+          totalQ: data.totalQuestions || 3300 
+      },
+      heatmap: parseCalendar(data.submissionCalendar) || Array(364).fill(0),
+      badges: badgesData?.badges || []
+    };
   } catch {
     return {
-      stats: { solved: '350+', easySolved: 242, mediumSolved: 116, hardSolved: 14, totalEasy: 300, totalMedium: 500, totalHard: 200, totalQ: 3300 },
-      heatmap: fallbackHeatmap,
+      stats: { solved: 0, easySolved: 0, mediumSolved: 0, hardSolved: 0, totalEasy: 800, totalMedium: 1700, totalHard: 700, totalQ: 3300 },
+      heatmap: Array(364).fill(0),
       badges: []
     };
   }
