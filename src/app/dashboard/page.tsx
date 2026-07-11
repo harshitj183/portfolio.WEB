@@ -398,32 +398,38 @@ const Dashboard = () => {
             }}
           >
             {getBadgeGif(selectedBadge.icon) ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                style={{ filter: 'drop-shadow(0 0 40px rgba(255,215,0,0.7)) drop-shadow(0 0 10px rgba(255,255,255,0.4))' }}
-              >
-                <img 
-                  src={getBadgeGif(selectedBadge.icon)!} 
-                  alt={selectedBadge.displayName} 
-                  style={{ width: 220, height: 220, objectFit: 'contain' }} 
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                animate={{ rotateY: 360 }}
-                transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                style={{ perspective: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              >
-                {selectedBadge.icon && (
-                  <Image 
-                    src={selectedBadge.icon.startsWith('/') ? `https://leetcode.com${selectedBadge.icon}` : selectedBadge.icon} 
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'absolute', width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(255,215,0,0.3)', filter: 'blur(30px)', zIndex: 0 }} />
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  style={{ position: 'relative', zIndex: 1 }}
+                >
+                  <img 
+                    src={getBadgeGif(selectedBadge.icon)!} 
                     alt={selectedBadge.displayName} 
-                    width={220} height={220} 
-                    style={{ filter: 'drop-shadow(0 0 40px rgba(255,215,0,0.7)) drop-shadow(0 0 10px rgba(255,255,255,0.4))' }} 
+                    style={{ width: 220, height: 220, objectFit: 'contain' }} 
                   />
-                )}
-              </motion.div>
+                </motion.div>
+              </div>
+            ) : (
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ position: 'absolute', width: '160px', height: '160px', borderRadius: '50%', background: 'rgba(255,215,0,0.3)', filter: 'blur(35px)', zIndex: 0 }} />
+                <motion.div
+                  animate={{ rotateY: 360 }}
+                  transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                  style={{ perspective: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', willChange: 'transform', position: 'relative', zIndex: 1 }}
+                >
+                  {selectedBadge.icon && (
+                    <Image 
+                      src={selectedBadge.icon.startsWith('/') ? `https://leetcode.com${selectedBadge.icon}` : selectedBadge.icon} 
+                      alt={selectedBadge.displayName} 
+                      width={220} height={220} 
+                      style={{ objectFit: 'contain' }} 
+                    />
+                  )}
+                </motion.div>
+              </div>
             )}
             <motion.h2 
               initial={{ y: 20, opacity: 0 }}
