@@ -113,7 +113,7 @@ async function syncKnowledge() {
     profile: staticProfile,
     github: githubData || "Data unavailable",
     leetcode: leetcodeData || "Data unavailable"
-  }; d
+  };
 
   const outputPath = path.join(process.cwd(), 'knowledge_base', 'harshit_graph.json');
   fs.writeFileSync(outputPath, JSON.stringify(graph, null, 2));

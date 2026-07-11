@@ -430,6 +430,7 @@ export default function PortfolioAgent() {
       window.removeEventListener('toggle-portfolio-agent', handleToggle);
       window.removeEventListener('send-agent-message', handleProgrammaticMessage);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleActionExecution]);
 
 

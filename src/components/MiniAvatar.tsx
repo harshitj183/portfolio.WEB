@@ -699,6 +699,7 @@ export default function RoamingHarshit() {
       window.removeEventListener('project-view', handleProjectView);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, router, triggerBubble, tourStep, deliveryMode]);
 
   // ── Idle Inactivity Detection ─────────────────────────────────────────────
@@ -733,6 +734,7 @@ export default function RoamingHarshit() {
       setMood('waving');
       setTimeout(() => setMood('walk'), 2000);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIdle, tourStep, deliveryMode]);
 
   // Random idle speaking
@@ -1014,6 +1016,7 @@ export default function RoamingHarshit() {
 
     frameId.current = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frameId.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mood, targetY, tourStep, pathname, deliveryMode, deliveryTarget, overrideTarget, triggerBubble]);
 
   // Periodic level jumping when in walk mode
@@ -1021,7 +1024,7 @@ export default function RoamingHarshit() {
     const interval = setInterval(() => {
       // Disable jumping when cursor tracking or docking is active
       const mouseActive = cursorPosRef.current && (performance.now() - lastMouseMoveTimeRef.current < 4000);
-      if (mouseActive || dockedElementRef.current || isHovered.current || tourStep >= 0 || deliveryMode !== 'none' || overrideTarget) return;
+      if (mouseActive || dockedElementRef.current || isHovered.current || tourStep >= 0 || deliveryMode !== 'none' || overrideTarget || isMobile) return;
       
       const levels = getTargetLevels();
       const currentLevelIndex = levels.findIndex(l => Math.abs(l - targetY) < 10);
@@ -1041,6 +1044,7 @@ export default function RoamingHarshit() {
     }, randomBetween(10000, 18000));
 
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetY, tourStep, deliveryMode, overrideTarget]);
 
   // React to Route Navigation changes

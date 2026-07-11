@@ -69,7 +69,7 @@ const OfflinePage = () => {
         </h1>
         
         <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem', fontSize: '1.1rem', lineHeight: 1.6 }}>
-          You have been disconnected from the main grid. We're currently rendering from the local cache. Please check your network connection.
+          You have been disconnected from the main grid. We&apos;re currently rendering from the local cache. Please check your network connection.
         </p>
 
         <button

@@ -221,7 +221,7 @@ const Contact = () => {
                 </motion.div>
                 <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Message Delivered</h2>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem', lineHeight: 1.7 }}>
-                  Transmission parsed. I'll get back to you within 24 hours.
+                  Transmission parsed. I&apos;ll get back to you within 24 hours.
                 </p>
                 <button
                   onClick={() => setStatus('idle')}

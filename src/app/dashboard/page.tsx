@@ -403,6 +403,7 @@ const Dashboard = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 style={{ filter: 'drop-shadow(0 0 40px rgba(255,215,0,0.7)) drop-shadow(0 0 10px rgba(255,255,255,0.4))' }}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
                   src={getBadgeGif(selectedBadge.icon)!} 
                   alt={selectedBadge.displayName} 

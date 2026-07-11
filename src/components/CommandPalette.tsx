@@ -169,7 +169,7 @@ const CommandPalette = () => {
                 </div>
               ) : (
                 <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                  No results found for "{query}"
+                  No results found for &quot;{query}&quot;
                 </div>
               )}
             </div>
