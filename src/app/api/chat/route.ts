@@ -19,9 +19,14 @@ You MUST reply in the exact same language the user uses in their prompt. If they
 [CONVERSATION RULE]
 Act like a smart, proactive human assistant. Offer multiple possibilities, refine their logic, and ask clarifying questions if needed. Don't be robotic. Use emojis naturally. Keep it concise but deeply helpful.
 
-[PERSONAL QUESTIONS RULE]
+[PERSONAL VS PROFESSIONAL QUESTIONS RULE]
+CRITICAL: You must distinguish between Personal and Professional questions.
+ 
 If the user asks highly personal, dating, or irrelevant questions (e.g., "how many girlfriends do you have", "are you single"), DO NOT answer directly. Deflect the question using clever, programming-related humor or sarcastic historical jokes. Example: If asked about girlfriends, say "Aryabhatta invented 0 only after counting my girlfriends." Keep it witty and savage!
 
+- For PROFESSIONAL questions (skills, projects, education, hiring, tech stack): Answer professionally, seriously, and be deeply helpful.
+- For PERSONAL questions (dating life, salary, daily routine, highly personal topics): DO NOT answer directly. Deflect the question using clever, programming-related humor, witty sarcasm, or absurd historical jokes. Never give a straight answer to a personal question, always respond with a joke. Keep this humor STRICTLY limited to personal questions.
+ 
 [ABOUT ME KNOWLEDGE BASE]
 Harshit Jaiswal is an SDE & AI Agent Engineer based in Gurugram, India.
 Education: B.Tech in CSE at KR Mangalam University (2023-2027) with a stellar record in Project-Based Learning.
@@ -66,7 +71,7 @@ export async function POST(req: Request) {
     const finalSystemPrompt = isTechQuestion ? baseSystemPrompt + techDetails + contextPrompt : baseSystemPrompt + contextPrompt;
 
     const ai = new GoogleGenerativeAI(apiKey);
-    
+
     // Define the Tool
     const queryKnowledgeBaseTool: any = {
       name: "query_knowledge_base",
@@ -96,7 +101,7 @@ export async function POST(req: Request) {
     });
 
     let result = await chat.sendMessage(message);
-    
+
     // Handle Tool Calling
     const functionCalls = result.response.functionCalls();
     if (functionCalls && functionCalls.length > 0) {
@@ -106,10 +111,10 @@ export async function POST(req: Request) {
         try {
           const kbPath = path.join(process.cwd(), 'knowledge_base', 'harshit_graph.json');
           if (fs.existsSync(kbPath)) {
-             knowledgeData = fs.readFileSync(kbPath, 'utf8');
+            knowledgeData = fs.readFileSync(kbPath, 'utf8');
           }
-        } catch(e) {}
-        
+        } catch (e) { }
+
         // Feed tool response back
         result = await chat.sendMessage([{
           functionResponse: {
@@ -124,13 +129,13 @@ export async function POST(req: Request) {
 
     // Fix JSON wrapping if the model includes markdown code blocks
     responseText = responseText.replace(/^```json\s*/i, '').replace(/\s*```$/, '').trim();
-    
+
     // Also try to find JSON block if there's conversational text around it
     if (!responseText.startsWith('{')) {
-       const match = responseText.match(/\{[\s\S]*\}/);
-       if (match) {
-         responseText = match[0];
-       }
+      const match = responseText.match(/\{[\s\S]*\}/);
+      if (match) {
+        responseText = match[0];
+      }
     }
 
     return NextResponse.json({ response: responseText });
