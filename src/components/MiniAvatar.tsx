@@ -935,7 +935,7 @@ export default function RoamingHarshit() {
               setMood('thinking');
             }
           }
-        } else if (dockedElementRef.current && !overrideTarget && tourStep < 0 && deliveryMode === 'none') {
+        } else if (false /* HOVER DOCKING DISABLED */ && dockedElementRef.current && !overrideTarget && tourStep < 0 && deliveryMode === 'none') {
           // Easing to docked component next to it
           const el = dockedElementRef.current;
           const rect = el.getBoundingClientRect();
