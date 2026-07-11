@@ -1016,32 +1016,7 @@ export default function RoamingHarshit() {
     return () => cancelAnimationFrame(frameId.current);
   }, [mood, targetY, tourStep, pathname, deliveryMode, deliveryTarget, overrideTarget, triggerBubble]);
 
-  // Periodic level jumping when in walk mode
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Disable jumping when cursor tracking or docking is active
-      const mouseActive = cursorPosRef.current && (performance.now() - lastMouseMoveTimeRef.current < 4000);
-      if (mouseActive || dockedElementRef.current || isHovered.current || tourStep >= 0 || deliveryMode !== 'none' || overrideTarget) return;
-      
-      const levels = getTargetLevels();
-      const currentLevelIndex = levels.findIndex(l => Math.abs(l - targetY) < 10);
-      
-      let nextLevelIndex = Math.floor(Math.random() * levels.length);
-      if (nextLevelIndex === currentLevelIndex) {
-        nextLevelIndex = (nextLevelIndex + 1) % levels.length;
-      }
-      const nextYVal = levels[nextLevelIndex];
-      setTargetY(nextYVal);
-
-      if (nextYVal > targetY) {
-        setMood('walk');
-      } else {
-        setMood('walk');
-      }
-    }, randomBetween(10000, 18000));
-
-    return () => clearInterval(interval);
-  }, [targetY, tourStep, deliveryMode, overrideTarget]);
+  // Periodic level jumping when in walk mode - DISABLED to stop flying behavior
 
   // React to Route Navigation changes
   useEffect(() => {
