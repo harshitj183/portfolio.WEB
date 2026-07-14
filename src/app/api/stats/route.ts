@@ -3,19 +3,45 @@ import { NextResponse } from 'next/server';
 export const revalidate = 3600; // Revalidate at most every hour
 export const runtime = 'edge'; // Deploy to Edge CDN for maximum speed
 
+async function fetchWithTimeout(url: string, options: any = {}, timeout = 3000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(id);
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    throw error;
+  }
+}
+
 export async function GET() {
   try {
     // Github Fetch
-    const ghResPromise = fetch('https://api.github.com/users/harshitj183', { next: { revalidate: 3600 } }).then(r => r.ok ? r.json() : {});
-    const reposResPromise = fetch('https://api.github.com/users/harshitj183/repos?per_page=100', { next: { revalidate: 3600 } }).then(r => r.ok ? r.json() : []);
-    const ghHeatmapPromise = fetch('https://github-contributions-api.deno.dev/harshitj183.json', { next: { revalidate: 3600 } }).then(r => r.ok ? r.json() : null).catch(() => null);
+    const ghResPromise = fetchWithTimeout('https://api.github.com/users/harshitj183', { next: { revalidate: 3600 } }, 3000)
+      .then(r => r.ok ? r.json() : {})
+      .catch(() => ({}));
+    
+    const reposResPromise = fetchWithTimeout('https://api.github.com/users/harshitj183/repos?per_page=100', { next: { revalidate: 3600 } }, 3000)
+      .then(r => r.ok ? r.json() : [])
+      .catch(() => []);
+    
+    const ghHeatmapPromise = fetchWithTimeout('https://github-contributions-api.deno.dev/harshitj183.json', { next: { revalidate: 3600 } }, 3000)
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null);
 
     // LeetCode Fetch
-    const lcResPromise = fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { next: { revalidate: 3600 } })
+    const lcResPromise = fetchWithTimeout('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { next: { revalidate: 3600 } }, 3000)
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .catch(() => fetch('https://leetcode-api-faisalshohag.vercel.app/harshitj183', { next: { revalidate: 3600 } }).then(r => r.ok ? r.json() : {}));
+      .catch(() => fetchWithTimeout('https://leetcode-api-faisalshohag.vercel.app/harshitj183', { next: { revalidate: 3600 } }, 3000)
+        .then(r => r.ok ? r.json() : {})
+        .catch(() => ({}))
+      );
     
-    const lcBadgesPromise = fetch('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { next: { revalidate: 3600 } }).then(r => r.ok ? r.json() : null).catch(() => null);
+    const lcBadgesPromise = fetchWithTimeout('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { next: { revalidate: 3600 } }, 3000)
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null);
 
     // Wait for all to resolve in parallel for maximum performance
     const [ghData, repos, ghHeatmapData, lcData, bData] = await Promise.all([

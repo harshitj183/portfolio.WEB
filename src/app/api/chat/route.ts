@@ -3,6 +3,9 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import fs from 'fs';
 import path from 'path';
 
+// Module-level cached knowledge data to prevent multiple filesystem reads across serverless invocations
+let cachedKnowledgeData: string | null = null;
+
 const baseSystemPrompt = `You're Portfolio Agent, a highly intelligent, conversational, and realistic AI mascot for Harshit Jaiswal's site.
 Output ONLY valid JSON:
 {"reply": "short polite response", "action": {"action": "goto_projects"}} // action can be null
@@ -108,12 +111,17 @@ export async function POST(req: Request) {
       const call = functionCalls[0];
       if (call.name === "query_knowledge_base") {
         let knowledgeData = "Knowledge base file not found. Fallback to basic info.";
-        try {
-          const kbPath = path.join(process.cwd(), 'knowledge_base', 'harshit_graph.json');
-          if (fs.existsSync(kbPath)) {
-            knowledgeData = fs.readFileSync(kbPath, 'utf8');
-          }
-        } catch (e) { }
+        if (cachedKnowledgeData) {
+          knowledgeData = cachedKnowledgeData;
+        } else {
+          try {
+            const kbPath = path.join(process.cwd(), 'knowledge_base', 'harshit_graph.json');
+            if (fs.existsSync(kbPath)) {
+              knowledgeData = fs.readFileSync(kbPath, 'utf8');
+              cachedKnowledgeData = knowledgeData;
+            }
+          } catch (e) { }
+        }
 
         // Feed tool response back
         result = await chat.sendMessage([{
