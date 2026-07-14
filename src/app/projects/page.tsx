@@ -8,10 +8,29 @@ import {
   FiGithub, FiFilter, FiMessageSquare
 } from 'react-icons/fi';
 import Image from 'next/image';
-import ReadmeViewer from '@/components/ReadmeViewer';
+import dynamic from 'next/dynamic';
 import TiltCard from '@/components/TiltCard';
-import ProjectFileTree from '@/components/ProjectFileTree';
 import { useAvatar } from '@/context/AvatarContext';
+
+const ReadmeViewer = dynamic(() => import('@/components/ReadmeViewer'), {
+  loading: () => (
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem 0', color: 'var(--accent)' }}>
+      <div className="spinner" style={{ width: '30px', height: '30px', border: '3px solid rgba(99,102,241,0.2)', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  ),
+  ssr: false,
+});
+
+const ProjectFileTree = dynamic(() => import('@/components/ProjectFileTree'), {
+  loading: () => (
+    <div style={{ padding: '2rem', color: 'var(--text-secondary)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+      <div className="spinner" style={{ width: '16px', height: '16px', border: '2px solid rgba(255,255,255,0.2)', borderTopColor: 'var(--text-secondary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+      <span>Loading repository map...</span>
+    </div>
+  ),
+  ssr: false,
+});
 
 const PROJECTS = [
   {

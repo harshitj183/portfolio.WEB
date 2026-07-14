@@ -32,6 +32,7 @@ const Sidebar = () => {
     { to: '/',          name: 'Home',      icon: <FiCommand size={17} />,      desc: 'Overview'        },
     { to: '/dashboard', name: 'Dashboard', icon: <FiActivity size={17} />,     desc: 'Stats & Metrics' },
     { to: '/projects',  name: 'Projects',  icon: <FiLayout size={17} />,       desc: 'Work Portfolio'  },
+    { to: 'https://blog.harshitj183.in', name: 'Blog', icon: <FiBook size={17} />, desc: 'Articles & Tech' },
     { to: '/about',     name: 'About',     icon: <FiUser size={17} />,         desc: 'Background'      },
     { to: '/contact',   name: 'Contact',   icon: <FiMessageSquare size={17}/>, desc: "Let's Talk"      },
   ];
@@ -110,7 +111,13 @@ const Sidebar = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: idx * 0.045, duration: 0.25 }}
       >
-        {item.soon ? inner : <Link href={item.to} style={{ textDecoration: 'none' }}>{inner}</Link>}
+        {item.soon ? (
+          inner
+        ) : item.to.startsWith('http') ? (
+          <a href={item.to} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>{inner}</a>
+        ) : (
+          <Link href={item.to} style={{ textDecoration: 'none' }}>{inner}</Link>
+        )}
       </motion.div>
     );
   };
