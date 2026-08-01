@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-06T18:51:01.600Z",
+  "lastUpdated": "2026-08-01T10:50:06.785Z",
   "profile": {
     "name": "Harshit Jaiswal",
     "location": "Gurugram, Haryana, India (Delhi NCR)",
@@ -37,8 +37,8 @@
       {
         "company": "Self-Employed",
         "role": "Freelance Web Developer",
-        "period": "Jan 2020 – Present",
-        "description": "Produced 24+ full-stack web projects for diverse clients. Spearheaded SEO strategies and DNS management across 15+ domains, boosting organic search traffic by 30%."
+        "period": "Jan 2023 – Present",
+        "description": "Built 20+ full-stack web applications, delivering custom features that accelerated client business workflows by 25%. Configured DNS and implemented SEO across 15+ domains, increasing organic traffic by 30%."
       }
     ],
     "skills": {
@@ -53,6 +53,8 @@
         "React",
         "Next.js",
         "Node.js",
+        "Express",
+        "FastAPI",
         "Bun.js",
         "HTML5",
         "CSS3",
@@ -60,30 +62,39 @@
         "WordPress"
       ],
       "backend": [
-        "PostgreSQL",
+        "PostgreSQL (Prisma ORM)",
         "MongoDB",
         "MySQL",
-        "Firebase Authentication",
-        "REST APIs"
+        "Firebase",
+        "REST APIs",
+        "Microservices Architecture"
       ],
       "tools": [
+        "Docker",
+        "Docker Compose",
+        "CI/CD (GitHub Actions)",
+        "Nginx",
+        "AWS (EC2, SES)",
+        "Cloudflare",
         "Git",
-        "GitHub",
-        "VS Code",
         "Postman",
-        "Linux (Basic)",
-        "Bash / Shell",
-        "CLI",
-        "Cloudflare"
+        "Linux",
+        "Bash"
       ],
       "exploring": [
-        "AI Engineering",
-        "DevOps Fundamentals (Docker, AWS, CI/CD)",
+        "Agentic AI Systems",
+        "LangChain",
+        "LangGraph",
+        "RAG (Retrieval-Augmented Generation)",
+        "Vector Databases",
+        "LLM Orchestration",
         "System Design"
       ],
       "core": [
         "Data Structures and Algorithms (DSA)",
         "Object-Oriented Programming (OOP)",
+        "Computer Networks (CN)",
+        "Agile / Scrum",
         "SDLC",
         "SEO",
         "Prompt Engineering"
@@ -91,7 +102,7 @@
     },
     "credentials_and_achievements": [
       "Project-Based Learning Recognition (PBL) - Projexa AI",
-      "Research Paper Publication - 'Innovative Systems and Ethical Data Practices' in IJSREM (Oct 2024)",
+      "Research Paper Publication - 'Organ Donation Systems and Ethical Data Practices' in IJSREM (Oct 2024)",
       "Cybersecurity Analyst Job Simulation - Tata Group (Forage, Apr 2025)",
       "Top performer in AMCAT Assessment"
     ],
@@ -109,13 +120,6 @@
   },
   "github": [
     {
-      "name": "CodeForces",
-      "description": "Codeforces solutions pushed by CFPusher",
-      "stars": 0,
-      "language": "C++",
-      "url": "https://github.com/harshitj183/CodeForces"
-    },
-    {
       "name": "Leetcode",
       "description": "Collection of LeetCode questions to ace the coding interview! - Created using [LeetHub](https://github.com/QasimWani/LeetHub)",
       "stars": 0,
@@ -123,18 +127,60 @@
       "url": "https://github.com/harshitj183/Leetcode"
     },
     {
-      "name": "openbiz",
-      "description": "Udyam Registration Portal Clone - Full Stack Application (Next.js + Express + PostgreSQL)",
+      "name": "click",
+      "description": "Python composable command line interface toolkit",
       "stars": 0,
-      "language": "TypeScript",
-      "url": "https://github.com/harshitj183/openbiz"
+      "language": null,
+      "url": "https://github.com/harshitj183/click"
     },
     {
-      "name": "ai-skills",
-      "description": "The Ultimate Library of curated AI Agent Skills. Contains 17 Mega-Skills and 8 Master Roles spanning React, Node.js, MCP, Supabase, and DevOps infrastructure to give your AI ultra-precise context.",
-      "stars": 2,
-      "language": "Python",
-      "url": "https://github.com/harshitj183/ai-skills"
+      "name": "ConceptCraft-AI",
+      "description": null,
+      "stars": 0,
+      "language": "JavaScript",
+      "url": "https://github.com/harshitj183/ConceptCraft-AI"
+    },
+    {
+      "name": "tm_devices",
+      "description": "Test & Measurement Device Management",
+      "stars": 0,
+      "language": null,
+      "url": "https://github.com/harshitj183/tm_devices"
+    },
+    {
+      "name": "CodeForces",
+      "description": "Codeforces solutions pushed by CFPusher",
+      "stars": 0,
+      "language": "C++",
+      "url": "https://github.com/harshitj183/CodeForces"
+    },
+    {
+      "name": "typescript-sdk",
+      "description": "The official TypeScript SDK for Model Context Protocol servers and clients",
+      "stars": 0,
+      "language": null,
+      "url": "https://github.com/harshitj183/typescript-sdk"
+    },
+    {
+      "name": "blog",
+      "description": "Personal blog at blog.harshitj183.in — Next.js 16, Tailwind CSS v4, Framer Motion",
+      "stars": 0,
+      "language": "TypeScript",
+      "url": "https://github.com/harshitj183/blog"
+    },
+    {
+      "name": "auditar-sdk",
+      "description": "Open-source Python SDK for zero-knowledge inference instrumentation. pip install auditar-sdk  Captures inputs/outputs only — never touches model weights.     Built for regulated AI in Indian financial services: RBI FREE-AI 7-Sutras ready.    ",
+      "stars": 0,
+      "language": null,
+      "url": "https://github.com/harshitj183/auditar-sdk"
+    },
+    {
+      "name": "pdf-studio",
+      "description": "Three lines of code for a PDF with a table, a chart, and a header.",
+      "stars": 0,
+      "language": null,
+      "url": "https://github.com/harshitj183/pdf-studio"
     },
     {
       "name": "portfolio.WEB",
@@ -142,45 +188,10 @@
       "stars": 0,
       "language": "TypeScript",
       "url": "https://github.com/harshitj183/portfolio.WEB"
-    },
-    {
-      "name": "realtime-chat-app",
-      "description": null,
-      "stars": 0,
-      "language": "JavaScript",
-      "url": "https://github.com/harshitj183/realtime-chat-app"
-    },
-    {
-      "name": "unified-college-interaction-system-web",
-      "description": "• To create a centralized platform for college-related information • To provide easy access to clubs, events, and registrations • To enable students to find faculty contact details efficiently • To offer a structured discussion forum for academic and general queries • To reduce dependency on unorganized communication channels",
-      "stars": 1,
-      "language": "JavaScript",
-      "url": "https://github.com/harshitj183/unified-college-interaction-system-web"
-    },
-    {
-      "name": "MultiSearch.Extension",
-      "description": "MultiSearchExtension is a powerful browser extension that allows users to perform multiple searches across different search engines simultaneously. This extension is designed to enhance productivity by providing quick and comprehensive search results from various sources.",
-      "stars": 3,
-      "language": "JavaScript",
-      "url": "https://github.com/harshitj183/MultiSearch.Extension"
-    },
-    {
-      "name": "harshitj183",
-      "description": "about me",
-      "stars": 1,
-      "language": "JavaScript",
-      "url": "https://github.com/harshitj183/harshitj183"
-    },
-    {
-      "name": "food-waste-management",
-      "description": null,
-      "stars": 0,
-      "language": "HTML",
-      "url": "https://github.com/harshitj183/food-waste-management"
     }
   ],
   "leetcode": {
-    "totalSolved": 386,
+    "totalSolved": 407,
     "ranking": "N/A",
     "reputation": 0
   }

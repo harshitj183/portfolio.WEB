@@ -95,7 +95,7 @@ const TOUR_STEPS: TourStep[] = [
     path: '/dashboard',
     targetId: 'leetcode-distribution',
     title: 'LeetCode Analytics',
-    desc: 'I have solved over 350+ data structures and algorithm challenges on LeetCode.',
+    desc: 'I have solved over 400+ data structures and algorithm challenges on LeetCode.',
     quip: 'I love solving algorithms! 🧩'
   },
   {
@@ -309,6 +309,7 @@ const getComponentQuip = (name: string, tag: string): string => {
   if (n.includes('linkedin') || n.includes('connect')) return "Connect with him on LinkedIn for professional updates. 🤝";
   
   // Projects
+  if (n.includes('concept') || n.includes('craft')) return "ConceptCraft AI is his flagship visual learning system. Truly next-level multi-agent pipeline! 🧠";
   if (n.includes('ucis') || n.includes('unified college')) return "Ah, UCIS! His flagship college interaction system. It's massive! 🚀";
   if (n.includes('ai skills') || n.includes('library')) return "He built this AI library using modern Generative AI techniques! 🧠";
   if (n.includes('chat') || n.includes('real-time')) return "Real-time, low-latency chat systems are his specialty. 💬";
@@ -316,10 +317,10 @@ const getComponentQuip = (name: string, tag: string): string => {
   // Education & Experience
   if (n.includes('education') || n.includes('b.tech') || n.includes('university') || n.includes('mangalam')) return "Harshit is pursuing his B.Tech at KR Mangalam University! 🎓";
   if (n.includes('experience') || n.includes('senpaihost') || n.includes('intern')) return "He worked as a Developer Intern at SenpaiHost! 💼";
-  if (n.includes('freelance') || n.includes('self-employed')) return "He has built 24+ full-stack projects for clients as a freelancer! 💻";
+  if (n.includes('freelance') || n.includes('self-employed')) return "He has built 20+ full-stack projects for clients as a freelancer! 💻";
   
   // Skills & Tech
-  if (n.includes('c++') || n.includes('dsa') || n.includes('algorithms')) return "He has solved over 250+ LeetCode problems in C++! 💻";
+  if (n.includes('c++') || n.includes('dsa') || n.includes('algorithms')) return "He has solved over 400+ LeetCode problems in C++! 💻";
   if (n.includes('docker') || n.includes('devops') || n.includes('cloud')) return "He loves containerizing applications with Docker! 🐳";
   if (n.includes('database') || n.includes('postgresql') || n.includes('mongodb')) return "He designs highly robust and scalable database schemas! 🗄️";
   if (n.includes('bun')) return "Did you know this site runs on Bun instead of Node? Super fast! ⚡";

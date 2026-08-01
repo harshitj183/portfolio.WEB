@@ -16,6 +16,15 @@ const TECH_STACK = [
 
 const FEATURED = [
   {
+    label: 'AI Platform',
+    title: 'ConceptCraft AI',
+    desc: 'Multi-agent educational platform translating complex theoretical concepts into interactive D3.js sandboxes. Features a 5-agent pipeline and adaptive quiz engine.',
+    tech: ['Next.js', 'FastAPI', 'LangGraph', 'Docker'],
+    image: '/projects/conceptcraft_landing.png',
+    github: 'https://github.com/harshitj183/ConceptCraft-AI',
+    color: '#a855f7',
+  },
+  {
     label: 'Flagship Project',
     title: 'Unified College Interaction System',
     desc: 'Central architecture supporting 1,000+ students & faculty. Real-time data sync, secure auth, 40% reduction in manual admin queries.',
@@ -45,7 +54,7 @@ const FEATURED = [
 ];
 
 const Home = () => {
-  const [lcSolved, setLcSolved] = useState<string>('350+');
+  const [lcSolved, setLcSolved] = useState<string>('400+');
   const [slide, setSlide] = useState(0);
   const [dir, setDir] = useState(1);
 
@@ -141,7 +150,7 @@ const Home = () => {
           </div>
           <p style={{ fontSize: '1.2rem', lineHeight: '1.7', marginBottom: '3rem', color: 'var(--text-secondary)', maxWidth: '520px' }}>
             <strong style={{ color: '#fff', fontWeight: 600 }}>Project Manager</strong> specializing in Full Stack Web Development (MERN Stack).
-            Delivered <strong style={{ color: '#fff', fontWeight: 600 }}>24+ production systems</strong> and solved <strong style={{ color: '#fff', fontWeight: 600 }}>{lcSolved} LeetCode problems</strong>.
+            Delivered <strong style={{ color: '#fff', fontWeight: 600 }}>20+ freelance web applications</strong> and solved <strong style={{ color: '#fff', fontWeight: 600 }}>{lcSolved} LeetCode problems</strong>.
           </p>
 
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -254,7 +263,7 @@ const Home = () => {
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginBottom: '1.5rem' }}>
             {[
-              { val: '24+', label: 'Projects' },
+              { val: '20+', label: 'Projects' },
               { val: lcSolved, label: 'LeetCode' },
               { val: '4+ Yrs', label: 'Experience' },
             ].map(({ val, label }) => (

@@ -32,7 +32,9 @@ const Sidebar = () => {
     { to: '/',          name: 'Home',      icon: <FiCommand size={17} />,      desc: 'Overview'        },
     { to: '/dashboard', name: 'Dashboard', icon: <FiActivity size={17} />,     desc: 'Stats & Metrics' },
     { to: '/projects',  name: 'Projects',  icon: <FiLayout size={17} />,       desc: 'Work Portfolio'  },
-    { to: 'https://blog.harshitj183.in', name: 'Blog', icon: <FiBook size={17} />, desc: 'Articles & Tech' },
+    ...(process.env.NODE_ENV !== 'production' ? [
+      { to: 'https://blog.harshitj183.in', name: 'Blog', icon: <FiBook size={17} />, desc: 'Articles & Tech' }
+    ] : []),
     { to: '/about',     name: 'About',     icon: <FiUser size={17} />,         desc: 'Background'      },
     { to: '/contact',   name: 'Contact',   icon: <FiMessageSquare size={17}/>, desc: "Let's Talk"      },
   ];

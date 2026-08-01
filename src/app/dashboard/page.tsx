@@ -318,7 +318,7 @@ const Dashboard = () => {
       </h2>
       <div id="stats-overview" className="grid" style={{ marginBottom: '2.5rem' }}>
         <StatCard label="GitHub Repos" value={github.stats?.repos || 0} icon={<FiGithub />} loading={github.loading} />
-        <StatCard label="Projects Shipped" value={24} suffix="+" icon={<FiZap />} />
+        <StatCard label="Projects Shipped" value={20} suffix="+" icon={<FiZap />} />
         <StatCard label="Current Streak" value={github.stats?.streak || 0} suffix=" days" icon={<FiTrendingUp />} loading={github.loading} />
       </div>
 

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiExternalLink, FiCpu, FiLayout, FiSearch,
   FiActivity, FiX, FiLayers, FiTerminal, FiCheckCircle,
-  FiGithub, FiFilter, FiMessageSquare
+  FiGithub, FiFilter, FiMessageSquare, FiBookOpen
 } from 'react-icons/fi';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
@@ -33,6 +33,27 @@ const ProjectFileTree = dynamic(() => import('@/components/ProjectFileTree'), {
 });
 
 const PROJECTS = [
+  {
+    id: 7,
+    title: 'ConceptCraft AI',
+    desc: 'Designed and engineered an advanced AI-powered educational platform that parses user prompts into production-grade interactive sandboxes. Implemented a 5-agent architecture to decompose topics, design personalized analogies, generate step-by-step D3.js simulations, administer adaptive quizzes, and maintain a persistent knowledge roadmap.',
+    tech: ['Next.js', 'FastAPI', 'Node.js', 'PostgreSQL', 'Prisma', 'Docker', 'AWS', 'LangGraph'],
+    tags: ['ai', 'fullstack', 'tools'],
+    icon: <FiBookOpen />,
+    github: 'https://github.com/harshitj183/ConceptCraft-AI',
+    live: null,
+    featured: true,
+    image: '/projects/conceptcraft_landing.png',
+    challenges: "Orchestrating a multi-agent system to reliably generate structured, executable D3.js visual notes and animations without syntax errors, while managing user knowledge graphs across multiple sessions.",
+    solution: "Designed a 5-agent pipeline using FastAPI and LangGraph with strict output schemas, coupled with an automated retry loop that regenerates simpler analogies and D3.js code when adaptive quiz scores drop below 60%.",
+    metrics: ["5-agent stateful pipeline architecture", "Sub-3s dynamic visual sandbox generation", "Adaptive quiz loop with 20%+ performance improvements"],
+    gallery: [
+      '/projects/conceptcraft_landing.png',
+      '/projects/conceptcraft_polymorphism.png',
+      '/projects/conceptcraft_recursion.png',
+      '/projects/conceptcraft_quiz.png'
+    ]
+  },
   {
     id: 1,
     title: 'Unified College Interaction System',
@@ -164,110 +185,196 @@ interface ProjectCardProps {
   onMouseEnter: () => void;
 }
 
-const ProjectCard = ({ project, onOpen, isActive, cardRef, onMouseEnter }: ProjectCardProps) => (
-  <TiltCard
-    ref={cardRef}
-    data-project-id={project.id}
-    data-project-title={project.title}
-    onClick={() => onOpen(project)}
-    onMouseEnter={onMouseEnter}
-    className={`glass-panel ${isActive ? 'project-highlight' : ''}`}
-    style={{ display: 'flex', flexDirection: 'column', padding: '1.8rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
-    tiltAngle={10}
-  >
-    {project.featured && (
-      <div style={{
-        position: 'absolute', top: '1rem', right: '1rem',
-        background: 'var(--accent)', border: '1px solid var(--accent)',
-        borderRadius: '4px', padding: '0.3rem 0.8rem', fontSize: '0.65rem',
-        color: '#fff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-        zIndex: 2
-      }}>
-        Featured
-      </div>
-    )}
+const ProjectCard = ({ project, onOpen, isActive, cardRef, onMouseEnter }: ProjectCardProps) => {
+  const [imgIndex, setImgIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const localRef = useRef<HTMLDivElement | null>(null);
 
-    {project.image && (
-      <div style={{ 
-        width: '100%', 
-        height: '160px', 
-        borderRadius: '10px', 
-        overflow: 'hidden', 
-        marginBottom: '1.5rem', 
-        border: '1px solid var(--glass-border)',
-        position: 'relative'
-      }}>
-        <Image 
-          src={project.image} 
-          alt={project.title} 
-          fill
-          style={{ objectFit: 'cover' }} 
-        />
-      </div>
-    )}
+  // Visibility detection to prevent timers running when offscreen
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      setIsVisible(true);
+      return;
+    }
 
-    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.2rem' }}>
-      <div style={{
-        background: 'rgba(99,102,241,0.1)', padding: '0.7rem',
-        borderRadius: '10px', color: 'var(--accent)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
-      }}>
-        {project.icon}
-      </div>
-      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-        {project.tech.slice(0, 3).map(t => (
-          <span key={t} className="pill" style={{ fontSize: '0.62rem', padding: '0.2rem 0.6rem' }}>{t}</span>
-        ))}
-      </div>
-    </div>
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
 
-    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.8rem', lineHeight: 1.25, flex: 0 }}>{project.title}</h3>
-    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '1.8rem', flex: 1 }}>{project.desc}</p>
+    if (localRef.current) {
+      observer.observe(localRef.current);
+    }
 
-    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
-      <span style={{ color: 'var(--accent)', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.06em' }}>
-        VIEW CASE STUDY →
-      </span>
-      <div style={{ display: 'flex', gap: '0.6rem' }}>
-        {project.github && (
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-            style={{ 
-              color: '#fff', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
-              background: 'rgba(255,255,255,0.05)', padding: '0.4rem 0.8rem', borderRadius: '100px',
-              border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s', fontWeight: 500
-            }}
-            title="Source Code"
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-          >
-            <FiGithub size={14} /> Code
-          </a>
-        )}
-        {project.live && (
-          <a
-            href={project.live}
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-            style={{ 
-              color: '#fff', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
-              background: 'rgba(99,102,241,0.15)', padding: '0.4rem 0.8rem', borderRadius: '100px',
-              border: '1px solid rgba(99,102,241,0.3)', transition: 'all 0.2s', fontWeight: 500
-            }}
-            title="Live Demo"
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.25)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(99,102,241,0.15)'}
-          >
-            <FiExternalLink size={14} /> Live
-          </a>
-        )}
+    return () => observer.disconnect();
+  }, []);
+
+  // Interval manager that auto-pauses when offscreen or user shifts tabs
+  useEffect(() => {
+    if (!isVisible) return;
+    if (project.gallery && project.gallery.length > 1) {
+      const handleVisibility = () => {
+        if (document.hidden) {
+          clearInterval(interval);
+        }
+      };
+
+      const interval = setInterval(() => {
+        if (!document.hidden) {
+          setImgIndex((prev) => (prev + 1) % project.gallery!.length);
+        }
+      }, 3000);
+
+      document.addEventListener('visibilitychange', handleVisibility);
+
+      return () => {
+        clearInterval(interval);
+        document.removeEventListener('visibilitychange', handleVisibility);
+      };
+    }
+  }, [project.gallery, isVisible]);
+
+  const displayImage = project.gallery && project.gallery.length > 0
+    ? project.gallery[imgIndex]
+    : project.image;
+
+  // Callback ref combining localRef with the parent's cardRef callback
+  const setRefs = (el: HTMLDivElement | null) => {
+    localRef.current = el;
+    cardRef(el);
+  };
+
+  return (
+    <TiltCard
+      ref={setRefs}
+      data-project-id={project.id}
+      data-project-title={project.title}
+      onClick={() => onOpen(project)}
+      onMouseEnter={onMouseEnter}
+      className={`glass-panel ${isActive ? 'project-highlight' : ''}`}
+      style={{ display: 'flex', flexDirection: 'column', padding: '1.8rem', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}
+      tiltAngle={10}
+    >
+      {project.featured && (
+        <div style={{
+          position: 'absolute', top: '1rem', right: '1rem',
+          background: 'var(--accent)', border: '1px solid var(--accent)',
+          borderRadius: '4px', padding: '0.3rem 0.8rem', fontSize: '0.65rem',
+          color: '#fff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
+          zIndex: 2
+        }}>
+          Featured
+        </div>
+      )}
+
+      {displayImage && (
+        <div style={{ 
+          width: '100%', 
+          height: '160px', 
+          borderRadius: '10px', 
+          overflow: 'hidden', 
+          marginBottom: '1.5rem', 
+          border: '1px solid var(--glass-border)',
+          position: 'relative'
+        }}>
+          {project.gallery && project.gallery.length > 1 ? (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={imgIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ position: 'absolute', inset: 0 }}
+              >
+                <Image 
+                  src={displayImage} 
+                  alt={project.title} 
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  style={{ objectFit: 'cover' }} 
+                />
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <Image 
+              src={displayImage} 
+              alt={project.title} 
+              fill
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              style={{ objectFit: 'cover' }} 
+            />
+          )}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.2rem' }}>
+        <div style={{
+          background: 'rgba(99,102,241,0.1)', padding: '0.7rem',
+          borderRadius: '10px', color: 'var(--accent)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+        }}>
+          {project.icon}
+        </div>
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+          {project.tech.slice(0, 3).map(t => (
+            <span key={t} className="pill" style={{ fontSize: '0.62rem', padding: '0.2rem 0.6rem' }}>{t}</span>
+          ))}
+        </div>
       </div>
-    </div>
-  </TiltCard>
-);
+
+      <h3 style={{ fontSize: '1.25rem', marginBottom: '0.8rem', lineHeight: 1.25, flex: 0 }}>{project.title}</h3>
+      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '1.8rem', flex: 1 }}>{project.desc}</p>
+
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ color: 'var(--accent)', fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.06em' }}>
+          VIEW CASE STUDY →
+        </span>
+        <div style={{ display: 'flex', gap: '0.6rem' }}>
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+              style={{ 
+                color: '#fff', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
+                background: 'rgba(255,255,255,0.05)', padding: '0.4rem 0.8rem', borderRadius: '100px',
+                border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s', fontWeight: 500
+              }}
+              title="Source Code"
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+            >
+              <FiGithub size={14} /> Code
+            </a>
+          )}
+          {project.live && (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+              style={{ 
+                color: '#fff', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
+                background: 'rgba(99,102,241,0.15)', padding: '0.4rem 0.8rem', borderRadius: '100px',
+                border: '1px solid rgba(99, 102, 241, 0.3)', transition: 'all 0.2s', fontWeight: 500
+              }}
+              title="Live Demo"
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.25)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)'}
+            >
+              <FiExternalLink size={14} /> Live
+            </a>
+          )}
+        </div>
+      </div>
+    </TiltCard>
+  );
+};
 
 const Projects = () => {
   const [selected, setSelected] = useState<Project | null>(null);

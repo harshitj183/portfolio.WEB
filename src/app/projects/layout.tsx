@@ -57,6 +57,17 @@ export default function ProjectsLayout({
                   "applicationCategory": "WebApplication",
                   "operatingSystem": "All"
                 }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "SoftwareApplication",
+                  "name": "ConceptCraft AI",
+                  "url": "https://github.com/harshitj183/ConceptCraft-AI",
+                  "applicationCategory": "EducationalApplication",
+                  "operatingSystem": "All"
+                }
               }
             ]
           })

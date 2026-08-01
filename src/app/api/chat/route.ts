@@ -40,6 +40,7 @@ Key Projects:
 1. Unified College Interaction System: Flagship project.
 2. AI Skills Library: Used modern AI techniques.
 3. Real-time Chat: High-performance chat system.
+4. ConceptCraft AI: AI-powered educational platform that parses prompts into D3.js simulations.
 Use this context to accurately answer questions about Harshit. If you need more up-to-date data, use your 'query_knowledge_base' tool.`;
 
 const techDetails = `

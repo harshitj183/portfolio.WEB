@@ -13,27 +13,27 @@ const SKILL_CATEGORIES = [
   {
     title: 'Web Development',
     icon: <FiLayout size={18} />,
-    skills: ['React', 'Next.js', 'Node.js', 'Bun.js', 'HTML5', 'CSS3', 'Tailwind CSS', 'WordPress']
+    skills: ['React', 'Next.js', 'Node.js', 'Express', 'FastAPI', 'Bun.js', 'HTML5', 'CSS3', 'Tailwind CSS', 'WordPress']
   },
   {
     title: 'Backend & Databases',
     icon: <FiDatabase size={18} />,
-    skills: ['PostgreSQL', 'MongoDB', 'MySQL', 'Firebase Authentication', 'REST APIs']
+    skills: ['PostgreSQL (Prisma ORM)', 'MongoDB', 'MySQL', 'Firebase', 'REST APIs', 'Microservices Architecture']
   },
   {
     title: 'Tools & Platforms',
     icon: <FiCpu size={18} />,
-    skills: ['Git', 'GitHub', 'VS Code', 'Postman', 'Linux (Basic)', 'Bash / Shell', 'CLI', 'Cloudflare']
+    skills: ['Docker', 'Docker Compose', 'CI/CD (GitHub Actions)', 'Nginx', 'AWS (EC2, SES)', 'Cloudflare', 'Git', 'Postman', 'Linux', 'Bash']
   },
   {
     title: 'Currently Exploring',
     icon: <FiCompass size={18} />,
-    skills: ['AI Engineering', 'DevOps Fundamentals (Docker, AWS, CI/CD)', 'System Design']
+    skills: ['Agentic AI Systems', 'LangChain', 'LangGraph', 'RAG (Retrieval-Augmented Generation)', 'Vector Databases', 'LLM Orchestration', 'System Design']
   },
   {
     title: 'Core Concepts',
     icon: <FiBookOpen size={18} />,
-    skills: ['Data Structures and Algorithms (DSA)', 'Object-Oriented Programming (OOP)', 'SDLC', 'SEO', 'Prompt Engineering']
+    skills: ['Data Structures and Algorithms (DSA)', 'Object-Oriented Programming (OOP)', 'Computer Networks (CN)', 'Agile / Scrum', 'SDLC', 'SEO', 'Prompt Engineering']
   }
 ];
 
@@ -111,10 +111,10 @@ const About = () => {
     {
       role: 'Freelance Web Developer',
       company: 'Self-Employed',
-      date: 'Jan 2020 – Present',
+      date: 'Jan 2023 – Present',
       desc: [
-        'Produced 24+ full-stack web projects for diverse clients, creating custom features and accelerating business processes by 25%.',
-        'Spearheaded SEO strategies and DNS management across 15+ domains, boosting organic search traffic by 30% and ensuring 99.9% server uptime.'
+        'Built 20+ full-stack web applications, delivering custom features that accelerated client business workflows by 25%.',
+        'Configured DNS and implemented SEO across 15+ domains, increasing organic traffic by 30% with 99.9% uptime.'
       ]
     }
   ];
@@ -194,7 +194,7 @@ const About = () => {
           </h2>
           {[
             { icon: <FiAward size={20} />, title: 'Project-Based Learning Recognition (PBL)', sub: 'Certified for "Unified College Interaction System" by Projexa AI (May 2026)' },
-            { icon: <FiFileText size={20} />, title: 'Research Paper Publication', sub: '"Innovative Systems and Ethical Data Practices" issued in IJSREM (Oct 2024)' },
+            { icon: <FiFileText size={20} />, title: 'Research Paper Publication', sub: '"Organ Donation Systems and Ethical Data Practices" issued in IJSREM (Oct 2024)' },
             { icon: <FiShield size={20} />, title: 'Cybersecurity Analyst Job Simulation', sub: 'Tata Group (Forage, Apr 2025)' },
             { icon: <FiTrendingUp size={20} />, title: 'AMCAT Assessment', sub: 'Ranked among the top-performing students in the AMCAT Assessment' },
           ].map(({ icon, title, sub }) => (

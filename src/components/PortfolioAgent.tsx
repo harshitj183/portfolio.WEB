@@ -103,6 +103,9 @@ function getLocalAgentResponse(userInput: string): string {
   if (input.includes('featured') || input.includes('flagship')) {
     return makeJson("Taking you to the flagship Unified College Interaction System project!", { action: 'show_featured_project' });
   }
+  if (input.includes('concept') || input.includes('craft')) {
+    return makeJson("Highlighting the ConceptCraft AI project dossier for you!", { action: 'highlight_project', project_name: 'ConceptCraft AI' });
+  }
   if (input.includes('timeline') || input.includes('experience')) {
     return makeJson("Navigating to Harshit's professional experience logs...", { action: 'goto_experience' });
   }

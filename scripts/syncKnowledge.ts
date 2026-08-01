@@ -71,21 +71,21 @@ const staticProfile = {
     {
       company: "Self-Employed",
       role: "Freelance Web Developer",
-      period: "Jan 2020 – Present",
-      description: "Produced 24+ full-stack web projects for diverse clients. Spearheaded SEO strategies and DNS management across 15+ domains, boosting organic search traffic by 30%."
+      period: "Jan 2023 – Present",
+      description: "Built 20+ full-stack web applications, delivering custom features that accelerated client business workflows by 25%. Configured DNS and implemented SEO across 15+ domains, increasing organic traffic by 30%."
     }
   ],
   skills: {
     languages: ["C++ (Intermediate)", "JavaScript (ES6+)", "TypeScript", "Python", "SQL"],
-    frontend: ["React", "Next.js", "Node.js", "Bun.js", "HTML5", "CSS3", "Tailwind CSS", "WordPress"],
-    backend: ["PostgreSQL", "MongoDB", "MySQL", "Firebase Authentication", "REST APIs"],
-    tools: ["Git", "GitHub", "VS Code", "Postman", "Linux (Basic)", "Bash / Shell", "CLI", "Cloudflare"],
-    exploring: ["AI Engineering", "DevOps Fundamentals (Docker, AWS, CI/CD)", "System Design"],
-    core: ["Data Structures and Algorithms (DSA)", "Object-Oriented Programming (OOP)", "SDLC", "SEO", "Prompt Engineering"]
+    frontend: ["React", "Next.js", "Node.js", "Express", "FastAPI", "Bun.js", "HTML5", "CSS3", "Tailwind CSS", "WordPress"],
+    backend: ["PostgreSQL (Prisma ORM)", "MongoDB", "MySQL", "Firebase", "REST APIs", "Microservices Architecture"],
+    tools: ["Docker", "Docker Compose", "CI/CD (GitHub Actions)", "Nginx", "AWS (EC2, SES)", "Cloudflare", "Git", "Postman", "Linux", "Bash"],
+    exploring: ["Agentic AI Systems", "LangChain", "LangGraph", "RAG (Retrieval-Augmented Generation)", "Vector Databases", "LLM Orchestration", "System Design"],
+    core: ["Data Structures and Algorithms (DSA)", "Object-Oriented Programming (OOP)", "Computer Networks (CN)", "Agile / Scrum", "SDLC", "SEO", "Prompt Engineering"]
   },
   credentials_and_achievements: [
     "Project-Based Learning Recognition (PBL) - Projexa AI",
-    "Research Paper Publication - 'Innovative Systems and Ethical Data Practices' in IJSREM (Oct 2024)",
+    "Research Paper Publication - 'Organ Donation Systems and Ethical Data Practices' in IJSREM (Oct 2024)",
     "Cybersecurity Analyst Job Simulation - Tata Group (Forage, Apr 2025)",
     "Top performer in AMCAT Assessment"
   ],
@@ -113,7 +113,7 @@ async function syncKnowledge() {
     profile: staticProfile,
     github: githubData || "Data unavailable",
     leetcode: leetcodeData || "Data unavailable"
-  }; d
+  };
 
   const outputPath = path.join(process.cwd(), 'knowledge_base', 'harshit_graph.json');
   fs.writeFileSync(outputPath, JSON.stringify(graph, null, 2));
