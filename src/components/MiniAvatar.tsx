@@ -1517,6 +1517,8 @@ export default function RoamingHarshit() {
 
   if (isMobile && !isAIModeOpen) return null;
 
+  const showTourBubble = tourStep >= 0;
+
   return (
     <>
       <div

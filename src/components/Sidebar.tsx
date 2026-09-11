@@ -165,10 +165,6 @@ const Sidebar = () => {
 
       <div className="desktop-profile" style={{ height: '1px', background: 'var(--border-color)', marginBottom: '1rem' }} />
 
-      {/* Mobile Header Title */}
-      <div className="mobile-header-title">
-        <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>Harshit Jaiswal</span>
-      </div>
 
       {/* Hamburger */}
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.2rem' }}>

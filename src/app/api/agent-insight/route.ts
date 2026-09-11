@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ message: "Hmm, my brain is offline right now (API Key missing)." });
+      // Graceful fallback — not an error, just unavailable
+      return NextResponse.json({ message: "Hmm, my brain is offline right now." }, { status: 200 });
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -31,6 +32,7 @@ ${activityLog.join('\n')}`;
     return NextResponse.json({ message: text });
   } catch (error) {
     console.error("Agent Insight Error:", error);
-    return NextResponse.json({ message: "I'm thinking really hard right now... give me a sec." }, { status: 500 });
+    // Return 200 with a fallback message so the client doesn't log a network error
+    return NextResponse.json({ message: "I'm thinking really hard right now... give me a sec." }, { status: 200 });
   }
 }

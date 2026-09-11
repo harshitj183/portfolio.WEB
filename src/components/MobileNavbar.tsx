@@ -2,103 +2,176 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiSearch, FiCpu
 } from 'react-icons/fi';
 import { useAvatar } from '../context/AvatarContext';
 
 const mobileNavItems = [
-  { to: '/',          name: 'Home',      icon: <FiCommand size={18} /> },
-  { to: '/about',     name: 'About',     icon: <FiUser size={18} /> },
-  { to: '/projects',  name: 'Projects',  icon: <FiLayout size={18} /> },
-  { to: '/dashboard', name: 'Stats',     icon: <FiActivity size={18} /> },
-  { to: '/contact',   name: 'Contact',   icon: <FiMessageSquare size={18} /> },
+  { to: '/',          name: 'Home',     icon: FiCommand       },
+  { to: '/about',     name: 'About',    icon: FiUser          },
+  { to: '/projects',  name: 'Projects', icon: FiLayout        },
+  { to: '/dashboard', name: 'Stats',    icon: FiActivity      },
+  { to: '/contact',   name: 'Contact',  icon: FiMessageSquare },
 ];
 
+/* ── Individual nav pill ── */
+function NavItem({
+  to, name, Icon, isActive, onClick,
+}: {
+  to: string; name: string; Icon: React.ElementType;
+  isActive: boolean; onClick?: () => void;
+}) {
+  return (
+    <Link
+      href={to}
+      className={`mnb-item${isActive ? ' mnb-active' : ''}`}
+      onClick={onClick}
+      aria-current={isActive ? 'page' : undefined}
+    >
+      {isActive && (
+        <motion.div
+          layoutId="mnb-pill"
+          className="mnb-pill"
+          transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+        />
+      )}
+      <motion.span
+        className="mnb-icon"
+        whileTap={{ scale: 0.72, rotate: -8 }}
+        whileHover={{ scale: 1.18 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+      >
+        <Icon size={19} />
+      </motion.span>
+      <motion.span
+        className="mnb-label"
+        animate={{ opacity: isActive ? 1 : 0.55, y: isActive ? 0 : 1 }}
+        transition={{ duration: 0.22 }}
+      >
+        {name}
+      </motion.span>
+    </Link>
+  );
+}
+
+/* ── AI / Search action button ── */
+function ActionBtn({
+  id, label, isActive, onClick, children,
+}: {
+  id: string; label: string; isActive?: boolean;
+  onClick: () => void; children: React.ReactNode;
+}) {
+  return (
+    <motion.button
+      id={id}
+      className={`mnb-item mnb-action${isActive ? ' mnb-active mnb-ai-active' : ''}`}
+      onClick={onClick}
+      aria-label={label}
+      whileTap={{ scale: 0.78, rotate: 6 }}
+      whileHover={{ scale: 1.12 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+    >
+      {isActive && (
+        <motion.div
+          layoutId="mnb-pill"
+          className="mnb-pill"
+          transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+        />
+      )}
+      {children}
+    </motion.button>
+  );
+}
+
+/* ── Main Component ── */
 export default function MobileNavbar() {
   const pathname = usePathname();
   const { logActivity, isAIModeOpen, toggleAIMode } = useAvatar();
 
   return (
-    <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
-      {mobileNavItems.map((item) => {
-        const cur = pathname || '';
-        const isActive = !isAIModeOpen && (item.to === '/' ? cur === '/' : cur.startsWith(item.to));
+    /*
+     * IMPORTANT: The outer <div> is the fixed-position centering shell.
+     * We keep transform:translateX(-50%) here in CSS (.mnb-root).
+     *
+     * The inner motion.div handles ONLY the spring-entrance animation (y + opacity)
+     * so Framer's inline transform never conflicts with the centering translateX.
+     */
+    <nav className="mnb-root" aria-label="Mobile Navigation">
+      {/* Liquid shimmer layer */}
+      <div className="mnb-shimmer" aria-hidden />
 
-        return (
-          <Link
-            key={item.to}
-            href={item.to}
-            className={`mobile-nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => {
-              logActivity(`User clicked ${item.name} in mobile navbar.`);
+      <motion.div
+        className="mnb-inner"
+        initial={{ y: 80, opacity: 0, scale: 0.9 }}
+        animate={{ y: 0,  opacity: 1, scale: 1  }}
+        transition={{ type: 'spring', stiffness: 320, damping: 28, delay: 0.2 }}
+        style={{ display: 'contents' }}
+      >
+        {mobileNavItems.map((item) => {
+          const cur      = pathname || '';
+          const isActive = !isAIModeOpen &&
+            (item.to === '/' ? cur === '/' : cur.startsWith(item.to));
+          return (
+            <NavItem
+              key={item.to}
+              to={item.to}
+              name={item.name}
+              Icon={item.icon}
+              isActive={isActive}
+              onClick={() => logActivity(`User clicked ${item.name} in mobile navbar.`)}
+            />
+          );
+        })}
+
+        {/* AI Agent toggle */}
+        <ActionBtn
+          id="mnb-ai-btn"
+          label="Toggle AI Agent Mode"
+          isActive={isAIModeOpen}
+          onClick={() => {
+            logActivity(isAIModeOpen ? 'User exited AI Mode.' : 'User entered AI Mode.');
+            toggleAIMode();
+          }}
+        >
+          <motion.span
+            className="mnb-icon"
+            animate={{
+              color: isAIModeOpen ? '#c084fc' : 'var(--accent)',
+              filter: isAIModeOpen
+                ? 'drop-shadow(0 0 8px #a855f7) drop-shadow(0 0 20px #7c3aed88)'
+                : 'none',
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            <FiCpu size={19} />
+          </motion.span>
+          <motion.span
+            className="mnb-label"
+            animate={{
+              opacity: 1,
+              fontWeight: isAIModeOpen ? 700 : 600,
+              color: isAIModeOpen ? '#e9d5ff' : undefined,
             }}
           >
-            {isActive && (
-              <motion.div
-                layoutId="mobile-nav-active-pill"
-                className="mobile-nav-indicator"
-                transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-              />
-            )}
-            <motion.span
-              whileTap={{ scale: 0.85 }}
-              className="mobile-nav-icon"
-            >
-              {item.icon}
-            </motion.span>
-            <span className="mobile-nav-label">{item.name}</span>
-          </Link>
-        );
-      })}
+            {isAIModeOpen ? 'Exit AI' : 'AI Agent'}
+          </motion.span>
+        </ActionBtn>
 
-      {/* AI Mode Toggle Button */}
-      <button
-        className={`mobile-nav-item mobile-nav-ai-btn ${isAIModeOpen ? 'active ai-active' : ''}`}
-        onClick={() => {
-          logActivity(isAIModeOpen ? 'User exited AI Mode.' : 'User entered AI Mode.');
-          toggleAIMode();
-        }}
-        aria-label="Toggle AI Agent Mode"
-        style={{
-          background: isAIModeOpen ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(168, 85, 247, 0.35))' : 'transparent',
-          borderRadius: '9999px',
-        }}
-      >
-        {isAIModeOpen && (
-          <motion.div
-            layoutId="mobile-nav-active-pill"
-            className="mobile-nav-indicator"
-            transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-          />
-        )}
-        <motion.span
-          whileTap={{ scale: 0.85 }}
-          className="mobile-nav-icon"
-          style={{ color: isAIModeOpen ? '#a855f7' : 'var(--accent)' }}
+        {/* Search */}
+        <ActionBtn
+          id="mnb-search-btn"
+          label="Search"
+          onClick={() => {
+            logActivity('User opened command palette search from mobile navbar.');
+            window.dispatchEvent(new CustomEvent('open-command-palette'));
+          }}
         >
-          <FiCpu size={18} />
-        </motion.span>
-        <span className="mobile-nav-label" style={{ fontWeight: 700, color: isAIModeOpen ? '#fff' : 'var(--text-secondary)' }}>
-          {isAIModeOpen ? 'Exit AI' : 'AI Agent'}
-        </span>
-      </button>
-
-      {/* Search Button */}
-      <button
-        className="mobile-nav-item mobile-nav-search-btn"
-        onClick={() => {
-          logActivity('User opened command palette search from mobile navbar.');
-          window.dispatchEvent(new CustomEvent('open-command-palette'));
-        }}
-        aria-label="Search"
-      >
-        <motion.span whileTap={{ scale: 0.85 }} className="mobile-nav-icon">
-          <FiSearch size={18} />
-        </motion.span>
-        <span className="mobile-nav-label">Search</span>
-      </button>
+          <span className="mnb-icon"><FiSearch size={19} /></span>
+          <span className="mnb-label">Search</span>
+        </ActionBtn>
+      </motion.div>
     </nav>
   );
 }
