@@ -7,12 +7,16 @@ import '../index.css';
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-primary',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.harshitj183.in'),
+  alternates: {
+    canonical: '/',
+  },
   title: 'Harshit Jaiswal | Full Stack Architect & SDE',
-  description: 'Elite Software Engineering Portfolio of Harshit Jaiswal. Building high-performance AI tools, modern web architectures, and scalable full-stack applications.',
+  description: 'Software Engineer & AI Architect Harshit Jaiswal. Specializing in MERN stack, LangChain Agentic AI, and scalable microservices. Delivered 20+ client builds.',
   keywords: ['Harshit Jaiswal', 'Software Engineer', 'Full Stack Developer', 'AI Agent Engineer', 'Next.js', 'React', 'Node.js', 'Gurugram'],
   authors: [{ name: 'Harshit Jaiswal' }],
   creator: 'Harshit Jaiswal',
@@ -21,13 +25,13 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://www.harshitj183.in',
     title: 'Harshit Jaiswal | Software Engineer',
-    description: 'Explore the interactive AI-powered portfolio of Harshit Jaiswal, SDE and AI Architect.',
+    description: 'Explore the AI-powered engineering portfolio of Harshit Jaiswal. Featuring full-stack web architectures, live metrics, and custom AI agent applications.',
     siteName: 'Harshit Jaiswal Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Harshit Jaiswal | Full Stack Architect & SDE',
-    description: 'Explore the interactive AI-powered portfolio of Harshit Jaiswal.',
+    description: 'Explore the AI-powered engineering portfolio of Harshit Jaiswal. Featuring full-stack web architectures, live metrics, and custom AI agent applications.',
   },
 };
 
@@ -48,6 +52,8 @@ export default function RootLayout({
         {/* Preconnect to important origins to reduce DNS/TCP latency */}
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
         <link rel="preconnect" href="https://assets.leetcode.com" />
+        <link rel="preconnect" href="https://api.github.com" />
+        <link rel="preconnect" href="https://raw.githubusercontent.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -67,7 +73,8 @@ export default function RootLayout({
                   "email": "harshitj183@gmail.com",
                   "alumniOf": {
                     "@type": "CollegeOrUniversity",
-                    "name": "KR Mangalam University"
+                    "name": "KR Mangalam University",
+                    "sameAs": "https://en.wikipedia.org/wiki/K._R._Mangalam_University"
                   },
                   "knowsAbout": [
                     "Software Engineering",
@@ -76,7 +83,16 @@ export default function RootLayout({
                     "Artificial Intelligence",
                     "React",
                     "Node.js",
-                    "Next.js"
+                    "Next.js",
+                    "TypeScript",
+                    "C++",
+                    "Docker",
+                    "PostgreSQL",
+                    "FastAPI",
+                    "System Design",
+                    "Agentic AI Systems",
+                    "LangChain",
+                    "LangGraph"
                   ],
                   "worksFor": {
                     "@type": "Organization",
@@ -93,7 +109,78 @@ export default function RootLayout({
                   "@id": "https://www.harshitj183.in/#website",
                   "url": "https://www.harshitj183.in",
                   "name": "Harshit Jaiswal Portfolio",
+                  "description": "Professional engineering portfolio and AI co-pilot hub of Harshit Jaiswal.",
                   "publisher": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "about": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  }
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  "@id": "https://www.harshitj183.in/#ucis",
+                  "name": "Unified College Interaction System",
+                  "alternateName": "UCIS",
+                  "description": "A high-performance collegiate communication and notes distribution system built with Next.js, Node.js, and PostgreSQL, deployed in Docker.",
+                  "url": "https://www.harshitj183.in/projects",
+                  "downloadUrl": "https://github.com/harshitj183/unified-college-interaction-system-web",
+                  "applicationCategory": "WebApplication",
+                  "operatingSystem": "All",
+                  "author": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "creator": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "featureList": "Secure notes distribution, calendar sync, real-time messaging, and student feedback systems."
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  "@id": "https://www.harshitj183.in/#conceptcraft",
+                  "name": "ConceptCraft AI",
+                  "description": "An interactive generative visualization platform parsing descriptive natural language prompts into live mathematical and algorithmic D3.js simulations.",
+                  "url": "https://www.harshitj183.in/projects",
+                  "downloadUrl": "https://github.com/harshitj183/ConceptCraft-AI",
+                  "applicationCategory": "EducationalApplication",
+                  "operatingSystem": "All",
+                  "author": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "creator": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "featureList": "Generates interactive sandboxes, visual notes, and quizzes from text prompts using D3.js."
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  "@id": "https://www.harshitj183.in/#aiskills",
+                  "name": "AI Skills - Global Context Library",
+                  "description": "An open-source CLI context library and NPM package for AI coding agents that reduces LLM prompt token consumption.",
+                  "url": "https://www.harshitj183.in/projects",
+                  "downloadUrl": "https://github.com/harshitj183/ai-skills",
+                  "applicationCategory": "DeveloperApplication",
+                  "operatingSystem": "All",
+                  "author": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "creator": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  }
+                },
+                {
+                  "@type": "SoftwareApplication",
+                  "@id": "https://www.harshitj183.in/#chat-app",
+                  "name": "Real-time Chat Application",
+                  "description": "A persistent multi-user instant messaging system with WebSockets, micro-second delivery speeds, media parsing, and typing indicators.",
+                  "url": "https://www.harshitj183.in/projects",
+                  "downloadUrl": "https://github.com/harshitj183/realtime-chat-app",
+                  "applicationCategory": "CommunicationApplication",
+                  "operatingSystem": "All",
+                  "author": {
+                    "@id": "https://www.harshitj183.in/#person"
+                  },
+                  "creator": {
                     "@id": "https://www.harshitj183.in/#person"
                   }
                 }

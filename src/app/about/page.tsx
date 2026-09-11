@@ -89,7 +89,7 @@ const About = () => {
 
   const experiences = [
     {
-      role: 'Project Manager Intern',
+      role: 'Full Stack & AI Engineer Intern',
       company: 'SenpaiHost (Remote)',
       date: 'Jun 2025 – Aug 2025',
       desc: [

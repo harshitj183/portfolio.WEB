@@ -58,6 +58,9 @@ const getFileIcon = (filename: string) => {
   return <FiFile color="#9ca3af" />;
 };
 
+// Global in-memory cache for GitHub trees to prevent duplicate API rate limits and speed up rendering
+const githubTreeCache: Record<string, FileNode[]> = {};
+
 export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
   const [tree, setTree] = useState<FileNode[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,6 +78,15 @@ export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
       if (!githubUrl || !githubUrl.includes('github.com')) {
         if (isMounted) {
           setTree(MOCK_TREE);
+          setLoading(false);
+        }
+        return;
+      }
+
+      // Check cache first
+      if (githubTreeCache[githubUrl]) {
+        if (isMounted) {
+          setTree(githubTreeCache[githubUrl]);
           setLoading(false);
         }
         return;
@@ -139,7 +151,10 @@ export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
           };
           sortNodes(root);
 
-          if (isMounted) setTree(root.length > 0 ? root : MOCK_TREE);
+          const finalTree = root.length > 0 ? root : MOCK_TREE;
+          githubTreeCache[githubUrl] = finalTree;
+
+          if (isMounted) setTree(finalTree);
         } else {
           if (isMounted) setTree(MOCK_TREE);
         }
@@ -332,12 +347,12 @@ export default function ProjectFileTree({ githubUrl }: ProjectFileTreeProps) {
             >
               {loading || fetchingFile ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
-                  {[1, 2, 3, 4, 5].map(i => (
+                  {[70, 50, 80, 45, 65].map((w, i) => (
                     <motion.div
                       key={i}
                       animate={{ opacity: [0.3, 0.6, 0.3] }}
                       transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.1 }}
-                      style={{ height: '18px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', width: `${Math.random() * 40 + 40}%` }}
+                      style={{ height: '18px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', width: `${w}%` }}
                     />
                   ))}
                   {fetchingFile && <div style={{ color: 'var(--accent)', fontSize: '0.8rem', textAlign: 'center', marginTop: '1rem' }}>Fetching file content...</div>}

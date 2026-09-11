@@ -47,6 +47,7 @@ const TiltCard = forwardRef<HTMLDivElement, TiltCardProps>(({
           rotateX,
           rotateY,
           transformStyle: "preserve-3d",
+          willChange: "transform",
         }}
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}

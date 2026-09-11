@@ -15,12 +15,14 @@ interface AdminNotificationProps {
   name: string;
   email: string;
   message: string;
+  subject?: string;
 }
 
 export const AdminNotification = ({
   name,
   email,
   message,
+  subject,
 }: AdminNotificationProps) => {
   return (
     <Html>
@@ -41,6 +43,13 @@ export const AdminNotification = ({
             <Text style={value}>
               <a href={`mailto:${email}`} style={link}>{email}</a>
             </Text>
+            
+            {subject && (
+              <>
+                <Text style={label}>Subject</Text>
+                <Text style={value}>{subject}</Text>
+              </>
+            )}
             
             <Text style={label}>Message</Text>
             <Text style={messageValue}>{message}</Text>

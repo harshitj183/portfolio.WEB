@@ -1,12 +1,15 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/projects',
+  },
   title: 'Engineering Projects | Harshit Jaiswal',
-  description: 'Explore the high-performance engineering portfolio and open-source projects of Harshit Jaiswal, including AI tools, Full Stack web applications, and browser extensions.',
+  description: 'Showcasing flagship projects by Harshit Jaiswal, including ConceptCraft AI simulation sandboxes, UCIS college system, and the AI Skills CLI NPM context library.',
   keywords: ['Software Projects', 'MERN Stack Projects', 'AI Open Source', 'React Applications', 'Node.js', 'GitHub', 'Harshit Jaiswal'],
   openGraph: {
     title: 'Engineering Projects | Harshit Jaiswal',
-    description: 'Explore the high-performance engineering portfolio and open-source projects of Harshit Jaiswal.',
+    description: 'Explore flagship software applications by Harshit Jaiswal: ConceptCraft AI, UCIS notes portal, and the AI Skills NPM context library for coding agents.',
     url: 'https://www.harshitj183.in/projects',
   }
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useId } from 'react';
 import mermaid from 'mermaid';
 
 interface MermaidProps {
@@ -9,7 +9,8 @@ interface MermaidProps {
 
 const Mermaid: React.FC<MermaidProps> = ({ chart }) => {
   const [svg, setSvg] = useState<string>('');
-  const idRef = useRef(`mermaid-${Math.random().toString(36).substr(2, 9)}`);
+  const reactId = useId();
+  const elementId = `mermaid-${reactId.replace(/:/g, '')}`;
 
   useEffect(() => {
     mermaid.initialize({
@@ -19,7 +20,7 @@ const Mermaid: React.FC<MermaidProps> = ({ chart }) => {
     });
     
     // Render the chart
-    mermaid.render(idRef.current, chart)
+    mermaid.render(elementId, chart)
       .then((result) => {
         setSvg(result.svg);
       })

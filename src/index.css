@@ -1,14 +1,16 @@
 :root {
-  --bg-color: #0c0c0e;
-  --bg-secondary: #16161a;
-  --border-color: #27272a;
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --accent: #6366f1;
+  --bg-color: #1a1a19;
+  --bg-secondary: #000000;
+  --border-color: #0c115a;
+  --text-primary: #f7f5f3;
+  --text-secondary: #b6c1c3;
+  --accent: #185bf7;
+  --glass-border: rgba(55, 67, 225, 0.2);
+  --accent-glow: rgba(229, 169, 59, 0.66);
   --sidebar-width: 280px;
 
-  --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-header: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-primary: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-header: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -383,6 +385,8 @@ textarea::placeholder {
 
 .featured-showcase-panel {
   padding: 3rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 450px;
 }
 
 .featured-project-grid {
@@ -434,6 +438,8 @@ textarea::placeholder {
 
 .responsive-timeline-panel {
   padding: 2.5rem 3rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 
 .about-info-panel {
@@ -510,6 +516,8 @@ textarea::placeholder {
   --text-primary: #fdfafb;
   --text-secondary: #b8a2c4;
   --accent: #f43f5e;
+  --glass-border: rgba(244, 63, 94, 0.15);
+  --accent-glow: rgba(244, 63, 94, 0.35);
 }
 
 /* ── Interactive Mascot Tour Highlights ── */

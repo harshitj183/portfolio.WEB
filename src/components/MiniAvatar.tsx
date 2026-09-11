@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAvatar } from '../context/AvatarContext';
+import { FiChevronLeft, FiChevronRight, FiCheckCircle, FiX } from 'react-icons/fi';
 
 type WalkDir = 'left' | 'right';
 type Mood    = 'walk' | 'idle' | 'typing' | 'waving' | 'thinking' | 'sleeping' | 'dancing' | 'running' | 'flying' | 'pointing' | 'talking' | 'jumping' | 'sofa_sleep' | 'sunglasses' | 'lightbulb' | 'hacker_typing' | 'analyzing' | 'building' | 'presenting' | 'listening';
@@ -122,7 +123,7 @@ const TOUR_STEPS: TourStep[] = [
 ];
 
 // ── Pixel Art Character ───────────────────────────────────────────────────
-const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, deliveryMode }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean; isAtHome: boolean; isMobile?: boolean; deliveryMode?: string }) => {
+const HarshitPixelImage = memo(({ mood, dir, step, isClimbing, isAtHome, isMobile, deliveryMode, isDizzy, focusedInputName }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean; isAtHome: boolean; isMobile?: boolean; deliveryMode?: string; isDizzy?: boolean; focusedInputName?: string | null }) => {
   let src = '/avatar/idle.webp';
   const isWalking = mood === 'walk';
   const isDancing = mood === 'dancing';
@@ -180,7 +181,13 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, de
         : isFlying
           ? (Math.sin(step * 0.1) * 10 + 'px')
           : '0px';
-  const rotateVal = isDancing ? (step % 2 === 0 ? '7deg' : '-7deg') : (isFlying ? (dir === 'left' ? '-15deg' : '15deg') : (isRunning ? (dir === 'left' ? '-5deg' : '5deg') : '0deg'));
+  let customRotate = '0deg';
+  if (mood === 'sofa_sleep' && focusedInputName) {
+    customRotate = dir === 'left' ? '12deg' : '-12deg';
+  }
+  const rotateVal = customRotate !== '0deg'
+    ? customRotate
+    : isDancing ? (step % 2 === 0 ? '7deg' : '-7deg') : (isFlying ? (dir === 'left' ? '-15deg' : '15deg') : (isRunning ? (dir === 'left' ? '-5deg' : '5deg') : '0deg'));
   const scaleValStr = isDancing ? (step % 2 === 0 ? 1.1 : 0.94) : 1;
   const flipScaleX = dir === 'left' ? -1 : 1;
 
@@ -193,6 +200,7 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, de
         alignItems: 'center',
         justifyContent: 'center',
         transform: `translateY(${bobY}) scaleX(${flipScaleX}) rotate(${rotateVal}) scale(${scaleValStr})`,
+        transformOrigin: 'bottom center',
         transition: 'all 0.3s ease',
         position: 'relative',
         borderRadius: '50%',
@@ -216,6 +224,10 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, de
       )}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes sofa-chill-swing {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-3px) rotate(3deg); }
+        }
         @keyframes avatar-3d-aura {
           0% {
             filter: drop-shadow(0 0 10px rgba(99, 102, 241, 1)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
@@ -240,18 +252,43 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, de
         }
       `}} />
 
+      {isDizzy && (
+        <div style={{
+          position: 'absolute',
+          top: '-15px',
+          left: 0,
+          right: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px',
+          fontSize: '22px',
+          zIndex: 10,
+          animation: 'spin 1.5s linear infinite',
+          pointerEvents: 'none'
+        }}>
+          🌀💫🌀
+        </div>
+      )}
+
       <Image
         src={src}
         alt="Harshit Jaiswal Avatar"
         width={200}
         height={200}
+        priority
         style={{
           width: '80%',
           height: '80%',
           objectFit: 'contain',
           position: 'relative',
           zIndex: 1,
-          animation: !isAtHome ? 'avatar-3d-aura 3s ease-in-out infinite' : 'avatar-idle-breathe 2s ease-in-out infinite'
+          animation: isDizzy
+            ? 'spin 0.4s linear infinite'
+            : mood === 'sofa_sleep'
+              ? 'sofa-chill-swing 2.2s ease-in-out infinite'
+              : !isAtHome
+                ? 'avatar-3d-aura 3s ease-in-out infinite'
+                : 'avatar-idle-breathe 2s ease-in-out infinite'
         }}
       />
       {/* Letter Delivery Overlay */}
@@ -296,7 +333,8 @@ const HarshitPixelImage = ({ mood, dir, step, isClimbing, isAtHome, isMobile, de
       )}
     </div>
   );
-};
+});
+HarshitPixelImage.displayName = 'HarshitPixelImage';
 
 // Helper to get contextual quips for different components
 const getComponentQuip = (name: string, tag: string): string => {
@@ -349,6 +387,84 @@ const getComponentQuip = (name: string, tag: string): string => {
 // ── Roaming Logic ──────────────────────────────────────────────────────────
 function randomBetween(a: number, b: number) { return a + Math.random() * (b - a); }
 
+const MatrixRainCanvas = memo(() => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / fontSize);
+    const yPositions = Array(columns).fill(0);
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZコンニチハハルシット";
+
+    let animationId: number;
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#10b981';
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < yPositions.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = yPositions[i];
+
+        ctx.fillText(char, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          yPositions[i] = 0;
+        } else {
+          yPositions[i] += fontSize;
+        }
+      }
+      animationId = requestAnimationFrame(draw);
+    };
+
+    animationId = requestAnimationFrame(draw);
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999998,
+        pointerEvents: 'none',
+        opacity: 0.38
+      }}
+    />
+  );
+});
+MatrixRainCanvas.displayName = 'MatrixRainCanvas';
+
+const TennisBallIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ overflow: 'visible', display: 'inline-block', verticalAlign: 'middle' }}>
+    <circle cx="12" cy="12" r="10" fill="#a3e635" stroke="#000000" strokeWidth="1.5" />
+    <path d="M6.2 6.2c2.5 3.3 2.5 8.3 0 11.6M17.8 6.2c-2.5 3.3-2.5 8.3 0 11.6" stroke="#000000" strokeWidth="1.2" />
+  </svg>
+);
+
 export default function RoamingHarshit() {
   const pathname = usePathname();
   const router = useRouter();
@@ -368,6 +484,26 @@ export default function RoamingHarshit() {
   const [step, setStep]         = useState(0);
   const [bubble, setBubble] = useState('');
   const [showBubble, setShowBubble] = useState(false);
+
+  // Dizzy & Cheat Code & Catch game states
+  const [isDizzy, setIsDizzy] = useState(false);
+  const [isMatrixActive, setIsMatrixActive] = useState(false);
+  const [isCatchMode, setIsCatchMode] = useState(false);
+  const [ballPos, setBallPos] = useState<{ x: number; y: number } | null>(null);
+  const [ballState, setBallState] = useState<'idle' | 'thrown' | 'caught'>('idle');
+
+  // Particle Engine States
+  const [particles, setParticles] = useState<{ id: number; emoji: string; x: number; y: number; vx: number; vy: number; life: number; scale: number; rotation: number; rotSpeed: number }[]>([]);
+  const nextParticleIdRef = useRef(0);
+
+  const clickTimesRef = useRef<number[]>([]);
+  const keyBufferRef = useRef<string>('');
+  const lastKeyTimeRef = useRef<number>(0);
+  const ballThrowRef = useRef<{ startX: number; startY: number; targetX: number; targetY: number; t: number } | null>(null);
+
+  // Contact Form Sitting state
+  const [focusedInputName, setFocusedInputName] = useState<string | null>(null);
+  const focusedInputNameRef = useRef<string | null>(null);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -410,6 +546,78 @@ export default function RoamingHarshit() {
     setShowBubble(true);
     if (bubbleTimer.current) clearTimeout(bubbleTimer.current);
     bubbleTimer.current = setTimeout(() => setShowBubble(false), duration);
+  }, []);
+
+  const triggerHackCheatCode = useCallback(() => {
+    setIsMatrixActive(true);
+    setMood('hacker_typing');
+    setOverrideTarget({ x: window.innerWidth / 2 - 90, y: window.innerHeight / 2 - 90 });
+    triggerBubble("Matrix decrypted... ACCESS GRANTED! 🕶️💻", 5000);
+    
+    setTimeout(() => {
+      setIsMatrixActive(false);
+      setOverrideTarget(null);
+      setMood('walk');
+    }, 5000);
+  }, [triggerBubble]);
+
+  const triggerDanceCheatCode = useCallback(() => {
+    setMood('dancing');
+    triggerBubble("Cheat activated: DANCE PARTY! 🕺🪩🎉", 5000);
+    
+    setOverrideTarget({ x: posRef.current.x, y: posRef.current.y + 150 });
+    setTimeout(() => {
+      setOverrideTarget(null);
+    }, 1200);
+  }, [triggerBubble]);
+
+  const triggerFlyCheatCode = useCallback(() => {
+    setMood('flying');
+    triggerBubble("Cheat activated: FLYING MODE! 🚀☁️", 6000);
+    
+    let count = 0;
+    const flyInterval = setInterval(() => {
+      setOverrideTarget({
+        x: randomBetween(50, window.innerWidth - 200),
+        y: randomBetween(50, window.innerHeight - 200)
+      });
+      count++;
+      if (count >= 5) {
+        clearInterval(flyInterval);
+        setOverrideTarget(null);
+        setMood('walk');
+      }
+    }, 1000);
+  }, [triggerBubble]);
+
+  const triggerSleepCheatCode = useCallback(() => {
+    setMood('sleeping');
+    triggerBubble("Cheat activated: Going to sleep... Zzz 💤", 4000);
+    setOverrideTarget({ x: 25, y: 20 });
+    setTimeout(() => {
+      setOverrideTarget(null);
+    }, 4000);
+  }, [triggerBubble]);
+
+  const spawnParticles = useCallback((emoji: string, startX: number, startY: number, count = 1) => {
+    setParticles(prev => {
+      const newParticles = [];
+      for (let i = 0; i < count; i++) {
+        newParticles.push({
+          id: nextParticleIdRef.current++,
+          emoji,
+          x: startX,
+          y: startY,
+          vx: randomBetween(-2, 2),
+          vy: randomBetween(1.5, 4.5),
+          life: 1.0,
+          scale: randomBetween(0.8, 1.3),
+          rotation: randomBetween(0, 360),
+          rotSpeed: randomBetween(-3, 3)
+        });
+      }
+      return [...prev, ...newParticles].slice(-40);
+    });
   }, []);
 
   const showQuip = useCallback((m: Mood) => {
@@ -506,20 +714,48 @@ export default function RoamingHarshit() {
     setTimeout(() => setMood('walk'), 3500);
   };
 
-  // Keyboard controls for Tour
+  // Keyboard controls for Tour & Easter Eggs
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // 1. Tour guide controls
       if (tourStep >= 0) {
         if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
         if (e.key === 'ArrowRight') nextTourStep();
         else if (e.key === 'ArrowLeft') prevTourStep();
         else if (e.key === 'Escape') endTour();
       }
+
+      // 2. Easter Egg codes tracking
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      
+      const now = Date.now();
+      if (now - lastKeyTimeRef.current > 2000) {
+        keyBufferRef.current = '';
+      }
+      lastKeyTimeRef.current = now;
+      
+      if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+        keyBufferRef.current = (keyBufferRef.current + e.key.toLowerCase()).slice(-20);
+        
+        if (keyBufferRef.current.endsWith('hack')) {
+          keyBufferRef.current = '';
+          triggerHackCheatCode();
+        } else if (keyBufferRef.current.endsWith('dance')) {
+          keyBufferRef.current = '';
+          triggerDanceCheatCode();
+        } else if (keyBufferRef.current.endsWith('fly')) {
+          keyBufferRef.current = '';
+          triggerFlyCheatCode();
+        } else if (keyBufferRef.current.endsWith('sleep')) {
+          keyBufferRef.current = '';
+          triggerSleepCheatCode();
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tourStep]);
+  }, [tourStep, triggerHackCheatCode, triggerDanceCheatCode, triggerFlyCheatCode, triggerSleepCheatCode]);
 
   // ── Event Listeners ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -634,11 +870,36 @@ export default function RoamingHarshit() {
       }, 4000);
     };
 
+    const handleStartCatch = () => {
+      setIsCatchMode(true);
+      triggerBubble("Let's play catch! Throw the ball by clicking anywhere on the screen! 🥎✨", 5000);
+    };
+
+    const handleStopCatch = () => {
+      setIsCatchMode(false);
+      setBallPos(null);
+      setBallState('idle');
+      setOverrideTarget(null);
+      triggerBubble("Good game! 🎮 Walk mode restored.", 3000);
+    };
+
+    const handleRunCheat = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const code = customEvent.detail?.code;
+      if (code === 'hack') triggerHackCheatCode();
+      else if (code === 'dance') triggerDanceCheatCode();
+      else if (code === 'fly') triggerFlyCheatCode();
+      else if (code === 'sleep') triggerSleepCheatCode();
+    };
+
     window.addEventListener('start-mascot-tour', handleStartTour);
     window.addEventListener('mascot-goto', handleMascotGoto);
     window.addEventListener('mascot-toggle-theme', handleToggleTheme);
     window.addEventListener('mascot-form-submitting', handleFormSubmitting);
     window.addEventListener('mascot-form-success', handleFormSuccess);
+    window.addEventListener('mascot-start-catch', handleStartCatch);
+    window.addEventListener('mascot-stop-catch', handleStopCatch);
+    window.addEventListener('mascot-run-cheat', handleRunCheat);
 
     const handleMascotSpeak = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -698,9 +959,90 @@ export default function RoamingHarshit() {
       window.removeEventListener('mascot-speak', handleMascotSpeak);
       window.removeEventListener('mascot-listen', handleMascotListen);
       window.removeEventListener('project-view', handleProjectView);
+      window.removeEventListener('mascot-start-catch', handleStartCatch);
+      window.removeEventListener('mascot-stop-catch', handleStopCatch);
+      window.removeEventListener('mascot-run-cheat', handleRunCheat);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [pathname, router, triggerBubble, tourStep, deliveryMode]);
+  }, [pathname, router, triggerBubble, tourStep, deliveryMode, triggerHackCheatCode, triggerDanceCheatCode, triggerFlyCheatCode, triggerSleepCheatCode]);
+
+  // Mouse Click Handler for Catch Mode
+  useEffect(() => {
+    if (!isCatchMode) return;
+    
+    const handleWindowClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button, input, textarea, a, .portfolio-agent-container, .mini-avatar-container')) return;
+      
+      const targetX = window.innerWidth - e.clientX - 40;
+      const targetY = window.innerHeight - e.clientY - 40;
+      
+      ballThrowRef.current = {
+        startX: posRef.current.x,
+        startY: posRef.current.y + 60,
+        targetX: targetX,
+        targetY: targetY,
+        t: 0
+      };
+      
+      setBallState('thrown');
+      setBallPos({ x: posRef.current.x, y: posRef.current.y + 60 });
+      setOverrideTarget(null);
+      setMood('pointing');
+      triggerBubble("Throwing the ball! 🥎☄️", 1000);
+    };
+    
+    window.addEventListener('click', handleWindowClick);
+    return () => window.removeEventListener('click', handleWindowClick);
+  }, [isCatchMode, triggerBubble]);
+
+  // Global Focus listeners for Contact Form Sitting leaning and quips
+  useEffect(() => {
+    if (pathname !== '/contact') return;
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        const name = target.getAttribute('name');
+        if (name) {
+          setFocusedInputName(name);
+          focusedInputNameRef.current = name;
+          
+          let quip = '';
+          if (name === 'name') {
+            quip = "Writing your name? ✍️ Make sure it's correct!";
+          } else if (name === 'email') {
+            quip = "Enter your email so Harshit can reply! ✉️";
+          } else if (name === 'subject') {
+            quip = "What's the topic? Keep it clear! 🧐";
+          } else if (name === 'message') {
+            quip = "Drafting your transmission... I am reading it! 📝";
+          }
+
+          if (quip) {
+            setBubble(quip);
+            setShowBubble(true);
+            if (bubbleTimer.current) clearTimeout(bubbleTimer.current);
+          }
+        }
+      }
+    };
+
+    const handleFocusOut = () => {
+      setFocusedInputName(null);
+      focusedInputNameRef.current = null;
+      setShowBubble(false);
+      if (bubbleTimer.current) clearTimeout(bubbleTimer.current);
+    };
+
+    document.addEventListener('focusin', handleFocusIn);
+    document.addEventListener('focusout', handleFocusOut);
+
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn);
+      document.removeEventListener('focusout', handleFocusOut);
+    };
+  }, [pathname]);
 
   // ── Idle Inactivity Detection ─────────────────────────────────────────────
   useEffect(() => {
@@ -754,6 +1096,8 @@ export default function RoamingHarshit() {
   // Global Input Focus Listener (Listening Animation)
   useEffect(() => {
     const handleFocusIn = (e: FocusEvent) => {
+      if (pathname === '/contact') return;
+
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         if (tourStep < 0 && deliveryMode === 'none' && !overrideTarget) {
@@ -769,7 +1113,7 @@ export default function RoamingHarshit() {
     return () => {
       document.removeEventListener('focusin', handleFocusIn);
     };
-  }, [tourStep, deliveryMode, overrideTarget, showQuip]);
+  }, [tourStep, deliveryMode, overrideTarget, showQuip, pathname]);
 
 
   // Contextual Hover State & Intent Graph
@@ -780,6 +1124,7 @@ export default function RoamingHarshit() {
   // ── Cursor Tracking & Context Detection ──────────────────────────────────
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      if (focusedInputNameRef.current) return;
       lastMouseMoveTimeRef.current = performance.now();
 
       // Offset position slightly behind cursor
@@ -864,6 +1209,10 @@ export default function RoamingHarshit() {
     lastTime.current = performance.now();
     
     const update = () => {
+      if (document.hidden) {
+        frameId.current = requestAnimationFrame(update);
+        return;
+      }
       try {
         const time = performance.now();
         const delta = Math.min((time - lastTime.current) / 16.666, 3);
@@ -880,6 +1229,26 @@ export default function RoamingHarshit() {
         }
 
         const current = posRef.current;
+
+        if (ballThrowRef.current) {
+          const throwData = ballThrowRef.current;
+          throwData.t += 0.045 * delta;
+          if (throwData.t >= 1) {
+            throwData.t = 1;
+            setBallPos({ x: throwData.targetX, y: throwData.targetY });
+            setOverrideTarget({ x: throwData.targetX, y: throwData.targetY });
+            setMood('running');
+            triggerBubble("Chasing the ball! 🏃🥎", 2000);
+            spawnParticles('✨', throwData.targetX, throwData.targetY, 6);
+            ballThrowRef.current = null;
+          } else {
+            const t = throwData.t;
+            const ballX = throwData.startX + (throwData.targetX - throwData.startX) * t;
+            const ballY = throwData.startY + (throwData.targetY - throwData.startY) * t + Math.sin(t * Math.PI) * 140;
+            setBallPos({ x: ballX, y: ballY });
+          }
+        }
+
         let nextY = current.y + (targetY - current.y) * 0.08 * delta;
         if (Math.abs(targetY - nextY) < 1) nextY = targetY;
 
@@ -905,10 +1274,52 @@ export default function RoamingHarshit() {
           nextY = current.y + (430 - current.y) * 0.08 * delta;
           setDir(prev => prev !== 'left' ? 'left' : prev); 
           setMood(prev => prev !== 'flying' ? 'flying' : prev);
+        } else if (pathname === '/contact' && !isCatchMode && tourStep < 0 && !overrideTarget) {
+          const formEl = document.getElementById('contact-form');
+          if (formEl) {
+            const rect = formEl.getBoundingClientRect();
+            const targetXVal = window.innerWidth - rect.left - 20;
+            const targetYVal = window.innerHeight - rect.top - 92;
+            
+            nextX = current.x + (targetXVal - current.x) * 0.1 * delta;
+            nextY = current.y + (targetYVal - current.y) * 0.1 * delta;
+            
+            const dist = Math.sqrt((targetXVal - current.x) ** 2 + (targetYVal - current.y) ** 2);
+            if (dist < 40) {
+              setMood('sofa_sleep');
+              setDir('right');
+            } else {
+              setMood('walk');
+              setDir(targetXVal > current.x ? 'left' : 'right');
+            }
+          } else {
+            nextX = current.x + (25 - current.x) * 0.08 * delta;
+            nextY = current.y + (20 - current.y) * 0.08 * delta;
+            setMood('idle');
+          }
         } else if (overrideTarget) {
-          // Chat Action Easing
-          nextX = current.x + (overrideTarget.x - current.x) * 0.0065 * delta;
-          nextY = current.y + (overrideTarget.y - current.y) * 0.0065 * delta;
+          // Chat Action Easing (faster when chasing a ball in catch game)
+          const easeSpeed = isCatchMode ? 0.12 : 0.0065;
+          nextX = current.x + (overrideTarget.x - current.x) * easeSpeed * delta;
+          nextY = current.y + (overrideTarget.y - current.y) * easeSpeed * delta;
+
+          if (isCatchMode && ballState === 'thrown') {
+            const dx = overrideTarget.x - current.x;
+            const dy = overrideTarget.y - current.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 40) {
+              setBallState('caught');
+              setMood('jumping');
+              triggerBubble("Caught it! 🥎🎉 Bringing it back to base...", 2200);
+              
+              setTimeout(() => {
+                setOverrideTarget(null);
+                setBallPos(null);
+                setBallState('idle');
+                setMood('walk');
+              }, 2200);
+            }
+          }
         } else if (tourStep >= 0 && typeof window !== 'undefined') {
           // Tour Guide Easing next to highlighted component
           const stepData = TOUR_STEPS[tourStep];
@@ -938,23 +1349,25 @@ export default function RoamingHarshit() {
           }
         } else if (false /* HOVER DOCKING DISABLED */ && dockedElementRef.current && !overrideTarget && tourStep < 0 && deliveryMode === 'none') {
           // Easing to docked component next to it
-          const el = dockedElementRef.current;
-          const rect = el.getBoundingClientRect();
-          
-          let targetXVal = window.innerWidth - rect.right - 90;
-          if (targetXVal < 10) targetXVal = window.innerWidth - rect.left + 10;
-          const sidebarWidth = window.innerWidth > 1024 ? 280 : 0;
-          targetXVal = Math.max(10, Math.min(window.innerWidth - sidebarWidth - 100, targetXVal));
+          const dockedEl = dockedElementRef.current;
+          if (dockedEl) {
+            const rect = (dockedEl as HTMLElement).getBoundingClientRect();
+            
+            let targetXVal = window.innerWidth - rect.right - 90;
+            if (targetXVal < 10) targetXVal = window.innerWidth - rect.left + 10;
+            const sidebarWidth = window.innerWidth > 1024 ? 280 : 0;
+            targetXVal = Math.max(10, Math.min(window.innerWidth - sidebarWidth - 100, targetXVal));
 
-          let targetYVal = window.innerHeight - rect.bottom + (rect.height / 2) - 42;
-          targetYVal = Math.max(20, Math.min(window.innerHeight - 100, targetYVal));
+            let targetYVal = window.innerHeight - rect.bottom + (rect.height / 2) - 42;
+            targetYVal = Math.max(20, Math.min(window.innerHeight - 100, targetYVal));
 
-          nextX = current.x + (targetXVal - current.x) * 0.0065 * delta;
-          nextY = current.y + (targetYVal - current.y) * 0.0065 * delta;
-          
-          // Orient avatar towards the center of the docked component
-          if (targetXVal > current.x) setDir('left');
-          else if (targetXVal < current.x) setDir('right');
+            nextX = current.x + (targetXVal - current.x) * 0.0065 * delta;
+            nextY = current.y + (targetYVal - current.y) * 0.0065 * delta;
+            
+            // Orient avatar towards the center of the docked component
+            if (targetXVal > current.x) setDir('left');
+            else if (targetXVal < current.x) setDir('right');
+          }
 
         } else if (cursorPosRef.current && (time - lastMouseMoveTimeRef.current < 4000) && !overrideTarget && tourStep < 0 && deliveryMode === 'none') {
           // Follow cursor with dynamic animations
@@ -1006,6 +1419,30 @@ export default function RoamingHarshit() {
         const nextPos = { x: nextX, y: nextY };
         posRef.current = nextPos;
         setPos(nextPos);
+
+        // Update particle physics
+        setParticles(prev => {
+          return prev.map(p => ({
+            ...p,
+            x: p.x + p.vx,
+            y: p.y + p.vy,
+            vy: p.vy - 0.08 * delta,
+            life: p.life - 0.02 * delta,
+            rotation: p.rotation + p.rotSpeed * delta
+          })).filter(p => p.life > 0);
+        });
+
+        // Spawn trailing exhaust / music particles based on mood
+        if (mood === 'running' && Math.random() < 0.22 * delta) {
+          spawnParticles('💨', nextX + 40, nextY + 15, 1);
+        }
+        if (mood === 'flying' && Math.random() < 0.3 * delta) {
+          spawnParticles('✨', nextX + 40, nextY + 15, 1);
+        }
+        if (mood === 'dancing' && Math.random() < 0.2 * delta) {
+          const note = Math.random() > 0.5 ? '🎵' : '🎶';
+          spawnParticles(note, nextX + 40, nextY + 100, 1);
+        }
       } catch (err) {
         console.error("Mascot update loop error:", err);
       }
@@ -1015,7 +1452,7 @@ export default function RoamingHarshit() {
 
     frameId.current = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frameId.current);
-  }, [mood, targetY, tourStep, pathname, deliveryMode, deliveryTarget, overrideTarget, triggerBubble]);
+  }, [mood, targetY, tourStep, pathname, deliveryMode, deliveryTarget, overrideTarget, triggerBubble, isCatchMode, ballState, spawnParticles]);
 
   // Periodic level jumping when in walk mode - DISABLED to stop flying behavior
 
@@ -1035,10 +1472,28 @@ export default function RoamingHarshit() {
 
   // Frame animations ticker - 120ms tick
   useEffect(() => {
-    const ticker = setInterval(() => {
-      setStep((s) => (s + 1) % 100);
-    }, 120);
-    return () => clearInterval(ticker);
+    let ticker: NodeJS.Timeout;
+    
+    const startTicker = () => {
+      ticker = setInterval(() => {
+        setStep((s) => (s + 1) % 100);
+      }, 120);
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        clearInterval(ticker);
+      } else {
+        startTicker();
+      }
+    };
+
+    startTicker();
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(ticker);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   // Hover handlers
@@ -1141,10 +1596,10 @@ export default function RoamingHarshit() {
                         }}
                         disabled={tourStep === 0}
                         style={{
-                          background: tourStep === 0 ? 'rgba(0,0,0,0.1)' : 'var(--accent)', border: 'none', color: tourStep === 0 ? '#888' : '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: tourStep === 0 ? 'not-allowed' : 'pointer', fontWeight: 600
+                          background: tourStep === 0 ? 'rgba(0,0,0,0.1)' : 'var(--accent)', border: 'none', color: tourStep === 0 ? '#888' : '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: tourStep === 0 ? 'not-allowed' : 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center'
                         }}
                       >
-                        ← Prev
+                        <FiChevronLeft size={10} style={{ marginRight: '2px' }} /> Prev
                       </button>
                       <button
                         onClick={(e) => {
@@ -1152,10 +1607,18 @@ export default function RoamingHarshit() {
                           nextTourStep();
                         }}
                         style={{
-                          background: 'var(--accent)', border: 'none', color: '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600
+                          background: 'var(--accent)', border: 'none', color: '#fff', fontSize: '0.7rem', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center'
                         }}
                       >
-                        {tourStep === TOUR_STEPS.length - 1 ? 'Finish 🎉' : 'Next →'}
+                        {tourStep === TOUR_STEPS.length - 1 ? (
+                          <>
+                            Finish <FiCheckCircle size={10} style={{ marginLeft: '4px' }} />
+                          </>
+                        ) : (
+                          <>
+                            Next <FiChevronRight size={10} style={{ marginLeft: '2px' }} />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -1191,7 +1654,27 @@ export default function RoamingHarshit() {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onClick={() => {
-            if (tourStep >= 0 || deliveryMode !== 'none') return; // let tour buttons take clicks
+            if (tourStep >= 0 || deliveryMode !== 'none' || isDizzy) return;
+            
+            const now = Date.now();
+            const rollingWindow = 2500;
+            clickTimesRef.current = [...clickTimesRef.current.filter(t => now - t < rollingWindow), now];
+            
+            if (clickTimesRef.current.length >= 5) {
+              setIsDizzy(true);
+              setMood('thinking');
+              triggerBubble("Whoa, stop tickling me! My circuits are spinning! 🌀🥴", 4000);
+              
+              if (idleTimer.current) clearTimeout(idleTimer.current);
+              
+              setTimeout(() => {
+                setIsDizzy(false);
+                setMood('walk');
+                clickTimesRef.current = [];
+              }, 4000);
+              return;
+            }
+
             if (idleTimer.current) clearTimeout(idleTimer.current);
             setMood('dancing');
             triggerBubble("Yay! Let's chat! 💬 Ask me anything about Harshit.");
@@ -1210,14 +1693,136 @@ export default function RoamingHarshit() {
             mood={mood}
             dir={dir}
             step={step}
-            isClimbing={(mood === 'walk' || mood === 'running') && Math.abs(pos.y - (cursorPosRef.current?.y || targetY)) > 40}
+            isClimbing={(mood === 'walk' || mood === 'running') && Math.abs(pos.y - targetY) > 40}
             isAtHome={pos.x <= 45 && pos.y <= 25}
             isMobile={isMobile}
             deliveryMode={deliveryMode}
+            isDizzy={isDizzy}
+            focusedInputName={focusedInputName}
           />
         </div>
         </motion.div>
       </div>
+
+      {isCatchMode && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '20px',
+          zIndex: 999999,
+          background: 'rgba(99, 102, 241, 0.95)',
+          color: '#fff',
+          padding: '8px 16px',
+          borderRadius: '12px',
+          border: '1px solid rgba(255,255,255,0.2)',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          fontSize: '0.8rem',
+          fontWeight: 600,
+          fontFamily: 'var(--font-primary)',
+          pointerEvents: 'auto'
+        }}>
+          <span><TennisBallIcon size={14} /> Play Catch Mode Active! Click screen to throw.</span>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('mascot-stop-catch'))}
+            style={{
+              background: 'rgba(255,255,255,0.15)',
+              border: 'none',
+              color: '#fff',
+              padding: '2px 8px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center'
+            }}
+          >
+            Exit <FiX size={12} style={{ marginLeft: '4px' }} />
+          </button>
+        </div>
+      )}
+
+      {isMatrixActive && (
+        <>
+          <MatrixRainCanvas />
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 20, 0, 0.05)',
+            border: '4px solid #10b981',
+            boxShadow: 'inset 0 0 100px rgba(16, 185, 129, 0.3)',
+            pointerEvents: 'none',
+            zIndex: 999999,
+            backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)',
+            backgroundSize: '100% 4px',
+            animation: 'matrix-glow 1s infinite alternate'
+          }}>
+            <style dangerouslySetInnerHTML={{__html: `
+              @keyframes matrix-glow {
+                from { opacity: 0.7; }
+                to { opacity: 1; }
+              }
+            `}} />
+          </div>
+        </>
+      )}
+
+      {isCatchMode && (
+        <div style={{
+          position: 'fixed',
+          right: ballState === 'caught'
+            ? `${pos.x + 40}px`
+            : `${ballPos?.x ?? 100}px`,
+          bottom: ballState === 'caught'
+            ? `${pos.y + 110}px`
+            : `${ballPos?.y ?? 100}px`,
+          width: '24px',
+          height: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999999,
+          pointerEvents: 'none',
+          transition: ballState === 'thrown' ? 'right 0.5s ease-out, bottom 0.5s ease-out' : 'none'
+        }}>
+          <TennisBallIcon size={24} />
+        </div>
+      )}
+
+      {particles.map(p => (
+        <div
+          key={p.id}
+          style={{
+            position: 'fixed',
+            right: `${p.x}px`,
+            bottom: `${p.y}px`,
+            opacity: p.life,
+            transform: `rotate(${p.rotation}deg) scale(${p.life})`,
+            zIndex: 999999,
+            pointerEvents: 'none',
+            willChange: 'transform, opacity'
+          }}
+        >
+          {p.emoji === '💨' ? (
+            <svg width={14 * p.scale} height={14 * p.scale} viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)" style={{ display: 'block' }}>
+              <circle cx="12" cy="12" r="10" />
+            </svg>
+          ) : p.emoji === '✨' ? (
+            <svg width={16 * p.scale} height={16 * p.scale} viewBox="0 0 24 24" fill="#fbbf24" style={{ display: 'block' }}>
+              <path d="M12 2l2.4 7.4h7.6l-6.2 4.5 2.4 7.4-6.2-4.5-6.2 4.5 2.4-7.4-6.2-4.5h7.6z" />
+            </svg>
+          ) : p.emoji === '🎵' || p.emoji === '🎶' ? (
+            <svg width={16 * p.scale} height={16 * p.scale} viewBox="0 0 24 24" fill="#ec4899" style={{ display: 'block' }}>
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+            </svg>
+          ) : (
+            p.emoji
+          )}
+        </div>
+      ))}
     </>
   );
 }

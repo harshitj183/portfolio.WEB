@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMessageSquare, FiX, FiSend, FiPlay, FiCompass } from 'react-icons/fi';
+import { FiMessageSquare, FiX, FiSend, FiPlay, FiCompass, FiBookOpen, FiFileText, FiCode, FiCalendar } from 'react-icons/fi';
 
 interface Message {
   sender: 'user' | 'agent';
@@ -31,6 +31,9 @@ type AllowedAction =
   | 'show_timeline'
   | 'show_featured_project'
   | 'book_meeting'
+  | 'start_catch_game'
+  | 'stop_catch_game'
+  | 'run_cheat_code'
   | 'execute_js';
 
 // Local Fallback Rule-Based Engine (Outputs JSON with reply & action)
@@ -85,6 +88,25 @@ function getLocalAgentResponse(userInput: string): string {
   } catch {}
 
   // 2. Exact triggers/keywords for actions
+  if (input.includes('play catch') || input.includes('throw ball') || input.includes('catch game') || input.includes('play game')) {
+    return makeJson("Let's play catch! Click anywhere on the screen to throw the ball, and I will run to catch it! 🥎", { action: 'start_catch_game' });
+  }
+  if (input === 'stop catch' || input === 'exit game' || input.includes('stop game')) {
+    return makeJson("Stopping catch game.", { action: 'stop_catch_game' });
+  }
+  if (input === 'hack' || input.includes('cheat code hack')) {
+    return makeJson("Cheat code: Hack activated!", { action: 'run_cheat_code', code: 'hack' });
+  }
+  if (input === 'dance' || input.includes('cheat code dance')) {
+    return makeJson("Cheat code: Dance activated!", { action: 'run_cheat_code', code: 'dance' });
+  }
+  if (input === 'fly' || input.includes('cheat code fly')) {
+    return makeJson("Cheat code: Fly activated!", { action: 'run_cheat_code', code: 'fly' });
+  }
+  if (input === 'sleep' || input.includes('cheat code sleep')) {
+    return makeJson("Cheat code: Sleep activated!", { action: 'run_cheat_code', code: 'sleep' });
+  }
+
   if (input.includes('resume') || input.includes(' cv')) {
     return makeJson("Opening Harshit's resume for you...", { action: 'open_resume' });
   }
@@ -163,7 +185,7 @@ export default function PortfolioAgent() {
     { sender: 'agent', text: 'Hi! I am the Harshit AI Agent. How can I assist you today?' }
   ]);
   const [inputVal, setInputVal] = useState('');
-  const [isOpen, setIsOpen] = useState(true); // Default to true for SSR, then check in useEffect
+  const [isOpen, setIsOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth > 1024 : true);
   const router = useRouter();
   const pathname = usePathname();
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -172,13 +194,6 @@ export default function PortfolioAgent() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    // On mount, if it's mobile, start closed. If desktop, stay open.
-    if (window.innerWidth <= 1024) {
-      setIsOpen(false);
-    }
-  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -276,6 +291,18 @@ export default function PortfolioAgent() {
       case 'start_portfolio_tour':
         showToast("Initializing Guided Interactive Tour...");
         window.dispatchEvent(new CustomEvent('start-mascot-tour'));
+        break;
+      case 'start_catch_game':
+        showToast("Starting catch game... 🥎");
+        window.dispatchEvent(new CustomEvent('mascot-start-catch'));
+        break;
+      case 'stop_catch_game':
+        showToast("Stopping catch game");
+        window.dispatchEvent(new CustomEvent('mascot-stop-catch'));
+        break;
+      case 'run_cheat_code':
+        showToast(`Cheat code run: ${actionObj.code}`);
+        window.dispatchEvent(new CustomEvent('mascot-run-cheat', { detail: { code: actionObj.code } }));
         break;
       case 'create_custom_command':
         try {
@@ -512,16 +539,16 @@ export default function PortfolioAgent() {
           {/* Quick Prompts */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'flex-end' }}>
                 {[
-                  "Start tour 🎓", 
-                  "Open resume 📄", 
-                  "Show me projects 🚀", 
-                  "Book a meeting 📅"
-                ].map((prompt, i) => (
+                  { label: "Start tour", trigger: "Start tour 🎓", icon: <FiBookOpen size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
+                  { label: "Open resume", trigger: "Open resume 📄", icon: <FiFileText size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
+                  { label: "Show me projects", trigger: "Show me projects 🚀", icon: <FiCode size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
+                  { label: "Book a meeting", trigger: "Book a meeting 📅", icon: <FiCalendar size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> }
+                ].map((item, i) => (
                   <button
                     key={i}
                     type="button"
                     onClick={() => {
-                      window.dispatchEvent(new CustomEvent('send-agent-message', { detail: { message: prompt } }));
+                      window.dispatchEvent(new CustomEvent('send-agent-message', { detail: { message: item.trigger } }));
                     }}
                     style={{
                       background: 'rgba(99, 102, 241, 0.15)',
@@ -532,11 +559,14 @@ export default function PortfolioAgent() {
                       color: '#e2e8f0',
                       cursor: 'pointer',
                       backdropFilter: 'blur(4px)',
+                      display: 'inline-flex',
+                      alignItems: 'center'
                     }}
                     onMouseOver={(e) => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.3)'}
                     onMouseOut={(e) => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)'}
                   >
-                    {prompt}
+                    {item.icon}
+                    {item.label}
                   </button>
                 ))}
               </div>

@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSend, FiMail, FiPhone, FiCheckCircle, FiLoader, FiGithub, FiLinkedin, FiCode, FiMapPin, FiCalendar } from 'react-icons/fi';
-import PostmanAnimation from '@/components/PostmanAnimation';
+import { FiSend, FiMail, FiPhone, FiCheckCircle, FiLoader, FiGithub, FiLinkedin, FiCode, FiMapPin, FiCalendar, FiAlertTriangle } from 'react-icons/fi';
+import dynamic from 'next/dynamic';
+
+const PostmanAnimation = dynamic(() => import('@/components/PostmanAnimation'), { ssr: false });
 
 /* 
   Contact form wired to /api/contact.
@@ -16,19 +18,25 @@ interface InputFieldProps {
   placeholder: string;
   required?: boolean;
   rows?: number;
+  autoComplete?: string;
 }
 
-const InputField = ({ label, type = 'text', name, placeholder, required = true, rows }: InputFieldProps) => (
+const InputField = ({ label, type = 'text', name, placeholder, required = true, rows, autoComplete }: InputFieldProps) => (
   <div style={{ marginBottom: '2rem' }}>
-    <label style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>
+    <label
+      htmlFor={`input-${name}`}
+      style={{ display: 'block', marginBottom: '0.8rem', fontSize: '0.72rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}
+    >
       {label}
     </label>
     {rows ? (
       <textarea
+        id={`input-${name}`}
         name={name}
         required={required}
         rows={rows}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         style={{
           width: '100%', padding: '1.2rem 1.4rem',
           background: 'rgba(255,255,255,0.03)',
@@ -40,10 +48,12 @@ const InputField = ({ label, type = 'text', name, placeholder, required = true, 
       />
     ) : (
       <input
+        id={`input-${name}`}
         type={type}
         name={name}
         required={required}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         style={{
           width: '100%', padding: '1.2rem 1.4rem',
           background: 'rgba(255,255,255,0.03)',
@@ -246,14 +256,14 @@ const Contact = () => {
                 </p>
 
                 {status === 'error' && (
-                  <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: '12px', padding: '1rem 1.4rem', marginBottom: '2rem', color: '#f87171', fontSize: '0.9rem' }}>
-                    ⚠ Transmission failed. Please try emailing directly.
+                  <div style={{ background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: '12px', padding: '1rem 1.4rem', marginBottom: '2rem', color: '#f87171', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <FiAlertTriangle size={16} /> Transmission failed. Please try emailing directly.
                   </div>
                 )}
 
                 <div className="grid" style={{ gap: '0 2rem' }}>
-                  <InputField label="Your Name" name="name" placeholder="John Doe" />
-                  <InputField label="Email" type="email" name="email" placeholder="you@example.com" />
+                  <InputField label="Your Name" name="name" placeholder="John Doe" autoComplete="name" />
+                  <InputField label="Email" type="email" name="email" placeholder="you@example.com" autoComplete="email" />
                 </div>
                 <InputField label="Subject" name="subject" placeholder="Collaboration opportunity..." />
                 <InputField label="Message" name="message" placeholder="Tell me about your project..." rows={5} />

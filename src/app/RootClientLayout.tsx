@@ -2,13 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import SpotlightEffect from '../components/SpotlightEffect';
 import { AvatarProvider } from '../context/AvatarContext';
 
+const SpotlightEffect = dynamic(() => import('../components/SpotlightEffect'), { ssr: false });
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false });
 const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
 const MiniAvatar = dynamic(() => import('../components/MiniAvatar'), { ssr: false });
 const PortfolioAgent = dynamic(() => import('../components/PortfolioAgent'), { ssr: false });
+const DevPaletteWidget = dynamic(() => import('../components/DevPaletteWidget'), { ssr: false });
 
 /**
  * Ambient Typing Sound Engine
@@ -101,6 +102,7 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
           <Sidebar />
           <MiniAvatar />
           <PortfolioAgent />
+          <DevPaletteWidget />
           <main className="main-content">
             {children}
             <footer style={{ borderTop: '1px solid var(--border-color)', marginTop: '8rem', paddingTop: '3rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>

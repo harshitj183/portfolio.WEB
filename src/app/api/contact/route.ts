@@ -10,12 +10,13 @@ export async function POST(request: Request) {
     const name = data.name as string;
     const email = data.email as string;
     const message = data.message as string;
+    const subject = data.subject as string;
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    if (name.length > 100 || email.length > 100 || message.length > 2000) {
+    if (name.length > 100 || email.length > 100 || (subject && subject.length > 150) || message.length > 2000) {
       return NextResponse.json({ error: 'Payload too large. Please keep your message concise.' }, { status: 400 });
     }
 
@@ -26,13 +27,15 @@ export async function POST(request: Request) {
     // Use custom domain if available, fallback to onboarding for testing
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'Harshit Jaiswal <hello@harshitj183.in>';
 
+    const emailSubject = subject ? `Portfolio [${name}]: ${subject}` : `New Portfolio Message from ${name}`;
+
     // Send the notification to the admin (you)
     const { data: adminData, error: adminError } = await resend.emails.send({
       from: fromEmail,
       to: adminEmail,
-      subject: `New Portfolio Message from ${name}`,
+      subject: emailSubject,
       replyTo: email,
-      react: AdminNotification({ name, email, message }) as React.ReactElement,
+      react: AdminNotification({ name, email, message, subject }) as React.ReactElement,
     });
 
     if (adminError) {

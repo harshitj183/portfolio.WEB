@@ -4,17 +4,35 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: ['GPTBot', 'gemini-2.5-flash', 'gemini-bot', 'gemini-crawler', 'ChatGPT-User', 'CCBot', 'anthropic-ai', 'ClaudeBot', 'OmgiliBot', 'FacebookBot', 'Bytespider', 'BaiduSpider'],
-        disallow: ['/'],
-      },
-      {
-        userAgent: ['Googlebot', 'Bingbot'],
-        allow: '/',
-      },
-      {
         userAgent: '*',
         allow: '/',
         disallow: ['/api/'],
+      },
+      {
+        userAgent: [
+          'GPTBot',
+          'ChatGPT-User',
+          'Google-Extended', // Google's AI crawler (Gemini)
+          'Anthropic-ai',
+          'Claude-Web',
+          'ClaudeBot',
+          'PerplexityBot',
+          'cohere-ai',
+        ],
+        allow: ['/', '/llms.txt'],
+        disallow: ['/api/'],
+      },
+      {
+        userAgent: [
+          'AhrefsBot',
+          'SemrushBot',
+          'MJ12bot',
+          'DotBot',
+          'Rogerbot',
+          'PetalBot',
+          'MegaIndex.ru',
+        ],
+        disallow: ['/'],
       }
     ],
     sitemap: 'https://www.harshitj183.in/sitemap.xml',

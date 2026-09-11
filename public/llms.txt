@@ -1,0 +1,89 @@
+# Harshit Jaiswal
+
+> Software Development Engineer (SDE) & AI Agent Engineer based in Gurugram, India, specializing in high-performance full-stack web applications, modern architectural designs, and generative AI systems.
+
+## Navigation & Documents
+- [Home](https://www.harshitj183.in/): Interactive AI-powered portfolio landing page.
+- [About](https://www.harshitj183.in/about): Detailed professional bio, experience at SenpaiHost, and education history.
+- [Projects](https://www.harshitj183.in/projects): Showcase of engineering systems (UCIS, ConceptCraft AI).
+- [Dashboard](https://www.harshitj183.in/dashboard): Live code contributions, LeetCode analytics, and repository metrics.
+- [Contact](https://www.harshitj183.in/contact): Communication form and direct channels.
+- [Download Full PDF Resume (CV)](https://www.harshitj183.in/resume.pdf): Direct download link for the printable PDF version.
+
+## Contact Info
+- **Email:** harshitj183@gmail.com
+- **Phone:** +91 97930 09391
+- **Location:** Gurugram, Delhi NCR, India
+- **GitHub:** [github.com/harshitj183](https://github.com/harshitj183)
+- **LinkedIn:** [linkedin.com/in/harshitj183](https://linkedin.com/in/harshitj183)
+- **LeetCode:** [leetcode.com/u/harshitj183](https://leetcode.com/u/harshitj183)
+
+## Technical Arsenal (Skills)
+- **Languages:** C++ (Intermediate), JavaScript (ES6+), TypeScript, Python, SQL.
+- **Web & Frameworks:** React, Next.js, Node.js, Express.js, FastAPI, Bun.js, HTML5, CSS3, Tailwind CSS, WordPress.
+- **Backend & Databases:** PostgreSQL (Prisma ORM), MongoDB, MySQL, Firebase, REST APIs, Microservices Architecture.
+- **Cloud, DevOps & Tools:** Docker, Docker Compose, CI/CD (GitHub Actions), Nginx, AWS (EC2, SES), Cloudflare, Git, Postman, Linux, Bash.
+- **AI Engineering & Exploration:** Agentic AI Systems, LangChain, LangGraph, RAG (Retrieval-Augmented Generation), Vector Databases, LLM Orchestration, System Design, Prompt Engineering.
+- **Core Concepts:** Data Structures and Algorithms (DSA), Object-Oriented Programming (OOP), Computer Networks (CN), Agile / Scrum, SDLC, SEO.
+
+## Full Curriculum Vitae (Resume Content)
+
+### Professional Summary
+Computer Science Engineering Student and Full Stack Developer specializing in MERN Stack and AI Systems. Successfully delivered 20+ freelance web applications across diverse domains. Hands-on experience with C++, JavaScript, React, and Next.js. Solved 400+ LeetCode problems, demonstrating strong fundamentals in Data Structures and Algorithms (DSA). Dedicated to building, containerizing, and deploying high-performance, scalable microservices architectures.
+
+### Professional Experience
+
+#### Project Manager Intern | SenpaiHost (Remote)
+*Duration: Jun 2025 – Aug 2025*
+- Managed Agile lifecycles for 10+ active client web builds, accelerating delivery velocity by 20%.
+- Led a 5-member engineering team through sprint schedules, achieving 100% on-time feature delivery.
+- Conducted regular code reviews and QA checks, reducing post-deployment bug reports by 15%.
+
+#### WordPress Developer Intern | SenpaiHost (Remote)
+*Duration: Aug 2024 – Sep 2024*
+- Developed WordPress sites with custom themes and plugins for 5 client projects.
+- Optimized page load speed by 40% using server caching and image compression, improving search rankings.
+- Designed responsive layouts with cross-functional teams, increasing mobile engagement by 25%.
+
+#### Freelance Web Developer | Self-Employed
+*Duration: Jan 2023 – Present*
+- Built 20+ full-stack web applications, delivering custom features that accelerated client business workflows by 25%.
+- Configured DNS and implemented SEO across 15+ domains, increasing organic traffic by 30% with 99.9% uptime.
+
+### Flagship Projects
+
+#### 1. ConceptCraft AI - Interactive AI Educational Platform
+*Stack: Next.js, FastAPI, Node.js, PostgreSQL, Docker, AWS*
+- Built an AI-powered learning platform that generates interactive sandboxes, visual notes, and quizzes from text prompts.
+- Engineered microservices using Next.js, Node.js, and FastAPI, containerized with Docker Compose on AWS EC2 with Nginx proxying and AWS SES OTP authentication.
+- [Source Code Link](https://github.com/harshitj183/ConceptCraft-AI)
+
+#### 2. AI Skills - Global Context Library & NPM Package
+*Stack: Node.js, CLI, GitHub Actions*
+- Reduced LLM prompt token consumption by engineering an open-source CLI context library and NPM package for AI coding agents.
+- Automated CI/CD build and release pipelines using GitHub Actions, ensuring consistent versioning and package publishing.
+- [GitHub Link](https://github.com/harshitj183/ai-skills) | [NPM Link](https://www.npmjs.com/)
+
+#### 3. Real-time Chat Application
+*Stack: React, Node.js, Socket.io, MongoDB*
+- Built a real-time chat app with WebSockets (Socket.io) supporting instant messaging and live user status tracking.
+- Secured user sessions and API routes using JWT authentication and MongoDB storage.
+- [Source Code Link](https://github.com/harshitj183/realtime-chat-app)
+
+#### 4. Multi-Search Extension
+*Stack: JavaScript, Browser Extension API*
+- Developed a browser extension for simultaneous querying across 5+ search engines, improving search efficiency by 20%.
+- Aggregated search results asynchronously with a single click, achieving a 4.5+ average user rating.
+
+### Education
+- **Bachelor of Technology (B.Tech) in Computer Science and Engineering**
+  *KR Mangalam University, Gurugram, Delhi NCR | Aug 2023 – Jun 2027*
+- **Higher Secondary Certificate (12th Grade Science)**
+  *S Tulsi Inter College, Rajapur, Near Prayagraj, Uttar Pradesh | Apr 2021 – Mar 2022*
+
+### Certifications & Achievements
+- **PBL Recognition:** Unified College Interaction System – Projexa AI (May 2026)
+- **Research Paper:** Organ Donation Systems & Ethical Data – IJSREM (Oct 2024)
+- **Cybersecurity Analyst Simulation:** Tata Group – Forage (Apr 2025)
+- **AMCAT Assessment:** Ranked among top-performing students in the AMCAT Assessment.
+- **LeetCode Solving:** 400+ problems solved.

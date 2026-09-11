@@ -103,11 +103,29 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const t = setInterval(() => {
-      setDir(1);
-      setSlide(s => (s + 1) % FEATURED.length);
-    }, 5000);
-    return () => clearInterval(t);
+    let t: NodeJS.Timeout;
+    
+    const startInterval = () => {
+      t = setInterval(() => {
+        setDir(1);
+        setSlide(s => (s + 1) % FEATURED.length);
+      }, 5000);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        clearInterval(t);
+      } else {
+        startInterval();
+      }
+    };
+
+    startInterval();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      clearInterval(t);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const goTo = (i: number) => {
@@ -149,7 +167,7 @@ const Home = () => {
             Gurugram, Delhi NCR
           </div>
           <p style={{ fontSize: '1.2rem', lineHeight: '1.7', marginBottom: '3rem', color: 'var(--text-secondary)', maxWidth: '520px' }}>
-            <strong style={{ color: '#fff', fontWeight: 600 }}>Project Manager</strong> specializing in Full Stack Web Development (MERN Stack).
+            <strong style={{ color: '#fff', fontWeight: 600 }}>Full Stack Software Developer & AI Agent Engineer</strong>.
             Delivered <strong style={{ color: '#fff', fontWeight: 600 }}>20+ freelance web applications</strong> and solved <strong style={{ color: '#fff', fontWeight: 600 }}>{lcSolved} LeetCode problems</strong>.
           </p>
 
@@ -252,7 +270,6 @@ const Home = () => {
               height={120}
               priority
               quality={75}
-              fetchPriority="high"
               sizes="120px"
               style={{
                 borderRadius: '12px',
@@ -265,7 +282,7 @@ const Home = () => {
             {[
               { val: '20+', label: 'Projects' },
               { val: lcSolved, label: 'LeetCode' },
-              { val: '4+ Yrs', label: 'Experience' },
+              { val: '3+ Yrs', label: 'Experience' },
             ].map(({ val, label }) => (
               <div key={label} style={{ textAlign: 'center', minWidth: '60px' }}>
                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{val}</div>
