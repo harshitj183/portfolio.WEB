@@ -9,6 +9,9 @@ type AvatarState = {
   timeoutId: NodeJS.Timeout | null;
   activityLog: string[];
   lastApiCallLogLength: number;
+  isAIModeOpen: boolean;
+  setAIModeOpen: (open: boolean) => void;
+  toggleAIMode: () => void;
   triggerAvatarReaction: (message: string, mood?: string, duration?: number) => void;
   logActivity: (action: string) => void;
   clearReaction: () => void;
@@ -20,6 +23,9 @@ export const useAvatarStore = create<AvatarState>((set) => ({
   timeoutId: null,
   activityLog: [],
   lastApiCallLogLength: 0,
+  isAIModeOpen: false,
+  setAIModeOpen: (open) => set({ isAIModeOpen: open }),
+  toggleAIMode: () => set((state) => ({ isAIModeOpen: !state.isAIModeOpen })),
   
   logActivity: (action) => {
     set((state) => {

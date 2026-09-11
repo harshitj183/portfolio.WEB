@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageSquare, FiX, FiSend, FiPlay, FiCompass, FiBookOpen, FiFileText, FiCode, FiCalendar } from 'react-icons/fi';
+import { useAvatar } from '../context/AvatarContext';
 
 interface Message {
   sender: 'user' | 'agent';
@@ -181,6 +182,8 @@ function getLocalAgentResponse(userInput: string): string {
 }
 
 export default function PortfolioAgent() {
+  const { isAIModeOpen, setAIModeOpen } = useAvatar();
+  const [isMobile, setIsMobile] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { sender: 'agent', text: 'Hi! I am the Harshit AI Agent. How can I assist you today?' }
   ]);
@@ -189,6 +192,19 @@ export default function PortfolioAgent() {
   const router = useRouter();
   const pathname = usePathname();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile && isAIModeOpen) {
+      setIsOpen(true);
+    }
+  }, [isMobile, isAIModeOpen]);
 
   // Scroll to bottom
   const scrollToBottom = () => {
@@ -464,6 +480,8 @@ export default function PortfolioAgent() {
 
 
 
+  if (isMobile && !isAIModeOpen) return null;
+
   return (
     <>
       <div
@@ -486,11 +504,19 @@ export default function PortfolioAgent() {
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', pointerEvents: 'auto' }}
             >
-              {/* Header with Close Button */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              {/* Header with Close / Exit AI Mode Button */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                {isMobile && (
+                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(99,102,241,0.15)', padding: '0.3rem 0.7rem', borderRadius: '12px', border: '1px solid rgba(99,102,241,0.3)' }}>
+                    🤖 AI Agent Mode
+                  </span>
+                )}
                 <button
                   aria-label="Close Chat"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (isMobile) setAIModeOpen(false);
+                  }}
                   style={{
                     background: 'rgba(0,0,0,0.5)',
                     border: '1px solid var(--border-color)',
@@ -502,7 +528,8 @@ export default function PortfolioAgent() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backdropFilter: 'blur(4px)'
+                    backdropFilter: 'blur(4px)',
+                    marginLeft: 'auto',
                   }}
                 >
                   <FiX size={16} />
