@@ -66,18 +66,23 @@ const Sidebar = () => {
           <motion.div
             layoutId="sidebar-active"
             style={{
-              position: 'absolute', inset: 0, borderRadius: '12px',
-              background: 'rgba(99,102,241,0.12)',
-              border: '1px solid rgba(99,102,241,0.25)',
-              borderLeft: '4px solid var(--accent)',
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.08)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.22)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
               zIndex: -1,
             }}
-            transition={{ type: 'spring', bounce: 0.18, duration: 0.45 }}
+            transition={{ type: 'spring', bounce: 0.15, duration: 0.35 }}
           />
         )}
 
         <span style={{
-          color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
+          color: isActive ? '#ffffff' : 'var(--text-secondary)',
           display: 'flex', alignItems: 'center',
           transition: 'color 0.2s',
         }}>
@@ -85,17 +90,17 @@ const Sidebar = () => {
         </span>
 
         <div style={{ lineHeight: 1.2, flex: 1 }}>
-          <div style={{ fontSize: '0.87rem', fontWeight: isActive ? 600 : 500 }}>{item.name}</div>
+          <div style={{ fontSize: '0.87rem', fontWeight: isActive ? 600 : 500, color: isActive ? '#ffffff' : undefined }}>{item.name}</div>
           <div style={{ fontSize: '0.62rem', color: 'var(--text-secondary)', opacity: 0.65, marginTop: '2px' }}>{item.desc}</div>
         </div>
 
         {item.soon && (
           <span style={{
             fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.06em',
-            textTransform: 'uppercase', color: 'var(--accent)',
-            border: '1px solid rgba(99,102,241,0.4)',
+            textTransform: 'uppercase', color: 'var(--text-secondary)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '4px', padding: '1px 5px',
-            background: 'rgba(99,102,241,0.08)',
+            background: 'rgba(255, 255, 255, 0.05)',
             flexShrink: 0,
           }}>
             Soon
@@ -127,8 +132,8 @@ const Sidebar = () => {
       {/* Top accent line */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-        background: 'linear-gradient(90deg, transparent, var(--accent), transparent)',
-        opacity: 0.6, zIndex: 2,
+        background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2) 50%, transparent)',
+        opacity: 0.8, zIndex: 2,
       }} />
 
       {/* ── Profile ── */}

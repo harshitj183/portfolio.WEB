@@ -8,7 +8,7 @@ import { FiBookOpen, FiClock, FiCalendar, FiArrowRight, FiTag, FiSearch, FiCode,
 import { BLOG_POSTS, BlogPost } from '@/data/blogs';
 import TiltCard from '@/components/TiltCard';
 
-const CATEGORIES = ['All', 'AI Systems', 'Distributed Systems', 'Developer Tools', 'Full Stack'] as const;
+const CATEGORIES = ['All', 'AI Systems', 'LLM & Agents', 'Cloud & DevOps', 'Distributed Systems', 'Developer Tools', 'Full Stack'] as const;
 
 export default function BlogIndexPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');

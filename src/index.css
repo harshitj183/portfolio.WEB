@@ -258,17 +258,18 @@ h4 {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 1.2rem;
+  padding: 0.85rem 1.1rem;
   border-radius: 12px;
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   z-index: 1;
 }
 
 .nav-item:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .nav-item.active {
@@ -488,46 +489,31 @@ textarea::placeholder {
 
   .mnb-item.mnb-active { color: #ffffff; }
 
-  /* ── Morphing active pill (framer layout animation target) ── */
+  /* ── Morphing active pill (standard dark frosted glass) ── */
   .mnb-pill {
     position: absolute;
     inset: 0;
     border-radius: 9999px;
     z-index: -1;
 
-    background: linear-gradient(
-      135deg,
-      rgba(99,102,241,0.38) 0%,
-      rgba(139,92,246,0.32) 50%,
-      rgba(168,85,247,0.28) 100%
-    );
-
-    /* Frosted inner glass highlight */
+    background: rgba(255, 255, 255, 0.1);
     box-shadow:
-      inset 0  1px 0  rgba(255,255,255,0.22),
-      inset 0 -1px 0  rgba(0,0,0,0.18),
-      0 0 18px rgba(99,102,241,0.45),
-      0 0 36px rgba(168,85,247,0.22);
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 4px 16px rgba(0, 0, 0, 0.5);
 
-    border: 1px solid rgba(139,92,246,0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
-  /* AI active pill — deeper violet */
+  /* AI active pill */
   .mnb-ai-active .mnb-pill {
-    background: linear-gradient(
-      135deg,
-      rgba(99,102,241,0.45) 0%,
-      rgba(168,85,247,0.45) 60%,
-      rgba(236,72,153,0.25) 100%
-    );
+    background: rgba(255, 255, 255, 0.14);
     box-shadow:
-      inset 0  1px 0  rgba(255,255,255,0.28),
-      inset 0 -1px 0  rgba(0,0,0,0.20),
-      0 0 24px rgba(168,85,247,0.6),
-      0 0 48px rgba(139,92,246,0.35);
-    border-color: rgba(192,132,252,0.65);
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.22);
   }
 
   /* ── Icon ── */
@@ -541,9 +527,8 @@ textarea::placeholder {
   }
 
   .mnb-active .mnb-icon {
-    color: #c4b5fd;
-    filter: drop-shadow(0 0 6px rgba(139,92,246,0.8))
-            drop-shadow(0 0 14px rgba(99,102,241,0.5));
+    color: #ffffff;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
   }
 
   /* ── Label ── */
