@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiCommand, FiUser, FiActivity, FiLayout, FiMessageSquare, FiExternalLink } from 'react-icons/fi';
+import { FiSearch, FiCommand, FiUser, FiActivity, FiLayout, FiMessageSquare, FiBook, FiExternalLink } from 'react-icons/fi';
 
 interface Command {
   id: string;
@@ -21,6 +21,7 @@ const COMMANDS: Command[] = [
   { id: 'projects', name: 'Engineering Dossiers', icon: <FiLayout />, section: 'Navigation', shortcut: 'P', path: '/projects' },
   { id: 'about', name: 'The Architect (About)', icon: <FiUser />, shortcut: 'A', section: 'Navigation', path: '/about' },
   { id: 'contact', name: 'Initialize Connection', icon: <FiMessageSquare />, shortcut: 'C', section: 'Navigation', path: '/contact' },
+  { id: 'blog', name: 'Engineering Blog & Architectures', icon: <FiBook />, shortcut: 'B', section: 'Navigation', path: '/blog' },
   { id: 'github', name: 'View External GitHub', icon: <FiExternalLink />, section: 'External', path: 'https://github.com/harshitj183', external: true },
   { id: 'linkedin', name: 'Connect on LinkedIn', icon: <FiExternalLink />, section: 'External', path: 'https://linkedin.com/in/harshitj183', external: true },
 ];
@@ -114,9 +115,9 @@ const CommandPalette = () => {
               width: '100%', maxWidth: '600px', zIndex: 20001, padding: '0 2rem'
             }}
           >
-            <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
+            <div className="glass-panel" style={{ padding: 0, overflow: 'hidden', background: 'rgba(12, 13, 24, 0.82)', backdropFilter: 'blur(36px) saturate(210%)', WebkitBackdropFilter: 'blur(36px) saturate(210%)', border: '1px solid rgba(255, 255, 255, 0.14)', borderTop: '1px solid rgba(255, 255, 255, 0.28)', borderRadius: '16px', boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 35px rgba(99,102,241,0.2)' }}>
               {/* Search Bar */}
-              <div style={{ display: 'flex', alignItems: 'center', padding: '1.2rem', borderBottom: '1px solid var(--border-color)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', padding: '1.2rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <FiSearch style={{ color: 'var(--text-secondary)', marginRight: '1rem' }} />
                 <input
                   ref={inputRef}

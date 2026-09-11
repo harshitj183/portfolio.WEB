@@ -21,6 +21,7 @@ type AllowedAction =
   | 'goto_skills'
   | 'goto_experience'
   | 'goto_contact'
+  | 'goto_blog'
   | 'open_resume'
   | 'open_github'
   | 'open_linkedin'
@@ -119,6 +120,9 @@ function getLocalAgentResponse(userInput: string): string {
   }
   if (input.includes('tour') || input.includes('guide')) {
     return makeJson("Let's take a quick interactive tour of the site! 🚀", { action: 'start_portfolio_tour' });
+  }
+  if (input.includes('blog') || input.includes('article') || input.includes('architecture') || input.includes('deep dive')) {
+    return makeJson("Navigating to Harshit's technical engineering deep-dives...", { action: 'goto_blog' });
   }
   if (input.includes('meeting') || input.includes('calendly') || input.includes('schedule')) {
     return makeJson("Opening Calendly booker. Let's arrange a sync! 📅", { action: 'book_meeting' });
@@ -253,6 +257,10 @@ export default function PortfolioAgent() {
       case 'goto_contact':
         showToast("Opening Connection Panel");
         router.push('/contact');
+        break;
+      case 'goto_blog':
+        showToast("Opening Engineering Blog");
+        router.push('/blog');
         break;
       case 'open_resume':
         showToast("Opening Harshit's Resume");
@@ -563,10 +571,11 @@ export default function PortfolioAgent() {
         </div>
 
         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {/* Quick Prompts */}
+              {/* Quick Prompts */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', justifyContent: 'flex-end' }}>
                 {[
                   { label: "Start tour", trigger: "Start tour 🎓", icon: <FiBookOpen size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
+                  { label: "Engineering blogs", trigger: "Show me blog articles 📚", icon: <FiBookOpen size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
                   { label: "Open resume", trigger: "Open resume 📄", icon: <FiFileText size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
                   { label: "Show me projects", trigger: "Show me projects 🚀", icon: <FiCode size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> },
                   { label: "Book a meeting", trigger: "Book a meeting 📅", icon: <FiCalendar size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} /> }
@@ -578,19 +587,29 @@ export default function PortfolioAgent() {
                       window.dispatchEvent(new CustomEvent('send-agent-message', { detail: { message: item.trigger } }));
                     }}
                     style={{
-                      background: 'rgba(99, 102, 241, 0.15)',
-                      border: '1px solid rgba(99, 102, 241, 0.3)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.25)',
                       borderRadius: '12px',
                       padding: '5px 10px',
                       fontSize: '0.75rem',
                       color: '#e2e8f0',
                       cursor: 'pointer',
-                      backdropFilter: 'blur(4px)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
                       display: 'inline-flex',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                      transition: 'all 0.2s'
                     }}
-                    onMouseOver={(e) => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.3)'}
-                    onMouseOut={(e) => e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)'}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = 'rgba(99, 102, 241, 0.25)';
+                      e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.5)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    }}
                   >
                     {item.icon}
                     {item.label}
@@ -599,7 +618,7 @@ export default function PortfolioAgent() {
               </div>
 
               {/* Input Form only */}
-              <form onSubmit={handleSend} style={{ display: 'flex', gap: '0.5rem', background: '#09090b', padding: '0.8rem', borderRadius: '16px', border: '1px solid var(--accent)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+              <form onSubmit={handleSend} style={{ display: 'flex', gap: '0.5rem', background: 'rgba(20, 20, 32, 0.75)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', padding: '0.8rem', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.12)', borderTop: '1px solid rgba(255, 255, 255, 0.25)', boxShadow: '0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2)' }}>
                 <input
                   id="agent-input"
                   value={inputVal}
@@ -610,8 +629,8 @@ export default function PortfolioAgent() {
                   placeholder="Ask me anything..."
                   style={{
                     flex: 1,
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid var(--border-color)',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '12px',
                     padding: '0.6rem 0.8rem',
                     color: '#fff',

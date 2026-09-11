@@ -140,8 +140,10 @@ const Home = () => {
       <div style={{ marginBottom: '2.5rem' }}>
         <span style={{ 
           display: 'inline-flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.85rem', 
-          background: 'rgba(255,255,255,0.03)', padding: '0.6rem 1.2rem', borderRadius: '100px', 
-          border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 4px 20px rgba(0,0,0,0.2)', fontWeight: 500 
+          background: 'rgba(255,255,255,0.05)', padding: '0.6rem 1.25rem', borderRadius: '100px', 
+          backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+          border: '1px solid rgba(255,255,255,0.12)', borderTop: '1px solid rgba(255,255,255,0.25)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.25)', fontWeight: 500 
         }}>
           <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 12px #10b981' }} />
           Available for full-time & freelance roles
@@ -305,10 +307,7 @@ const Home = () => {
         </p>
         <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
           {TECH_STACK.map((tech) => (
-            <span key={tech} style={{ 
-              padding: '0.6rem 1.2rem', fontSize: '0.85rem', background: 'rgba(255,255,255,0.03)', 
-              borderRadius: '100px', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-secondary)'
-            }}>
+            <span key={tech} className="pill" style={{ fontSize: '0.85rem' }}>
               {tech}
             </span>
           ))}

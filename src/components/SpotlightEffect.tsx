@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 export default function SpotlightEffect() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      const cards = document.querySelectorAll('.glass-panel');
+      const cards = document.querySelectorAll('.glass-panel, .apple-liquid-glass, .liquid-widget, .featured-showcase-panel, .portfolio-agent-panel, .project-drawer');
       for (const card of cards) {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;

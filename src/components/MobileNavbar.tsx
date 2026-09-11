@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiSearch, FiCpu
+  FiCommand, FiUser, FiLayout, FiActivity, FiMessageSquare, FiBook, FiCpu
 } from 'react-icons/fi';
 import { useAvatar } from '../context/AvatarContext';
 
@@ -14,6 +14,7 @@ const mobileNavItems = [
   { to: '/projects',  name: 'Projects', icon: FiLayout        },
   { to: '/dashboard', name: 'Stats',    icon: FiActivity      },
   { to: '/contact',   name: 'Contact',  icon: FiMessageSquare },
+  { to: '/blog',      name: 'Blog',     icon: FiBook          },
 ];
 
 /* ── Individual nav pill ── */
@@ -157,19 +158,6 @@ export default function MobileNavbar() {
           >
             {isAIModeOpen ? 'Exit AI' : 'AI Agent'}
           </motion.span>
-        </ActionBtn>
-
-        {/* Search */}
-        <ActionBtn
-          id="mnb-search-btn"
-          label="Search"
-          onClick={() => {
-            logActivity('User opened command palette search from mobile navbar.');
-            window.dispatchEvent(new CustomEvent('open-command-palette'));
-          }}
-        >
-          <span className="mnb-icon"><FiSearch size={19} /></span>
-          <span className="mnb-label">Search</span>
         </ActionBtn>
       </motion.div>
     </nav>
