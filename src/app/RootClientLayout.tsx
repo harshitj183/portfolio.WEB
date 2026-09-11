@@ -7,6 +7,7 @@ import { AvatarProvider } from '../context/AvatarContext';
 const SpotlightEffect = dynamic(() => import('../components/SpotlightEffect'), { ssr: false });
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false });
 const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
+const MobileNavbar = dynamic(() => import('../components/MobileNavbar'), { ssr: false });
 const MiniAvatar = dynamic(() => import('../components/MiniAvatar'), { ssr: false });
 const PortfolioAgent = dynamic(() => import('../components/PortfolioAgent'), { ssr: false });
 const DevPaletteWidget = dynamic(() => import('../components/DevPaletteWidget'), { ssr: false });
@@ -100,6 +101,7 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
           <SpotlightEffect />
           <CommandPalette />
           <Sidebar />
+          <MobileNavbar />
           <MiniAvatar />
           <PortfolioAgent />
           <DevPaletteWidget />
