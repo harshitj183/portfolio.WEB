@@ -10,7 +10,6 @@ const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
 const MobileNavbar = dynamic(() => import('../components/MobileNavbar'), { ssr: false });
 const MiniAvatar = dynamic(() => import('../components/MiniAvatar'), { ssr: false });
 const PortfolioAgent = dynamic(() => import('../components/PortfolioAgent'), { ssr: false });
-const DevPaletteWidget = dynamic(() => import('../components/DevPaletteWidget'), { ssr: false });
 
 /**
  * Ambient Typing Sound Engine
@@ -104,7 +103,6 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
           <MobileNavbar />
           <MiniAvatar />
           <PortfolioAgent />
-          <DevPaletteWidget />
           <main className="main-content">
             {children}
             <footer style={{ borderTop: '1px solid var(--border-color)', marginTop: '8rem', paddingTop: '3rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
