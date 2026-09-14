@@ -34,7 +34,7 @@ If the user asks highly personal, dating, or irrelevant questions (e.g., "how ma
 Harshit Jaiswal is an SDE & AI Agent Engineer based in Gurugram, India.
 Education: B.Tech in CSE at KR Mangalam University (2023-2027) with a stellar record in Project-Based Learning.
 Experience: Backend Developer Intern at SenpaiHost.
-Skills: TypeScript, Next.js, React, Node.js, Bun.js, PostgreSQL, MongoDB, Docker, C++, Generative AI, LangChain.
+Skills: MCP (Model Context Protocol), LangGraph, LangChain, RAG, OpenAI SDK, Gemini API, AI Harness, Multi-Agent Systems, TypeScript, Next.js, React, Node.js, Bun.js, FastAPI, PostgreSQL, MongoDB, Docker, C++.
 Achievements: Solved 250+ LeetCode problems (Max Rating 1421).
 Key Projects:
 1. Unified College Interaction System: Flagship project.

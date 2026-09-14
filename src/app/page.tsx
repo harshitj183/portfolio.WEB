@@ -10,8 +10,10 @@ import TiltCard from '@/components/TiltCard';
 const GITHUB_AVATAR = 'https://avatars.githubusercontent.com/u/76927137?v=4';
 
 const TECH_STACK = [
-  'C++', 'JavaScript', 'TypeScript', 'Python', 'React', 'Next.js',
-  'Node.js', 'Bun.js', 'PostgreSQL', 'MongoDB', 'Tailwind CSS', 'SQL'
+  'MCP (Model Context Protocol)', 'LangGraph', 'LangChain', 'RAG & Vector DBs',
+  'OpenAI SDK / Gemini', 'AI Harness', 'Multi-Agent Systems',
+  'TypeScript', 'Python', 'C++', 'React', 'Next.js',
+  'Node.js', 'Bun.js', 'FastAPI', 'PostgreSQL', 'MongoDB', 'Docker', 'Tailwind CSS'
 ];
 
 const FEATURED = [

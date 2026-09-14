@@ -358,6 +358,10 @@ const getComponentQuip = (name: string, tag: string): string => {
   if (n.includes('freelance') || n.includes('self-employed')) return "He has built 20+ full-stack projects for clients as a freelancer! 💻";
   
   // Skills & Tech
+  if (n.includes('mcp') || n.includes('context protocol')) return "Harshit builds custom MCP servers & client integrations for intelligent tool orchestration! 🔌";
+  if (n.includes('langgraph') || n.includes('multi-agent') || n.includes('harness')) return "He builds cyclic multi-agent graphs with LangGraph and AI harnesses for reliable execution! 🤖";
+  if (n.includes('rag') || n.includes('vector')) return "RAG pipelines with hybrid vector search and semantic retrieval are part of his core AI arsenal! 📚";
+  if (n.includes('langchain') || n.includes('openai') || n.includes('agent')) return "He integrates OpenAI SDK, Gemini API, and LangChain to power next-gen agentic workflows! 🧠";
   if (n.includes('c++') || n.includes('dsa') || n.includes('algorithms')) return "He has solved over 400+ LeetCode problems in C++! 💻";
   if (n.includes('docker') || n.includes('devops') || n.includes('cloud')) return "He loves containerizing applications with Docker! 🐳";
   if (n.includes('database') || n.includes('postgresql') || n.includes('mongodb')) return "He designs highly robust and scalable database schemas! 🗄️";
@@ -369,7 +373,7 @@ const getComponentQuip = (name: string, tag: string): string => {
   if (n.includes('theme') || n.includes('mode') || n.includes('color')) return "Switching themes! I love changing colors! 🎨";
   if (n.includes('hero')) return "This is Harshit's main landing! SDE & AI Agent Engineer. 🚀";
   if (n.includes('profile')) return "Check out Harshit's profile card! Available for hire. 🏆";
-  if (n.includes('tech-stack') || n.includes('skills')) return "Here is Harshit's tech arsenal: React, TS, Node, C++, Docker... 💻";
+  if (n.includes('tech-stack') || n.includes('skills')) return "Harshit's arsenal: MCP, LangGraph, RAG, LangChain, OpenAI SDK, React, TS, Node, C++, Docker... 💻";
   if (n.includes('featured') || n.includes('work')) return "This showcase highlights his best engineering systems! 🌟";
   if (n.includes('projects') || n.includes('grid') || n.includes('dossier')) return "A directory of Harshit's case studies and live projects. 📁";
   if (n.includes('stats') || n.includes('dashboard') || n.includes('metrics')) return "Track live engineering stats, contributions, and solved problems! 📊";

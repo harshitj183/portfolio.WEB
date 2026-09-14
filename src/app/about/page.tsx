@@ -6,6 +6,21 @@ import TiltCard from '@/components/TiltCard';
 
 const SKILL_CATEGORIES = [
   {
+    title: 'AI Agents & LLM Tooling',
+    icon: <FiZap size={18} />,
+    skills: [
+      'MCP (Model Context Protocol)',
+      'LangGraph',
+      'LangChain',
+      'RAG (Retrieval-Augmented Generation)',
+      'OpenAI SDK / Gemini API',
+      'AI Harness & Eval Systems',
+      'Vector Databases (Pinecone / Chroma / pgvector)',
+      'Multi-Agent Pipelines',
+      'Structured Outputs & Tool Calling'
+    ]
+  },
+  {
     title: 'Languages',
     icon: <FiCode size={18} />,
     skills: ['C++ (Intermediate)', 'JavaScript (ES6+)', 'TypeScript', 'Python', 'SQL']
@@ -26,14 +41,9 @@ const SKILL_CATEGORIES = [
     skills: ['Docker', 'Docker Compose', 'CI/CD (GitHub Actions)', 'Nginx', 'AWS (EC2, SES)', 'Cloudflare', 'Git', 'Postman', 'Linux', 'Bash']
   },
   {
-    title: 'Currently Exploring',
+    title: 'Core Concepts & Exploring',
     icon: <FiCompass size={18} />,
-    skills: ['Agentic AI Systems', 'LangChain', 'LangGraph', 'RAG (Retrieval-Augmented Generation)', 'Vector Databases', 'LLM Orchestration', 'System Design']
-  },
-  {
-    title: 'Core Concepts',
-    icon: <FiBookOpen size={18} />,
-    skills: ['Data Structures and Algorithms (DSA)', 'Object-Oriented Programming (OOP)', 'Computer Networks (CN)', 'Agile / Scrum', 'SDLC', 'SEO', 'Prompt Engineering']
+    skills: ['Data Structures & Algorithms (DSA)', 'Agentic Orchestration', 'System Design', 'OOP', 'Computer Networks (CN)', 'Prompt Engineering', 'SDLC / Agile']
   }
 ];
 

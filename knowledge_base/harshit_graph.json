@@ -42,6 +42,17 @@
       }
     ],
     "skills": {
+      "ai_agents": [
+        "MCP (Model Context Protocol)",
+        "LangGraph",
+        "LangChain",
+        "RAG (Retrieval-Augmented Generation)",
+        "OpenAI SDK / Gemini API",
+        "AI Harness & Evaluation Systems",
+        "Vector Databases (Pinecone / Chroma / pgvector)",
+        "Multi-Agent Pipelines & Workflows",
+        "Structured Outputs & Tool Calling"
+      ],
       "languages": [
         "C++ (Intermediate)",
         "JavaScript (ES6+)",
@@ -81,22 +92,14 @@
         "Linux",
         "Bash"
       ],
-      "exploring": [
-        "Agentic AI Systems",
-        "LangChain",
-        "LangGraph",
-        "RAG (Retrieval-Augmented Generation)",
-        "Vector Databases",
-        "LLM Orchestration",
-        "System Design"
-      ],
       "core": [
         "Data Structures and Algorithms (DSA)",
+        "Agentic Orchestration",
+        "System Design",
         "Object-Oriented Programming (OOP)",
         "Computer Networks (CN)",
         "Agile / Scrum",
         "SDLC",
-        "SEO",
         "Prompt Engineering"
       ]
     },

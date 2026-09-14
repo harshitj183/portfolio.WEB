@@ -262,12 +262,12 @@ const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
 /* ── Tech Radar (Clean List) ───────────────── */
 const TechRadar = () => {
   const items = [
-    { label: 'React', pct: 95, color: '#38bdf8' },
-    { label: 'Node/Bun', pct: 90, color: '#4ade80' },
-    { label: 'TypeScript', pct: 85, color: '#60a5fa' },
-    { label: 'DSA', pct: 82, color: '#a78bfa' },
-    { label: 'DevOps', pct: 72, color: '#fb923c' },
-    { label: 'MongoDB', pct: 85, color: '#34d399' },
+    { label: 'AI Agents (LangGraph/MCP/RAG)', pct: 92, color: '#a855f7' },
+    { label: 'React / Next.js', pct: 95, color: '#38bdf8' },
+    { label: 'Node / Bun / Python', pct: 90, color: '#4ade80' },
+    { label: 'TypeScript', pct: 88, color: '#60a5fa' },
+    { label: 'DSA & System Design', pct: 82, color: '#a78bfa' },
+    { label: 'PostgreSQL / MongoDB / Vector DBs', pct: 85, color: '#34d399' },
   ];
 
   return (
