@@ -41,14 +41,23 @@ const StatCard = ({ label, value, suffix = '', icon, loading = false }: StatCard
 interface GithubHeatmapProps {
   data: number[] | null;
   loading: boolean;
+  totalContributions?: number;
 }
 
-const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
+const GithubHeatmap = ({ data, loading, totalContributions }: GithubHeatmapProps) => {
   const [tooltip, setTooltip] = useState<{ val: number; weekIdx: number; dayIdx: number } | null>(null);
   const colors = ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'];
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
   const flatData = data || Array(364).fill(0);
+
+  const getLevel = (v: number) => {
+    if (v <= 0) return 0;
+    if (v <= 2) return 1;
+    if (v <= 5) return 2;
+    if (v <= 9) return 3;
+    return 4;
+  };
 
   // Generate month label positions
   const today = new Date();
@@ -67,11 +76,15 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
           <FiGithub className="text-accent" /> GitHub Contribution Graph
         </h3>
         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-          {tooltip && (
+          {tooltip ? (
             <span className="pill accent" style={{ fontSize: '0.7rem', textTransform: 'none' }}>
               {tooltip.val} contribution{tooltip.val !== 1 ? 's' : ''}
             </span>
-          )}
+          ) : totalContributions ? (
+            <span className="pill accent" style={{ fontSize: '0.7rem' }}>
+              {totalContributions.toLocaleString()} Contributions
+            </span>
+          ) : null}
           <span className="pill" style={{ fontSize: '0.7rem' }}>Past 52 Weeks</span>
         </div>
       </div>
@@ -97,7 +110,7 @@ const GithubHeatmap = ({ data, loading }: GithubHeatmapProps) => {
                 {Array.from({ length: 7 }).map((_, dayIdx) => {
                   const dataIdx = weekIdx * 7 + dayIdx;
                   const val = loading ? 0 : (flatData[dataIdx] || 0);
-                  const level = Math.min(val, 4);
+                  const level = loading ? 0 : getLevel(val);
                   return (
                     <div
                       key={dayIdx}
@@ -325,7 +338,7 @@ const Dashboard = () => {
 
 
       <div id="github-heatmap" style={{ marginBottom: '4rem' }}>
-        <GithubHeatmap data={github.heatmap} loading={github.loading} />
+        <GithubHeatmap data={github.heatmap} loading={github.loading} totalContributions={github.stats?.totalContributions} />
       </div>
 
       <div style={{ width: '100%', height: '1px', background: 'var(--border-color)', margin: '4rem 0' }} />
