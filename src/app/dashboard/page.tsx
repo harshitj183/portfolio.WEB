@@ -173,12 +173,26 @@ const LeetcodeBadges = ({ badges, loading, onBadgeClick }: { badges: any[] | nul
 };
 
 /* ── LeetCode Heatmap ──────────────────── */
-const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
+interface LeetcodeHeatmapProps {
+  data: number[] | null;
+  loading: boolean;
+  totalSubmissions?: number;
+}
+
+const LeetcodeHeatmap = ({ data, loading, totalSubmissions }: LeetcodeHeatmapProps) => {
   const [tooltip, setTooltip] = useState<{ val: number; weekIdx: number; dayIdx: number } | null>(null);
   const colors = ['#161b22', '#7e4b22', '#a16207', '#ca8a04', '#eab308'];
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
   const flatData = data || Array(364).fill(0);
+
+  const getLevel = (v: number) => {
+    if (v <= 0) return 0;
+    if (v <= 2) return 1;
+    if (v <= 5) return 2;
+    if (v <= 9) return 3;
+    return 4;
+  };
 
   const today = new Date();
   const monthLabels: { label: string; weekIndex: number }[] = [];
@@ -196,11 +210,15 @@ const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
           <FiCode className="text-accent" /> LeetCode Submission Graph
         </h3>
         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-          {tooltip && (
+          {tooltip ? (
             <span className="pill accent" style={{ fontSize: '0.7rem', textTransform: 'none' }}>
               {tooltip.val} submission{tooltip.val !== 1 ? 's' : ''}
             </span>
-          )}
+          ) : totalSubmissions ? (
+            <span className="pill accent" style={{ fontSize: '0.7rem' }}>
+              {totalSubmissions.toLocaleString()} Submissions
+            </span>
+          ) : null}
           <span className="pill" style={{ fontSize: '0.7rem' }}>Past 52 Weeks</span>
         </div>
       </div>
@@ -224,7 +242,7 @@ const LeetcodeHeatmap = ({ data, loading }: GithubHeatmapProps) => {
                 {Array.from({ length: 7 }).map((_, dayIdx) => {
                   const dataIdx = weekIdx * 7 + dayIdx;
                   const val = loading ? 0 : (flatData[dataIdx] || 0);
-                  const level = Math.min(val, 4);
+                  const level = loading ? 0 : getLevel(val);
                   return (
                     <div
                       key={dayIdx}
@@ -387,7 +405,7 @@ const Dashboard = () => {
       </div>
 
       <div id="leetcode-heatmap" style={{ marginBottom: '3rem' }}>
-        <LeetcodeHeatmap data={leetcode.heatmap} loading={leetcode.loading} />
+        <LeetcodeHeatmap data={leetcode.heatmap} loading={leetcode.loading} totalSubmissions={leetcode.stats?.totalSubmissions} />
       </div>
 
       <AnimatePresence>

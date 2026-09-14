@@ -96,6 +96,113 @@ async function fetchGitHubContributions(username: string) {
   }
 }
 
+// Fetch LeetCode stats via official GraphQL
+async function fetchLeetCodeOfficial(username: string) {
+  const query = `
+    query getUserProfile($username: String!) {
+      allQuestionsCount {
+        difficulty
+        count
+      }
+      matchedUser(username: $username) {
+        submitStatsGlobal {
+          acSubmissionNum {
+            difficulty
+            count
+            submissions
+          }
+        }
+        submissionCalendar
+        profile {
+          ranking
+          reputation
+        }
+        badges {
+          id
+          displayName
+          icon
+          creationDate
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetchWithTimeout('https://leetcode.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': `https://leetcode.com/${username}/`
+      },
+      body: JSON.stringify({ query, variables: { username } }),
+      next: { revalidate: 3600 }
+    }, 6000);
+
+    if (!res.ok) throw new Error(`LeetCode GraphQL responded with ${res.status}`);
+    const data = await res.json();
+    const user = data.data?.matchedUser;
+    if (!user) throw new Error('Matched user not found in LeetCode response');
+
+    const stats = user.submitStatsGlobal?.acSubmissionNum || [];
+    const totalSolved = stats.find((s: any) => s.difficulty === 'All')?.count || 468;
+    const easySolved = stats.find((s: any) => s.difficulty === 'Easy')?.count || 272;
+    const mediumSolved = stats.find((s: any) => s.difficulty === 'Medium')?.count || 170;
+    const hardSolved = stats.find((s: any) => s.difficulty === 'Hard')?.count || 26;
+
+    const allQ = data.data?.allQuestionsCount || [];
+    const totalEasy = allQ.find((q: any) => q.difficulty === 'Easy')?.count || 965;
+    const totalMedium = allQ.find((q: any) => q.difficulty === 'Medium')?.count || 2115;
+    const totalHard = allQ.find((q: any) => q.difficulty === 'Hard')?.count || 975;
+    const totalQuestions = allQ.find((q: any) => q.difficulty === 'All')?.count || 4055;
+
+    // Parse Calendar
+    const calendar = typeof user.submissionCalendar === 'string'
+      ? JSON.parse(user.submissionCalendar || '{}')
+      : (user.submissionCalendar || {});
+    
+    const heatmap = Array(364).fill(0);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const msInDay = 24 * 60 * 60 * 1000;
+    let totalSubmissions = 0;
+
+    for (const [timestamp, count] of Object.entries(calendar)) {
+      const date = new Date(parseInt(timestamp) * 1000);
+      date.setHours(0, 0, 0, 0);
+      const diffDays = Math.floor((now.getTime() - date.getTime()) / msInDay);
+      if (diffDays >= 0 && diffDays < 364) {
+        heatmap[363 - diffDays] += count as number;
+        totalSubmissions += count as number;
+      }
+    }
+
+    const badges = (user.badges || []).map((b: any) => ({
+      displayName: b.displayName,
+      icon: b.icon?.startsWith('/') ? `https://leetcode.com${b.icon}` : b.icon
+    }));
+
+    return {
+      stats: {
+        solved: totalSolved,
+        easySolved,
+        mediumSolved,
+        hardSolved,
+        totalEasy,
+        totalMedium,
+        totalHard,
+        totalQ: totalQuestions,
+        totalSubmissions
+      },
+      heatmap,
+      badges
+    };
+  } catch (error) {
+    console.error('LeetCode official GraphQL error:', error);
+    return null;
+  }
+}
+
 export async function GET() {
   try {
     // 1. Github User Stats
@@ -117,23 +224,12 @@ export async function GET() {
     // 3. Github Contribution Heatmap (Direct Scraping)
     const ghContributionsPromise = fetchGitHubContributions('harshitj183');
 
-    // 4. LeetCode Stats
-    const lcResPromise = fetchWithTimeout('https://leetcode-api-faisalshohag.vercel.app/harshitj183', { next: { revalidate: 3600 } }, 5000)
-      .then(r => r.ok ? r.json() : {})
-      .catch(() =>
-        fetchWithTimeout('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183', { next: { revalidate: 3600 } }, 5000)
-          .then(r => r.ok ? r.json() : {})
-          .catch(() => ({}))
-      );
-
-    // 5. LeetCode Badges
-    const lcBadgesPromise = fetchWithTimeout('https://alfa-leetcode-api.onrender.com/harshitj183/badges', { next: { revalidate: 3600 } }, 4000)
-      .then(r => r.ok ? r.json() : null)
-      .catch(() => null);
+    // 4. LeetCode Official GraphQL Fetch
+    const lcOfficialPromise = fetchLeetCodeOfficial('harshitj183');
 
     // Wait for all to resolve in parallel for maximum performance
-    const [ghData, repos, ghContribData, lcData, bData] = await Promise.all([
-      ghResPromise, reposResPromise, ghContributionsPromise, lcResPromise, lcBadgesPromise
+    const [ghData, repos, ghContribData, lcResult] = await Promise.all([
+      ghResPromise, reposResPromise, ghContributionsPromise, lcOfficialPromise
     ]);
 
     // Parse GitHub Heatmap & Stats
@@ -142,34 +238,29 @@ export async function GET() {
     const totalContributions = ghContribData?.totalContributions || 3229;
     const calculatedStreak = ghContribData?.currentStreak || (ghContribData?.longestStreak ? Math.min(ghContribData.longestStreak, 42) : 42);
 
-    // Parse Leetcode Calendar
-    const parseCalendar = (calendarObj: any) => {
-      if (!calendarObj) return null;
-      try {
-        const calendar = typeof calendarObj === 'string' ? JSON.parse(calendarObj) : calendarObj;
-        const heatmap = Array(364).fill(0);
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const msInDay = 24 * 60 * 60 * 1000;
-        for (const [timestamp, count] of Object.entries(calendar)) {
-          const date = new Date(parseInt(timestamp) * 1000);
-          date.setHours(0, 0, 0, 0);
-          const diffDays = Math.floor((now.getTime() - date.getTime()) / msInDay);
-          if (diffDays >= 0 && diffDays < 364) {
-            heatmap[363 - diffDays] += count as number;
-          }
-        }
-        return heatmap;
-      } catch (e) {
-        return null;
-      }
+    // Fallback baseline for LeetCode if completely offline
+    const fallbackLcStats = {
+      solved: 468,
+      easySolved: 272,
+      mediumSolved: 170,
+      hardSolved: 26,
+      totalEasy: 965,
+      totalMedium: 2115,
+      totalHard: 975,
+      totalQ: 4055,
+      totalSubmissions: 1427
     };
 
-    const lCSolved = lcData.totalSolved || (lcData.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'All')?.count) || 400;
-    const lcEasy = lcData.easySolved || (lcData.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'Easy')?.count) || 150;
-    const lcMedium = lcData.mediumSolved || (lcData.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'Medium')?.count) || 200;
-    const lcHard = lcData.hardSolved || (lcData.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'Hard')?.count) || 50;
-    const lcBadges = bData?.badges || [];
+    const lcStats = lcResult?.stats || fallbackLcStats;
+    const lcHeatmap = lcResult?.heatmap || Array(364).fill(0);
+    const lcBadges = lcResult?.badges || [
+      { displayName: '365 Days Badge', icon: 'https://assets.leetcode.com/static_assets/marketing/lg365.png' },
+      { displayName: '200 Days Badge 2026', icon: 'https://assets.leetcode.com/static_assets/others/200_1080_1080.png' },
+      { displayName: '100 Days Badge 2026', icon: 'https://assets.leetcode.com/static_assets/others/100_1080_1080.png' },
+      { displayName: '50 Days Badge 2026', icon: 'https://assets.leetcode.com/static_assets/others/50_1080_1080.png' },
+      { displayName: '100 Days Badge 2025', icon: 'https://assets.leetcode.com/static_assets/others/lg25100.png' },
+      { displayName: '50 Days Badge 2025', icon: 'https://assets.leetcode.com/static_assets/others/lg2550.png' }
+    ];
 
     return NextResponse.json({
       github: {
@@ -183,17 +274,8 @@ export async function GET() {
         heatmap: ghHeatmap
       },
       leetcode: {
-        stats: {
-          solved: lCSolved,
-          easySolved: lcEasy,
-          mediumSolved: lcMedium,
-          hardSolved: lcHard,
-          totalEasy: (lcData as any).totalEasy || 800,
-          totalMedium: (lcData as any).totalMedium || 1700,
-          totalHard: (lcData as any).totalHard || 700,
-          totalQ: (lcData as any).totalQuestions || 3300
-        },
-        heatmap: parseCalendar(lcData.submissionCalendar) || Array(364).fill(0),
+        stats: lcStats,
+        heatmap: lcHeatmap,
         badges: lcBadges
       }
     }, {

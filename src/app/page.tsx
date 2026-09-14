@@ -88,20 +88,14 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetch('https://alfa-leetcode-api.onrender.com/userProfile/harshitj183')
+    fetch('/api/stats')
       .then(r => r.json())
       .then(d => {
-        const allStats = d.matchedUserStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'All');
-        if (allStats) {
-          setLcSolved(String(allStats.count));
+        if (d?.leetcode?.stats?.solved) {
+          setLcSolved(String(d.leetcode.stats.solved));
         }
       })
-      .catch(() => {
-        fetch('https://leetcode-stats-api.herokuapp.com/harshitj183')
-          .then(r => r.json())
-          .then(d => { if (d.status === 'success') setLcSolved(String(d.totalSolved)); })
-          .catch(() => {});
-      });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
