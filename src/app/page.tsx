@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { FiGithub, FiMapPin, FiArrowRight, FiStar, FiExternalLink } from 'react-icons/fi';
+import { FiGithub, FiMapPin, FiArrowRight, FiStar, FiExternalLink, FiLayers, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import Image from 'next/image';
 import Link from 'next/link';
 import TiltCard from '@/components/TiltCard';
@@ -311,72 +311,304 @@ const Home = () => {
       </section>
 
       {/* Featured Project Showcase */}
-      <h2 id="featured-work" style={{ fontSize: '1.8rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <FiStar className="text-accent" /> Featured Work
-      </h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--accent)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
+            <FiLayers size={14} /> Curated Showcase
+          </span>
+          <h2 id="featured-work" style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0 }}>
+            <FiStar className="text-accent" /> Featured Engineering Systems
+          </h2>
+        </div>
 
-      <section aria-labelledby="featured-work" className="glass-panel featured-showcase-panel" style={{ marginBottom: '5rem', position: 'relative', minHeight: '280px', padding: 0 }}>
+        {/* Next / Prev Controls */}
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            onClick={() => goTo((slide - 1 + FEATURED.length) % FEATURED.length)}
+            aria-label="Previous Project"
+            className="pill"
+            style={{ width: '40px', height: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }}
+          >
+            <FiChevronLeft size={18} />
+          </button>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', minWidth: '45px', textAlign: 'center', fontFamily: 'monospace' }}>
+            0{slide + 1} / 0{FEATURED.length}
+          </span>
+          <button
+            onClick={() => goTo((slide + 1) % FEATURED.length)}
+            aria-label="Next Project"
+            className="pill"
+            style={{ width: '40px', height: '40px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }}
+          >
+            <FiChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Interactive Project Switcher Tabs */}
+      <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+        {FEATURED.map((item, idx) => (
+          <button
+            key={item.title}
+            onClick={() => goTo(idx)}
+            style={{
+              padding: '0.55rem 1.1rem',
+              borderRadius: '12px',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              border: idx === slide ? `1px solid ${item.color}` : '1px solid rgba(255,255,255,0.06)',
+              background: idx === slide ? `${item.color}18` : 'rgba(255,255,255,0.02)',
+              color: idx === slide ? '#ffffff' : 'var(--text-secondary)',
+              boxShadow: idx === slide ? `0 0 20px ${item.color}30` : 'none',
+              transition: 'all 0.25s ease',
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+          >
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color, boxShadow: idx === slide ? `0 0 8px ${item.color}` : 'none' }} />
+            {item.title}
+          </button>
+        ))}
+      </div>
+
+      {/* Main 3D Showcase Card */}
+      <section
+        aria-labelledby="featured-work"
+        className="glass-panel"
+        style={{
+          marginBottom: '5rem',
+          position: 'relative',
+          padding: '2.5rem',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          border: `1px solid ${proj.color}40`,
+          boxShadow: `0 25px 60px -15px ${proj.color}25, 0 0 40px ${proj.color}15, inset 0 1px 0 rgba(255,255,255,0.15)`,
+          transition: 'border-color 0.5s ease, box-shadow 0.5s ease'
+        }}
+      >
+        {/* Dynamic Aurora Ambient Backlight */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '-20%',
+            right: '-10%',
+            width: '450px',
+            height: '450px',
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${proj.color}35 0%, transparent 70%)`,
+            filter: 'blur(60px)',
+            pointerEvents: 'none',
+            transition: 'all 0.6s ease'
+          }}
+        />
+
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={slide}
             custom={dir}
-            initial={{ x: dir * 80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: dir * -80, opacity: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="featured-project-grid"
+            initial={{ opacity: 0, x: dir * 60, scale: 0.98 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: dir * -60, scale: 0.98 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '3rem',
+              alignItems: 'center',
+              position: 'relative',
+              zIndex: 2
+            }}
           >
+            {/* Left Content Column */}
             <div>
-              <span className="pill accent" style={{ marginBottom: '1.5rem', display: 'inline-block', fontSize: '0.75rem', background: proj.color, border: 'none' }}>
-                {proj.label}
-              </span>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem', lineHeight: '1.2' }}>{proj.title}</h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.7', marginBottom: '2rem' }}>{proj.desc}</p>
-              <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-                {proj.tech.map(t => <span key={t} className="pill" style={{ fontSize: '0.75rem' }}>{t}</span>)}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    padding: '0.35rem 0.8rem',
+                    borderRadius: '100px',
+                    background: `${proj.color}25`,
+                    color: '#ffffff',
+                    border: `1px solid ${proj.color}60`,
+                    boxShadow: `0 0 15px ${proj.color}40`,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                >
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#fff', boxShadow: '0 0 8px #fff' }} />
+                  {proj.label}
+                </span>
+
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
+                  FEATURED // 0{slide + 1}
+                </span>
               </div>
+
+              <h3 style={{ fontSize: '2.2rem', marginBottom: '1rem', lineHeight: '1.15', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+                {proj.title}
+              </h3>
+
+              <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.75', marginBottom: '2rem', maxWidth: '520px' }}>
+                {proj.desc}
+              </p>
+
+              {/* Tech Stack Chips */}
+              <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
+                {proj.tech.map(t => (
+                  <span
+                    key={t}
+                    style={{
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      padding: '0.4rem 0.85rem',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      color: '#e4e4e7',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              {/* Interactive Buttons */}
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <Link href="/projects" className="nav-item active" style={{ display: 'inline-flex', width: 'auto', gap: '0.6rem', fontSize: '0.85rem' }}>
-                  Case Study <FiArrowRight />
+                <Link
+                  href="/projects"
+                  className="premium-action-btn premium-action-primary"
+                  style={{
+                    padding: '0.85rem 1.8rem',
+                    fontSize: '0.9rem',
+                    background: `linear-gradient(135deg, ${proj.color}, #6366f1)`,
+                    boxShadow: `0 4px 20px ${proj.color}50`
+                  }}
+                >
+                  Explore Case Study <FiArrowRight size={16} />
                 </Link>
-                <a href={proj.github} target="_blank" rel="noreferrer" className="pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', padding: '0.6rem 1.2rem' }}>
-                  <FiGithub /> GitHub
+                <a
+                  href={proj.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="premium-action-btn premium-action-secondary"
+                  style={{ padding: '0.85rem 1.6rem', fontSize: '0.9rem' }}
+                >
+                  <FiGithub size={17} /> GitHub Repo
                 </a>
               </div>
             </div>
-            <TiltCard tiltAngle={5} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)', position: 'relative', height: '220px' }}>
-              <Image src={proj.image} alt={proj.title} fill sizes="(max-width: 768px) 100vw, 50vw" priority={slide === 0} style={{ objectFit: 'cover', display: 'block' }} />
-            </TiltCard>
+
+            {/* Right 3D Perspective Device Mockup */}
+            <div style={{ perspective: '1200px', display: 'flex', justifyContent: 'center' }}>
+              <motion.div
+                whileHover={{ scale: 1.03, rotateY: -6, rotateX: 4 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+                style={{
+                  width: '100%',
+                  borderRadius: '16px',
+                  background: 'rgba(10, 10, 15, 0.95)',
+                  border: '1px solid rgba(255,255,255,0.14)',
+                  borderTop: '1px solid rgba(255,255,255,0.3)',
+                  boxShadow: `0 25px 50px -12px rgba(0,0,0,0.9), 0 0 30px ${proj.color}30`,
+                  overflow: 'hidden',
+                  transformStyle: 'preserve-3d',
+                  cursor: 'pointer'
+                }}
+              >
+                {/* 3D Window Title Bar */}
+                <div
+                  style={{
+                    padding: '0.75rem 1.2rem',
+                    background: 'rgba(255,255,255,0.03)',
+                    borderBottom: '1px solid rgba(255,255,255,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
+                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b' }} />
+                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }} />
+                  </div>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontFamily: 'monospace', opacity: 0.8 }}>
+                    {proj.title.toLowerCase().replace(/\s+/g, '-')}.app
+                  </span>
+                  <span style={{ width: '10px' }} />
+                </div>
+
+                {/* Screenshot Container with Reflection and Glow */}
+                <div style={{ position: 'relative', height: '260px', overflow: 'hidden' }}>
+                  <Image
+                    src={proj.image}
+                    alt={proj.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority={slide === 0}
+                    style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                  />
+
+                  {/* Scanline & Glare Gradient */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 40%, rgba(0,0,0,0.6) 100%)',
+                      pointerEvents: 'none'
+                    }}
+                  />
+
+                  {/* Floating 3D Badge */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '1rem',
+                      right: '1rem',
+                      padding: '0.4rem 0.9rem',
+                      borderRadius: '100px',
+                      background: 'rgba(0,0,0,0.75)',
+                      backdropFilter: 'blur(12px)',
+                      border: `1px solid ${proj.color}80`,
+                      boxShadow: `0 0 15px ${proj.color}50`,
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem'
+                    }}
+                  >
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: proj.color }} />
+                    Active Architecture
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Dot indicators */}
-        <div style={{ display: 'flex', gap: '4px', justifyContent: 'center', marginTop: '2rem' }}>
-          {FEATURED.map((_, i) => (
-            <button key={i} aria-label={`Go to slide ${i + 1}`} onClick={() => goTo(i)} style={{
-              width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'transparent', border: 'none', cursor: 'pointer', padding: 0
-            }}>
-              <span style={{
-                width: i === slide ? '24px' : '8px', height: '8px',
-                borderRadius: '4px',
-                background: i === slide ? proj.color : 'var(--border-color)',
-                transition: 'all 0.3s ease',
-              }} />
-            </button>
-          ))}
-        </div>
-
-        {/* Progress bar */}
+        {/* Animated Progress Bar */}
         <motion.div
           key={`bar-${slide}`}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 5, ease: 'linear' }}
           style={{
-            position: 'absolute', bottom: 0, left: 0,
-            height: '2px', width: '100%',
-            background: proj.color,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            height: '3px',
+            width: '100%',
+            background: `linear-gradient(90deg, ${proj.color}, #6366f1, #10b981)`,
+            boxShadow: `0 0 10px ${proj.color}`,
             transformOrigin: 'left',
           }}
         />
