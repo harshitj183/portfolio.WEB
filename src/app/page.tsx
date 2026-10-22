@@ -131,27 +131,20 @@ const Home = () => {
 
   const proj = FEATURED[slide];
   return (
-    <main style={{ padding: '2rem 0' }}>
+    <main style={{ padding: '1.5rem 0' }}>
       {/* Available Badge */}
-      <div style={{ marginBottom: '2.5rem' }}>
-        <span style={{ 
-          display: 'inline-flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.85rem', 
-          background: 'rgba(255,255,255,0.05)', padding: '0.6rem 1.25rem', borderRadius: '100px', 
-          backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255,255,255,0.12)', borderTop: '1px solid rgba(255,255,255,0.25)',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.25)', fontWeight: 500 
-        }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 12px #10b981' }} />
+      <div className="home-available-badge-wrapper">
+        <span className="home-available-badge">
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 12px #10b981', flexShrink: 0 }} />
           Available for full-time & freelance roles
         </span>
       </div>
 
       {/* Hero Section */}
-      <header id="hero-section" style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: 'clamp(3rem, 7vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: '1.1', marginBottom: '1.5rem', maxWidth: '900px' }}>
+      <header id="hero-section" className="home-hero-header">
+        <h1 className="home-hero-title">
           Harshit Jaiswal
-          <br />
-          <span style={{ color: 'var(--text-secondary)', fontWeight: 500, fontSize: '0.55em' }}>
+          <span className="home-hero-subtitle">
             SDE | AI Agent Engineer | Freelancer | Author
           </span>
         </h1>
@@ -160,20 +153,19 @@ const Home = () => {
       {/* Hero content row */}
       <section aria-label="Introduction and Links" className="hero-content-grid">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '1rem' }}>
+          <div className="home-location-badge">
             <FiMapPin size={16} />
             Gurugram, Delhi NCR
           </div>
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.7', marginBottom: '3rem', color: 'var(--text-secondary)', maxWidth: '520px' }}>
+          <p className="home-hero-desc">
             <strong style={{ color: '#fff', fontWeight: 600 }}>Full Stack Software Developer & AI Agent Engineer</strong>.
             Delivered <strong style={{ color: '#fff', fontWeight: 600 }}>20+ freelance web applications</strong> and solved <strong style={{ color: '#fff', fontWeight: 600 }}>{lcSolved} LeetCode problems</strong>.
           </p>
 
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="home-hero-actions">
             <Link
               href="/contact"
-              className="premium-action-btn premium-action-primary"
-              style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
+              className="premium-action-btn premium-action-primary home-action-btn"
               aria-label="Get in touch with Harshit Jaiswal for hiring or freelance"
             >
               Get in touch <FiArrowRight size={16} />
@@ -181,8 +173,7 @@ const Home = () => {
             <a
               href="/resume.pdf"
               download="Harshit_Jaiswal_Resume.pdf"
-              className="premium-action-btn premium-action-secondary"
-              style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
+              className="premium-action-btn premium-action-secondary home-action-btn"
               title="Download Harshit Jaiswal's CV"
               aria-label="Download Harshit Jaiswal's CV PDF"
             >
@@ -192,8 +183,7 @@ const Home = () => {
               href="https://github.com/harshitj183"
               target="_blank"
               rel="noreferrer"
-              className="premium-action-btn premium-action-secondary"
-              style={{ padding: '0.8rem 1.8rem', fontSize: '0.95rem', width: 'auto', flex: 'none' }}
+              className="premium-action-btn premium-action-secondary home-action-btn"
               aria-label="View Harshit Jaiswal's GitHub Profile"
             >
               <FiGithub size={18} /> GitHub
@@ -202,21 +192,16 @@ const Home = () => {
         </div>
 
         {/* Avatar card Container */}
-        <div style={{ perspective: '1000px', display: 'flex', justifyContent: 'center' }}>
+        <div className="home-profile-card-wrapper">
           <motion.div 
             id="profile-card" 
-            className="glass-panel" 
+            className="glass-panel home-profile-card" 
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ 
-              padding: '2.5rem', 
-              textAlign: 'center', 
-              maxWidth: '300px', 
-              width: '100%',
               rotateX,
               rotateY,
               transformStyle: "preserve-3d",
-              cursor: "pointer",
             }}
             whileHover={{ scale: 1.05 }}
             animate={{ y: [0, -10, 0] }}
@@ -224,20 +209,7 @@ const Home = () => {
           >
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1.5rem', transform: "translateZ(50px)" }}>
             {/* Thought/Dream Bubble */}
-            <div style={{
-              position: 'absolute',
-              top: '-32px',
-              right: '-32px',
-              background: 'var(--accent)',
-              color: '#fff',
-              padding: '0.4rem 0.8rem',
-              borderRadius: '20px',
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              boxShadow: '0 0 15px var(--accent-glow)',
-              whiteSpace: 'nowrap',
-              zIndex: 3
-            }}>
+            <div className="home-avatar-thought-bubble">
               harshitj183
               {/* Little floating bubble trail */}
               <span style={{
@@ -296,12 +268,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Tech Stack Ticker (Now a clean static list) */}
-      <section id="tech-stack" aria-label="Technology Stack" style={{ marginBottom: '5rem' }}>
+      {/* Tech Stack Ticker (Clean static list) */}
+      <section id="tech-stack" aria-label="Technology Stack" className="home-tech-section">
         <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', marginBottom: '1.5rem', fontWeight: 600 }}>
           Tech Stack
         </p>
-        <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+        <div className="home-tech-pills">
           {TECH_STACK.map((tech) => (
             <span key={tech} className="pill" style={{ fontSize: '0.85rem' }}>
               {tech}
@@ -310,19 +282,19 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Project Showcase */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      {/* Featured Project Showcase Header */}
+      <div className="home-showcase-header">
         <div>
           <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--accent)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
             <FiLayers size={14} /> Curated Showcase
           </span>
-          <h2 id="featured-work" style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', margin: 0 }}>
+          <h2 id="featured-work" className="home-showcase-title">
             <FiStar className="text-accent" /> Featured Engineering Systems
           </h2>
         </div>
 
         {/* Next / Prev Controls */}
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div className="home-showcase-controls">
           <button
             onClick={() => goTo((slide - 1 + FEATURED.length) % FEATURED.length)}
             aria-label="Previous Project"
@@ -346,7 +318,7 @@ const Home = () => {
       </div>
 
       {/* Interactive Project Switcher Tabs */}
-      <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+      <div className="home-project-tabs">
         {FEATURED.map((item, idx) => (
           <button
             key={item.title}
@@ -365,7 +337,8 @@ const Home = () => {
               whiteSpace: 'nowrap',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem'
+              gap: '0.5rem',
+              flexShrink: 0
             }}
           >
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color, boxShadow: idx === slide ? `0 0 8px ${item.color}` : 'none' }} />
@@ -377,16 +350,10 @@ const Home = () => {
       {/* Main 3D Showcase Card */}
       <section
         aria-labelledby="featured-work"
-        className="glass-panel"
+        className="glass-panel home-showcase-card"
         style={{
-          marginBottom: '5rem',
-          position: 'relative',
-          padding: '2.5rem',
-          borderRadius: '24px',
-          overflow: 'hidden',
           border: `1px solid ${proj.color}40`,
           boxShadow: `0 25px 60px -15px ${proj.color}25, 0 0 40px ${proj.color}15, inset 0 1px 0 rgba(255,255,255,0.15)`,
-          transition: 'border-color 0.5s ease, box-shadow 0.5s ease'
         }}
       >
         {/* Dynamic Aurora Ambient Backlight */}
@@ -413,14 +380,7 @@ const Home = () => {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: dir * -60, scale: 0.98 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '3rem',
-              alignItems: 'center',
-              position: 'relative',
-              zIndex: 2
-            }}
+            className="home-showcase-grid"
           >
             {/* Left Content Column */}
             <div>
@@ -451,11 +411,11 @@ const Home = () => {
                 </span>
               </div>
 
-              <h3 style={{ fontSize: '2.2rem', marginBottom: '1rem', lineHeight: '1.15', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+              <h3 className="home-project-title">
                 {proj.title}
               </h3>
 
-              <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.75', marginBottom: '2rem', maxWidth: '520px' }}>
+              <p className="home-project-desc">
                 {proj.desc}
               </p>
 
@@ -481,7 +441,7 @@ const Home = () => {
               </div>
 
               {/* Interactive Buttons */}
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="home-project-actions">
                 <Link
                   href="/projects"
                   className="premium-action-btn premium-action-primary"
@@ -546,7 +506,7 @@ const Home = () => {
                 </div>
 
                 {/* Screenshot Container with Reflection and Glow */}
-                <div style={{ position: 'relative', height: '260px', overflow: 'hidden' }}>
+                <div className="home-mockup-screen">
                   <Image
                     src={proj.image}
                     alt={proj.title}
@@ -615,11 +575,10 @@ const Home = () => {
       </section>
 
       {/* Browse All CTA */}
-      <div style={{ textAlign: 'center' }}>
+      <div className="home-bottom-cta">
         <Link
           href="/projects"
-          className="nav-item"
-          style={{ display: 'inline-flex', padding: '1rem 2.5rem', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', gap: '0.8rem' }}
+          className="nav-item home-cta-btn"
           aria-label="Browse All Projects by Harshit Jaiswal"
         >
           Browse All Projects <FiArrowRight />

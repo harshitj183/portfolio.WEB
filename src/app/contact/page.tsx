@@ -163,11 +163,11 @@ const Contact = () => {
       <h1 className="premium-gradient-text" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1rem', letterSpacing: '-0.04em' }}>
         Initialize Connection
       </h1>
-      <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7', marginBottom: '5rem', maxWidth: '560px' }}>
+      <p className="contact-subtitle-mb" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', lineHeight: '1.7', marginBottom: 'clamp(2rem, 5vw, 5rem)', maxWidth: '560px' }}>
         Open for full-time roles, strategic collaborations, or specialized engineering consultations. Typically respond within 24 hours.
       </p>
 
-      <div className="grid" style={{ gap: '5rem', alignItems: 'flex-start' }}>
+      <div className="grid contact-grid" style={{ gap: 'clamp(2rem, 5vw, 5rem)', alignItems: 'flex-start' }}>
         {/* Contact Links */}
         <div id="direct-channels">
           <p style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', fontWeight: 700, marginBottom: '2rem' }}>
@@ -218,8 +218,8 @@ const Contact = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
-                className="glass-panel"
-                style={{ padding: '4.5rem', textAlign: 'center' }}
+                className="glass-panel contact-success-panel"
+                style={{ padding: 'clamp(2rem, 5vw, 4.5rem)', textAlign: 'center' }}
               >
                 <motion.div
                   initial={{ scale: 0 }}
@@ -248,8 +248,8 @@ const Contact = () => {
                 ref={formRef}
                 exit={{ opacity: 0, y: -20 }}
                 onSubmit={handleSubmit}
-                className="glass-panel"
-                style={{ padding: '3.5rem' }}
+                className="glass-panel contact-form-panel"
+                style={{ padding: 'clamp(1.5rem, 4vw, 3.5rem)' }}
               >
                 <p style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-secondary)', fontWeight: 700, marginBottom: '2.5rem' }}>
                   Send a Message

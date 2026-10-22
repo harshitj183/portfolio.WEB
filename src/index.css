@@ -692,6 +692,158 @@ textarea::placeholder {
   }
 }
 
+/* ============================================================
+   Full Mobile Responsive Overrides
+   ============================================================ */
+
+/* --- Contact Page --- */
+@media (max-width: 1024px) {
+  /* Two-column contact grid collapses to single column */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Contact form padding */
+  .contact-form-panel {
+    padding: 1.8rem 1.5rem !important;
+  }
+
+  /* Success/animating states in contact */
+  .contact-success-panel {
+    padding: 2.5rem 1.5rem !important;
+  }
+
+  /* About page section margin reductions */
+  .about-section-mb {
+    margin-bottom: 3rem !important;
+  }
+
+  /* Timeline left padding reduction on small screens */
+  .timeline-item-inner {
+    padding-left: 2rem !important;
+  }
+
+  /* About hero title */
+  .about-hero-title {
+    font-size: clamp(2rem, 8vw, 3.5rem) !important;
+  }
+
+  /* Skills grid single column */
+  .skills-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Contact subtitle margin */
+  .contact-subtitle-mb {
+    margin-bottom: 2.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Contact form padding extra small */
+  .contact-form-panel {
+    padding: 1.5rem 1.2rem !important;
+  }
+
+  /* Contact success extra small */
+  .contact-success-panel {
+    padding: 2rem 1.2rem !important;
+  }
+
+  /* Timeline further reduction */
+  .timeline-item-inner {
+    padding-left: 1.6rem !important;
+  }
+
+  /* About sections tight margin */
+  .about-section-mb {
+    margin-bottom: 2rem !important;
+  }
+
+  /* Credentials/education grid single col */
+  .about-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Contact subtitle margin */
+  .contact-subtitle-mb {
+    margin-bottom: 2rem !important;
+  }
+}
+
+/* --- Glass panel padding overrides on mobile --- */
+@media (max-width: 768px) {
+  .glass-panel.about-info-panel {
+    padding: 1.5rem !important;
+  }
+
+  .glass-panel.responsive-timeline-panel {
+    padding: 1.5rem 1.2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-panel.about-info-panel {
+    padding: 1.2rem 1rem !important;
+  }
+
+  .glass-panel.responsive-timeline-panel {
+    padding: 1.2rem 1rem !important;
+  }
+}
+
+/* --- Projects page drawer fixes --- */
+@media (max-width: 768px) {
+  .project-drawer {
+    max-width: 100% !important;
+    border-left: none !important;
+  }
+
+  .drawer-header {
+    padding: 1rem 1.2rem !important;
+  }
+
+  .drawer-content {
+    padding: 0 1.2rem 5rem 1.2rem !important;
+  }
+}
+
+/* --- General page content max-width / overflow fix --- */
+@media (max-width: 1024px) {
+  .main-content {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+}
+
+/* --- Dashboard page (stats grid) --- */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+}
+
+/* --- Pill overflow fix on small screens --- */
+@media (max-width: 480px) {
+  .pill {
+    font-size: 0.72rem !important;
+    padding: 0.4rem 0.7rem !important;
+  }
+}
+
+/* --- Modal / case study fixes for mobile --- */
+@media (max-width: 768px) {
+  .case-study-modal {
+    padding: 1.5rem 1.2rem !important;
+    border-radius: 16px;
+  }
+}
+
 /* ── Synthwave Rose Alternative Theme ── */
 :root.theme-alt {
   --bg-color: #0b071e;
@@ -1026,5 +1178,387 @@ textarea::placeholder {
 @media (max-width: 1024px) {
   .project-file-tree-container {
     display: none !important;
+  }
+}
+
+/* ============================================================
+   Homepage Mobile Responsive System (.home-*)
+   ============================================================ */
+
+/* Available badge wrapper */
+.home-available-badge-wrapper {
+  margin-bottom: 2.5rem;
+}
+
+.home-available-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.6rem 1.25rem;
+  border-radius: 100px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+  max-width: 100%;
+}
+
+/* Hero Header */
+.home-hero-header {
+  margin-bottom: 2rem;
+}
+
+.home-hero-title {
+  font-size: clamp(2.2rem, 5.5vw + 0.8rem, 4.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  max-width: 900px;
+}
+
+.home-hero-subtitle {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.55em;
+  display: block;
+  margin-top: 0.5rem;
+  line-height: 1.35;
+}
+
+/* Hero Content Grid & Text */
+.home-location-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.home-hero-desc {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  color: var(--text-secondary);
+  max-width: 520px;
+}
+
+/* Hero Action Buttons */
+.home-hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home-action-btn {
+  padding: 0.8rem 1.8rem;
+  font-size: 0.95rem;
+  width: auto;
+  flex: none;
+}
+
+/* Profile 3D Card */
+.home-profile-card-wrapper {
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.home-profile-card {
+  padding: 2.5rem;
+  text-align: center;
+  max-width: 300px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.home-avatar-thought-bubble {
+  position: absolute;
+  top: -32px;
+  right: -24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  box-shadow: 0 0 15px var(--accent-glow);
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* Tech Stack */
+.home-tech-section {
+  margin-bottom: 5rem;
+}
+
+.home-tech-pills {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+/* Showcase Header & Navigation */
+.home-showcase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.home-showcase-title {
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.home-showcase-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Project Tabs Bar */
+.home-project-tabs {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.home-project-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Main Featured Project Card & Grid */
+.home-showcase-card {
+  margin-bottom: 5rem;
+  position: relative;
+  padding: 2.5rem;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.home-showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.home-project-title {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  line-height: 1.15;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.home-project-desc {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  max-width: 520px;
+}
+
+.home-project-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home-mockup-screen {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+
+/* Bottom CTA */
+.home-bottom-cta {
+  text-align: center;
+}
+
+.home-cta-btn {
+  display: inline-flex;
+  padding: 1rem 2.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  gap: 0.8rem;
+  border-radius: 14px;
+}
+
+/* ============================================================
+   Homepage Responsive Media Query Breakpoints
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .home-showcase-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-available-badge-wrapper {
+    margin-bottom: 1.8rem;
+  }
+
+  .home-available-badge {
+    font-size: 0.78rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .home-hero-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .home-hero-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .home-hero-subtitle {
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  .home-hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .home-tech-section {
+    margin-bottom: 3rem;
+  }
+
+  .home-showcase-card {
+    padding: 1.5rem !important;
+    border-radius: 20px;
+    margin-bottom: 3.5rem;
+  }
+
+  .home-project-title {
+    font-size: 1.7rem;
+  }
+
+  .home-project-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .home-mockup-screen {
+    height: 220px;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-hero-actions {
+    gap: 0.6rem;
+  }
+
+  .home-action-btn {
+    flex: 1 1 calc(50% - 0.3rem);
+    justify-content: center;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.88rem !important;
+    text-align: center;
+  }
+
+  .home-showcase-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .home-showcase-title {
+    font-size: 1.45rem;
+  }
+
+  .home-showcase-controls {
+    align-self: flex-end;
+  }
+
+  .home-project-actions {
+    gap: 0.6rem;
+  }
+
+  .home-project-actions > * {
+    flex: 1 1 calc(50% - 0.3rem);
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-available-badge {
+    font-size: 0.74rem;
+    padding: 0.45rem 0.85rem;
+  }
+
+  .home-hero-title {
+    font-size: 1.85rem;
+  }
+
+  .home-hero-subtitle {
+    font-size: 0.78rem;
+    margin-top: 0.4rem;
+  }
+
+  .home-avatar-thought-bubble {
+    top: -24px;
+    right: -8px;
+    font-size: 0.66rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .home-profile-card {
+    padding: 1.75rem 1.25rem !important;
+    max-width: 100%;
+  }
+
+  .home-showcase-card {
+    padding: 1.2rem !important;
+    border-radius: 16px;
+    margin-bottom: 2.5rem;
+  }
+
+  .home-mockup-screen {
+    height: 180px;
+  }
+
+  .home-action-btn,
+  .home-project-actions > * {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+
+  .home-cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
   }
 }

@@ -60,7 +60,8 @@ const TimelineItem = ({ role, company, date, desc, isLast }: TimelineItemProps) 
     initial={{ opacity: 0, x: -20 }}
     whileInView={{ opacity: 1, x: 0 }}
     viewport={{ once: true }}
-    style={{ position: 'relative', paddingLeft: '3rem', marginBottom: isLast ? 0 : '3.5rem' }}
+    className="timeline-item-inner"
+    style={{ position: 'relative', paddingLeft: 'clamp(1.5rem, 4vw, 3rem)', marginBottom: isLast ? 0 : '3.5rem' }}
   >
     {/* Dot */}
     <div style={{
@@ -137,7 +138,7 @@ const About = () => {
       style={{ padding: '2rem 0' }}
     >
       {/* Hero */}
-      <motion.div id="about-hero" variants={itemVars} style={{ marginBottom: '5rem' }}>
+      <motion.div id="about-hero" variants={itemVars} className="about-section-mb" style={{ marginBottom: 'clamp(2rem, 5vw, 5rem)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
           <FiMapPin className="text-accent" size={16} />
           <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Delhi NCR, India · KR Mangalam University, 2023–2027</span>
@@ -154,13 +155,13 @@ const About = () => {
       </motion.div>
 
       {/* Skills */}
-      <motion.div id="skills-section" variants={itemVars} style={{ marginBottom: '5rem' }}>
+      <motion.div id="skills-section" variants={itemVars} className="about-section-mb" style={{ marginBottom: 'clamp(2rem, 5vw, 5rem)' }}>
         <h2 style={{ fontSize: '1.8rem', marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <FiTerminal className="text-accent" /> Arsenal Intensity
         </h2>
         <div className="grid">
           {SKILL_CATEGORIES.map((cat) => (
-            <TiltCard key={cat.title} className="glass-panel" style={{ padding: '2.5rem' }} tiltAngle={4}>
+            <TiltCard key={cat.title} className="glass-panel" style={{ padding: 'clamp(1.2rem, 3vw, 2.5rem)' }} tiltAngle={4}>
               <h3 style={{ marginBottom: '2rem', color: 'var(--accent)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 {cat.icon} {cat.title}
               </h3>
@@ -177,7 +178,7 @@ const About = () => {
       </motion.div>
 
       {/* Experience Timeline */}
-      <motion.div id="experience-section" variants={itemVars} style={{ marginBottom: '5rem' }}>
+      <motion.div id="experience-section" variants={itemVars} className="about-section-mb" style={{ marginBottom: 'clamp(2rem, 5vw, 5rem)' }}>
         <h2 style={{ fontSize: '1.8rem', marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <FiBriefcase className="text-accent" /> Field Records
         </h2>
@@ -195,8 +196,8 @@ const About = () => {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
-        className="grid"
-        style={{ marginBottom: '5rem' }}
+        className="grid about-section-mb"
+        style={{ marginBottom: 'clamp(2rem, 5vw, 5rem)' }}
       >
         <TiltCard className="glass-panel about-info-panel" tiltAngle={3}>
           <h2 style={{ fontSize: '1.3rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
