@@ -8,6 +8,7 @@ const SpotlightEffect = dynamic(() => import('../components/SpotlightEffect'), {
 const CommandPalette = dynamic(() => import('../components/CommandPalette'), { ssr: false });
 const Sidebar = dynamic(() => import('../components/Sidebar'), { ssr: false });
 const MobileNavbar = dynamic(() => import('../components/MobileNavbar'), { ssr: false });
+const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: false });
 const MiniAvatar = dynamic(() => import('../components/MiniAvatar'), { ssr: false });
 const PortfolioAgent = dynamic(() => import('../components/PortfolioAgent'), { ssr: false });
 
@@ -100,6 +101,7 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
           <SpotlightEffect />
           <CommandPalette />
           <Sidebar />
+          <MobileHeader />
           <MobileNavbar />
           <MiniAvatar />
           <PortfolioAgent />

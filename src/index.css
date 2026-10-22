@@ -550,7 +550,254 @@ textarea::placeholder {
   .mnb-root { display: none !important; }
 }
 
-/* ── Legacy class aliases (kept for any remaining refs) ── */
+/* ── Mobile Top Header ── */
+.mobile-header {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  /* ── Root bar ── */
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9998;
+    padding: 0 1.1rem;
+    height: 58px;
+
+    /* Liquid glass — matches sidebar & bottom nav */
+    background: rgba(0, 0, 0, calc(var(--mh-bg-opacity, 0.82)));
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+
+    border-bottom: 1px solid rgba(255, 255, 255, calc(var(--mh-border-opacity, 0.07)));
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06),
+      0 6px 28px rgba(0, 0, 0, 0.55);
+
+    transition: box-shadow 0.3s ease;
+  }
+
+  .mobile-header--scrolled {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.09),
+      0 10px 40px rgba(0, 0, 0, 0.75),
+      0 0 40px rgba(99, 102, 241, 0.08);
+  }
+
+  /* Push content below header */
+  .main-content {
+    padding-top: calc(58px + 1.2rem) !important;
+  }
+
+  /* ── Shimmer sweep (same as bottom nav) ── */
+  .mh-shimmer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .mh-shimmer-line {
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.07) 45%,
+      rgba(255, 255, 255, 0.13) 50%,
+      rgba(255, 255, 255, 0.07) 55%,
+      transparent 100%
+    );
+    animation: mnb-shimmer 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* ── Brand link ── */
+  .mh-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── Avatar ── */
+  .mh-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+  }
+
+  .mh-avatar-glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 11px;
+    background: var(--accent);
+    filter: blur(7px);
+    z-index: 0;
+  }
+
+  .mh-avatar-img {
+    position: relative;
+    z-index: 1;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1.5px solid rgba(99, 102, 241, 0.5);
+    display: block;
+  }
+
+  /* Pulsing green live dot */
+  .mh-live-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 9px;
+    height: 9px;
+    background: #10b981;
+    border-radius: 50%;
+    border: 2px solid #000;
+    z-index: 2;
+    display: block;
+  }
+
+  /* ── Name + role text ── */
+  .mh-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.25;
+    gap: 2px;
+  }
+
+  .mh-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Meta row: @username · Role */
+  .mh-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: 14px;
+    overflow: hidden;
+  }
+
+  .mh-username {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    opacity: 0.85;
+  }
+
+  .mh-meta-sep {
+    font-size: 0.55rem;
+    color: var(--text-secondary);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  /* Role cycling container — fixed height so layout doesn't jump */
+  .mh-role-wrap {
+    height: 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .mh-role {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    display: block;
+  }
+
+  /* ── Available badge ── */
+  .mh-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.32rem 0.72rem;
+    border-radius: 9999px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #10b981;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    cursor: default;
+    user-select: none;
+
+    /* Liquid glass pill — same pattern as .pill */
+    background: rgba(16, 185, 129, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    border-top: 1px solid rgba(16, 185, 129, 0.28);
+    box-shadow:
+      0 2px 10px rgba(16, 185, 129, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .mh-badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: block;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  }
+
+  .mh-badge-text {
+    display: inline;
+  }
+
+  /* Hide on very small screens — show only dot */
+  @media (max-width: 360px) {
+    .mh-badge-text {
+      display: none;
+    }
+    .mh-badge {
+      padding: 0.38rem 0.5rem;
+    }
+  }
+}
+
+/* Desktop — completely hidden */
+@media (min-width: 1025px) {
+  .mobile-header { display: none !important; }
+}
+
+
 .mobile-bottom-nav { display: none; }
 @media (max-width: 1024px) { .mobile-bottom-nav { display: none !important; } }
 
