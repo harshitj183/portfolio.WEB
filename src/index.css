@@ -1150,10 +1150,10 @@ textarea::placeholder {
   z-index: 99999;
 }
 
-/* On mobile: position avatar above the AI chat panel which is lifted 85px from bottom */
+/* On mobile: position avatar above the AI chat panel and bottom nav */
 @media (max-width: 1024px) {
   .mini-avatar-container {
-    bottom: 420px;
+    bottom: 440px;
     right: 12px;
   }
 }
@@ -1171,8 +1171,8 @@ textarea::placeholder {
   }
 
   .mini-avatar-container {
-    bottom: 440px;
-    /* Stay just above the chat panel */
+    bottom: 460px;
+    /* Stay above the chat panel and bottom nav */
     right: 12px;
   }
 }

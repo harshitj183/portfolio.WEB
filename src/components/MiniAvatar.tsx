@@ -1224,8 +1224,8 @@ export default function RoamingHarshit() {
         lastTime.current = time;
 
         if (isMobile) {
-          // On mobile, lock the avatar to the bottom right corner (idle position)
-          setPos({ x: 20, y: 20 });
+          // On mobile, lock the avatar to the bottom right corner (above bottom nav)
+          setPos({ x: 20, y: 100 });
           if (mood === 'walk' || mood === 'running' || mood === 'flying') {
             setMood('idle');
           }
