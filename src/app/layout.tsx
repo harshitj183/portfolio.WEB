@@ -49,6 +49,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google AdSense verification meta tag */}
+        <meta name="google-adsense-account" content="ca-pub-9029687078071299" />
         {/* Preconnect to important origins to reduce DNS/TCP latency */}
         <link rel="preconnect" href="https://avatars.githubusercontent.com" />
         <link rel="preconnect" href="https://assets.leetcode.com" />
@@ -190,6 +192,13 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.variable} style={{ margin: 0, background: '#09090b', color: '#fff' }}>
+        <Script
+          id="google-adsense"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9029687078071299"
+          crossOrigin="anonymous"
+          strategy="lazyOnload"
+        />
         <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
