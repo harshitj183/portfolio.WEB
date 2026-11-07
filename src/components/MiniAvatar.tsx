@@ -122,54 +122,50 @@ const TOUR_STEPS: TourStep[] = [
   }
 ];
 
-// ── Pixel Art Character ───────────────────────────────────────────────────
+// ── Pet Avatar Character (from OpenAI-curated pet plugin sprite pack) ────
+// Frame counts per activity from the sprite sheet validation:
+//   idle: 6, waving: 4, running: 6, running-left: 8, running-right: 8,
+//   jumping: 5, failed: 8, waiting: 6, review: 6, look directions: 4 cardinals
+// Animation speed: advance one frame every 3 steps for smooth playback.
+const PET_FRAME_SPEED = 3; // lower = faster animation
+
+function petFrame(activity: string, step: number, count: number): string {
+  const idx = Math.floor(step / PET_FRAME_SPEED) % count;
+  return `/avatar/pet_${activity}_${idx}.webp`;
+}
+
 const HarshitPixelImage = memo(({ mood, dir, step, isClimbing, isAtHome, isMobile, deliveryMode, isDizzy, focusedInputName }: { mood: Mood; dir: WalkDir; step: number; isClimbing: boolean; isAtHome: boolean; isMobile?: boolean; deliveryMode?: string; isDizzy?: boolean; focusedInputName?: string | null }) => {
-  let src = '/avatar/idle.webp';
+  let src = '/avatar/pet_idle_0.webp';
   const isWalking = mood === 'walk';
   const isDancing = mood === 'dancing';
   const isRunning = mood === 'running';
   const isFlying = mood === 'flying';
-  
-  if (mood === 'waving') {
-    src = '/avatar/waving.webp';
-  } else if (mood === 'idle') {
-    src = '/avatar/idle.webp';
-  } else if (mood === 'typing') {
-    src = '/avatar/typing.webp';
-  } else if (mood === 'thinking') {
-    src = '/avatar/thinking.webp';
-  } else if (mood === 'sleeping') {
-    src = '/avatar/sleeping.webp';
-  } else if (mood === 'pointing') {
-    src = '/avatar/pointing.webp';
-  } else if (mood === 'talking') {
-    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/talking_1.webp' : '/avatar/talking_2.webp';
-  } else if (mood === 'dancing') {
-    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/dancing.webp' : '/avatar/idle.webp';
+
+  // Map each mood to the corresponding pet activity frames
+  if (mood === 'idle') {
+    src = petFrame('idle', step, 6);
+  } else if (mood === 'waving') {
+    src = petFrame('waving', step, 4);
   } else if (mood === 'walk') {
-    src = (Math.floor(step / 2) % 2 === 0) ? '/avatar/walk.webp' : '/avatar/idle.webp';
+    // Walking uses the running frames (closest to a walk cycle)
+    src = petFrame('running', step, 6);
   } else if (mood === 'running') {
-    src = (Math.floor(step / 1.5) % 2 === 0) ? '/avatar/running.webp' : '/avatar/idle.webp';
-  } else if (mood === 'flying') {
-    src = '/avatar/flying.webp';
-  } else if (mood === 'jumping') {
-    src = '/avatar/jumping.webp';
-  } else if (mood === 'sofa_sleep') {
-    src = (Math.floor(step / 3) % 2 === 0) ? '/avatar/sofa_sleep_1.webp' : '/avatar/sofa_sleep_2.webp';
-  } else if (mood === 'sunglasses') {
-    src = '/avatar/sunglasses.webp';
-  } else if (mood === 'lightbulb') {
-    src = '/avatar/lightbulb.webp';
-  } else if (mood === 'hacker_typing') {
-    src = '/avatar/hacker_typing.webp';
-  } else if (mood === 'analyzing') {
-    src = '/avatar/analyzing.webp';
-  } else if (mood === 'building') {
-    src = '/avatar/building.webp';
-  } else if (mood === 'presenting') {
-    src = '/avatar/presenting.webp';
-  } else if (mood === 'listening') {
-    src = '/avatar/thinking.webp';
+    // Direction-specific running frames (8 frames each)
+    src = dir === 'left' ? petFrame('running-left', step, 8) : petFrame('running-right', step, 8);
+  } else if (mood === 'jumping' || mood === 'dancing' || mood === 'flying') {
+    src = petFrame('jumping', step, 5);
+  } else if (mood === 'typing' || mood === 'hacker_typing' || mood === 'analyzing' || mood === 'building' || mood === 'talking') {
+    // Working / typing / talking → review (focused active-work motion)
+    src = petFrame('review', step, 6);
+  } else if (mood === 'thinking' || mood === 'listening') {
+    // Thinking / listening → waiting (expectant pose)
+    src = petFrame('waiting', step, 6);
+  } else if (mood === 'pointing' || mood === 'lightbulb' || mood === 'presenting') {
+    // Pointing / idea / presenting → waving (attached-arm gesture)
+    src = petFrame('waving', step, 4);
+  } else if (mood === 'sleeping' || mood === 'sofa_sleep' || mood === 'sunglasses') {
+    // Sleeping / chilling → idle (calm breathing loop)
+    src = petFrame('idle', step, 6);
   }
 
   const bobY = isClimbing
